@@ -13,11 +13,11 @@ function setindex!(fv::FeatureVector, value::Number, key)
 end
 
 function keys(fv::FeatureVector)
-  return keys(fv.map)
+  return Base.keys(fv.map)
 end
 
 function values(fv::FeatureVector)
-  return values(fv.map)
+  return Base.values(fv.map)
 end
 
 function +(fv1::FeatureVector, fv2::FeatureVector)
@@ -66,11 +66,33 @@ function //(fv::FeatureVector, value::Number)
     return FeatureVector(dict)
 end
 
-#=
+function cos_similarity(fv1::FeatureVector, fv2::FeatureVector)
+    fv1_keys = keys(fv1)
+    fv2_keys = keys(fv2)
+    fv1_magnitude = 0;
+    fv2_magnitude = 0;
+    dot_product = 0;
+    
+    for key in fv1_keys
+        fv1_value = fv1[key]
+        fv1_magnitude += fv1_value*fv1_value
+        if (key in fv2_keys)
+            dot_product += fv1_value*fv2[key]
+        end
+    end
 
-function cos_similarity()
+    for key in fv2_keys
+        fv2_value = fv2[key]
+        fv2_magnitude += fv2_value*fv2_value
+    end
+
+    cosine = dot_product/(sqrt(fv1_magnitude)*sqrt(fv2_magnitude))
+    cosine = 1 - cosine
+    return cosine
 end
 
+
+#=
 function zero_dist()
 end
 
@@ -79,6 +101,7 @@ end
 
 function euclidean_dist()
 end
+
 
 function infinite_dist()
 end
