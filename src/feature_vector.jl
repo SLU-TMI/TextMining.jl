@@ -13,11 +13,11 @@ function setindex!(fv::FeatureVector, value::Number, key)
 end
 
 function keys(fv::FeatureVector)
-  return keys(fv.map)
+  return Base.keys(fv.map)
 end
 
 function values(fv::FeatureVector)
-  return values(fv.map)
+  return Base.values(fv.map)
 end
 
 function +(fv1::FeatureVector, fv2::FeatureVector)
@@ -66,22 +66,116 @@ function //(fv::FeatureVector, value::Number)
     return FeatureVector(dict)
 end
 
-#=
+function cos_similarity(fv1::FeatureVector, fv2::FeatureVector)
+    fv1_keys = keys(fv1)
+    fv2_keys = keys(fv2)
+    fv1_magnitude = 0
+    fv2_magnitude = 0
+    dot_product = 0
 
-function cos_similarity()
+    for key in fv1_keys
+        fv1_value = fv1[key]
+        fv1_magnitude += fv1_value*fv1_value
+        if key in fv2_keys
+            dot_product += fv1_value*fv2[key]
+        end
+    end
+
+    for key in fv2_keys
+        fv2_value = fv2[key]
+        fv2_magnitude += fv2_value*fv2_value
+    end
+
+    cosine = dot_product/(sqrt(fv1_magnitude)*sqrt(fv2_magnitude))
+    cosine = 1 - cosine
+    return cosine
 end
 
-function zero_dist()
+function zero_dist(fv1::FeatureVector, fv2::FeatureVector)
+    fv1_keys = keys(fv1)
+    fv2_keys = keys(fv2)
+    distance = 0
+
+    for key in fv1_keys
+        if key in fv2_keys
+            distance += abs(fv1[key]-fv2[key])
+        end
+    end
+    return distance
 end
 
-function manhattan_dist()
+function manhattan_dist(fv1::FeatureVector, fv2::FeatureVector)
+    fv1_keys = keys(fv1)
+    fv2_keys = keys(fv2)
+    distance = 0
+
+    for key in fv1_keys
+        if key in fv2_keys
+            distance += abs(fv1[key]-fv2[key])
+        else
+            distance += abs(fv1[key])
+        end
+    end
+
+    for key in fv2_keys
+        if fv1[key] == 0
+            distance += abs(fv2[key])
+        end
+    end
+    return distance
 end
 
-function euclidean_dist()
+function euclidean_dist(fv1::FeatureVector, fv2::FeatureVector)
+    fv1_keys = keys(fv1)
+    fv2_keys = keys(fv2)
+    distance = 0
+    value = 0
+
+    for key in fv1_keys
+        if key in fv2_keys
+            value = fv1[key]-fv2[key]
+        else
+            value = fv1[key]
+        end
+        distance += value*value
+    end
+
+    for key in fv2_keys
+        if fv1[key] == 0
+            value = fv2[key]
+            distance += value*value
+        end
+    end
+    return sqrt(distance)
 end
 
-function infinite_dist()
+function infinite_dist(fv1::FeatureVector, fv2::FeatureVector)
+    fv1_keys = keys(fv1)
+    fv2_keys = keys(fv2)
+    distance = 0
+    current = 0
+
+    for key in fv1_keys
+        
+        if key in fv2_keys
+            current = abs(fv1[key]-fv2[key])
+        else 
+            current = abs(fv1[key])
+        end
+
+        if current > distance
+            distance = current
+        end
+    end
+
+    for key in fv2_keys
+        if fv1[key] == 0
+            current = fv2[key]
+        end
+
+        if current > distance
+            distance = current
+        end
+    end
+    return distance
 end
-
-
-=#
