@@ -4,6 +4,19 @@ type FeatureVector
     FeatureVector(map::Dict) = new(map)
 end
 
+function loadFeatureVector(string)
+    words = clean(string)
+    fv = FeatureVector()
+    for word in words
+        if word in keys(fv)
+            fv[word] += 1
+        else
+            setindex!(fv,1,word)
+        end
+    end
+    return fv
+end
+
 function getindex(fv::FeatureVector, key)
   return fv.map[key]
 end
