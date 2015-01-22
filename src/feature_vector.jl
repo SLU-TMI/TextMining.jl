@@ -4,10 +4,9 @@ type FeatureVector
     FeatureVector(map::Dict) = new(map)
 end
 
-function loadFeatureVector(string)
-    words = clean(string)
+function loadFeatureVector(array)
     fv = FeatureVector()
-    for word in words
+    for word in array
         if word in keys(fv)
             fv[word] += 1
         else
