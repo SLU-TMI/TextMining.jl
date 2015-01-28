@@ -32,13 +32,13 @@ function values(fv::FeatureVector)
   return Base.values(fv.map)
 end
 
-function findCommonType(fv1::FeatureVector,fv2::FeatureVector)
+function find_common_type(fv1::FeatureVector,fv2::FeatureVector)
 		commonType = promote_type(typeof(first(fv1.map)),typeof(first(fv2.map)))
 		return Dict{commonType[1],commonType[2]}(fv1.map)
 end
 
 function +(fv1::FeatureVector, fv2::FeatureVector)
-    dict = findCommonType(fv1,fv2)
+    dict = find_common_type(fv1,fv2)
     fv1_keys = keys(fv1)
     fv2_keys = keys(fv2)
     for key in fv2_keys
@@ -52,7 +52,7 @@ function +(fv1::FeatureVector, fv2::FeatureVector)
 end
 
 function -(fv1::FeatureVector, fv2::FeatureVector)
-    dict = findCommonType(fv1,fv2)
+    dict = find_common_type(fv1,fv2)
     fv1_keys = keys(fv1)
     fv2_keys = keys(fv2)
     for key in fv2_keys
