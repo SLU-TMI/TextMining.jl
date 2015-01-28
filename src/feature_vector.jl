@@ -1,20 +1,10 @@
-type FeatureVector
-    map::Dict
-    FeatureVector() = new(Dict())
-    FeatureVector(map::Dict) = new(map)
+type FeatureVector{K,V<:Number}
+    map::Dict{K,V}
+    FeatureVector() = new(Dict{Any,Number}())
+    FeatureVector{K,V}(map::Dict{K,V}) = new(map)
 end
-
-function loadFeatureVector(array)
-    fv = FeatureVector()
-    for word in array
-        if word in keys(fv)
-            fv[word] += 1
-        else
-            setindex!(fv,1,word)
-        end
-    end
-    return fv
-end
+FeatureVector() = FeatureVector{Any,Number}()
+FeatureVector(map::Dict) = FeatureVector{Any,Number}(map)
 
 function getindex(fv::FeatureVector, key)
   return fv.map[key]
@@ -32,13 +22,29 @@ function values(fv::FeatureVector)
   return Base.values(fv.map)
 end
 
+function isempty(fv::FeatureVector)
+    return Base.isempty(fv.map)
+end
+
 function find_common_type(fv1::FeatureVector,fv2::FeatureVector)
-		commonType = promote_type(typeof(first(fv1.map)),typeof(first(fv2.map)))
-		return Dict{commonType[1],commonType[2]}(fv1.map)
+    if isempty(fv1) && isempty(fv2)
+        commonType = (Any,Number)
+    elseif isempty(fv1)
+        commonType = typeof(first(fv2.map))
+    elseif isempty(fv2)
+        commonType = typeof(first(fv1.map))
+    else
+        fv1_type = typeof(first(fv1.map))
+        fv2_type = typeof(first(fv2.map))
+	    commonType = (promote_type(fv1_type[1],fv2_type[1]),
+                      promote_type(fv1_type[2],fv2_type[2]))
+    end
+	return commonType
 end
 
 function +(fv1::FeatureVector, fv2::FeatureVector)
-    dict = find_common_type(fv1,fv2)
+    dict_type = find_common_type(fv1,fv2)
+    dict = Dict{dict_type[1],dict_type[2]}(fv1.map)
     fv1_keys = keys(fv1)
     fv2_keys = keys(fv2)
     for key in fv2_keys
@@ -52,7 +58,8 @@ function +(fv1::FeatureVector, fv2::FeatureVector)
 end
 
 function -(fv1::FeatureVector, fv2::FeatureVector)
-    dict = find_common_type(fv1,fv2)
+    dict_type = find_common_type(fv1,fv2)
+    dict = Dict{dict_type[1],dict_type[2]}(fv1.map)
     fv1_keys = keys(fv1)
     fv2_keys = keys(fv2)
     for key in fv2_keys
@@ -61,6 +68,15 @@ function -(fv1::FeatureVector, fv2::FeatureVector)
 		else
 	    	dict[key] = -fv2[key]
 		end
+    end
+    return FeatureVector(dict)
+end
+
+function *(fv::FeatureVector, value)
+    fv_keys = keys(fv)
+    dict = Dict{typeof(first(fv_keys)), promote_type(typeof(first(fv.map)[2]),value)}()
+    for key in fv_keys
+        dict[key] = fv[key]*value
     end
     return FeatureVector(dict)
 end
