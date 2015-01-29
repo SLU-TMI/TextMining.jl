@@ -1,10 +1,19 @@
 using LightXML
 
-function parseXML(doc::ASCIIString)
+function parseXML(doc)
 	xdoc = parse_file(doc)
 	xroot = root(xdoc)
-	ces = collect(child_elements(xroot))
-	body = collect(child_elements(ces[2]))
-	text = content(body[2])
+	ces = get_elements_by_tagname(xroot, "text")
+	body = content(ces[1])
+	text = string(body)
 	return text
+end
+
+function parseXMLDir(files)
+	x = 1
+	for file in files
+		files[x] = parseXML(file)
+		x+=1
+	end
+	return files
 end
