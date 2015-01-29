@@ -1,3 +1,7 @@
+import Base.isempty
+
+#TODO comment code!
+
 type FeatureVector{K,V<:Number}
     map::Dict{K,V}
     FeatureVector() = new(Dict{Any,Number}())
@@ -74,16 +78,17 @@ end
 
 function *(fv::FeatureVector, value)
     fv_keys = keys(fv)
-    dict = Dict{typeof(first(fv_keys)), promote_type(typeof(first(fv.map)[2]),value)}()
+    fv_type = typeof(first(fv.map)[2])
+    dict = Dict{typeof(first(fv_keys)), promote_type(fv_type,typeof(value))}()
     for key in fv_keys
         dict[key] = fv[key]*value
     end
     return FeatureVector(dict)
 end
 
-function /(fv::FeatureVector, value::Number)
+function /(fv::FeatureVector, value)
     fv_keys = keys(fv)
-    dict = Dict{typeof(first(fv_keys)), Number}()
+    dict = Dict{typeof(first(fv_keys)), typeof(fv[first(fv_keys)]/value)}()
     for key in fv_keys
 		dict[key] = fv[key]/value
     end
