@@ -104,6 +104,7 @@ function //(fv::FeatureVector, value::Number)
     return FeatureVector(dict)
 end
 
+#TODO - implement threshold, if less than e^-15 return 0?
 function cos_similarity(fv1::FeatureVector, fv2::FeatureVector)
     fv1_keys = keys(fv1)
     fv2_keys = keys(fv2)
