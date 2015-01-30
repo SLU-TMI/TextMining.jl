@@ -1,5 +1,6 @@
 using FactCheck
 
+
 export FeatureVector
 
 	facts("Adding Two FeatureVectors") do
