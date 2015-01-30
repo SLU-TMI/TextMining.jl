@@ -30,6 +30,7 @@ function isempty(fv::FeatureVector)
     return Base.isempty(fv.map)
 end
 
+#TODO look into the merge function for Dict
 function find_common_type(fv1::FeatureVector,fv2::FeatureVector)
     if isempty(fv1) && isempty(fv2)
         commonType = (Any,Number)
@@ -46,17 +47,30 @@ function find_common_type(fv1::FeatureVector,fv2::FeatureVector)
 	return commonType
 end
 
+# function +(fv1::FeatureVector, fv2::FeatureVector)
+#     dict_type = find_common_type(fv1,fv2)
+#     dict = Dict{dict_type[1],dict_type[2]}(fv1.map)
+#     fv1_keys = keys(fv1)
+#     fv2_keys = keys(fv2)
+#     for key in fv2_keys
+# 		if key in fv1_keys
+# 	    	dict[key] += fv2[key]
+# 		else
+# 	    	dict[key] = fv2[key]
+# 		end
+#     end
+#     return FeatureVector(dict)
+# end
+
 function +(fv1::FeatureVector, fv2::FeatureVector)
-    dict_type = find_common_type(fv1,fv2)
-    dict = Dict{dict_type[1],dict_type[2]}(fv1.map)
+    # dict_type = find_common_type(fv1,fv2)
+    dict = Base.merge(fv1.map,fv2.map)
     fv1_keys = keys(fv1)
     fv2_keys = keys(fv2)
     for key in fv2_keys
-		if key in fv1_keys
-	    	dict[key] += fv2[key]
-		else
-	    	dict[key] = fv2[key]
-		end
+        if key in fv1_keys
+            dict[key] = fv1[key] + fv2[key]
+        end
     end
     return FeatureVector(dict)
 end
@@ -76,6 +90,7 @@ function -(fv1::FeatureVector, fv2::FeatureVector)
     return FeatureVector(dict)
 end
 
+#needs error checking? if fv is empty error obviously
 function *(fv::FeatureVector, value)
     fv_keys = keys(fv)
     fv_type = typeof(first(fv.map)[2])
@@ -86,6 +101,7 @@ function *(fv::FeatureVector, value)
     return FeatureVector(dict)
 end
 
+#needs error checking? if fv is empty error obviously
 function /(fv::FeatureVector, value)
     fv_keys = keys(fv)
     dict = Dict{typeof(first(fv_keys)), typeof(fv[first(fv_keys)]/value)}()
