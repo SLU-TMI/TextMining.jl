@@ -2,6 +2,8 @@ import Base.isempty
 
 #TODO comment code!
 
+
+#should the dict be copied so the original dictionary isn't changed?
 type FeatureVector{K,V<:Number}
     map::Dict{K,V}
     FeatureVector() = new(Dict{Any,Number}())
@@ -30,7 +32,6 @@ function isempty(fv::FeatureVector)
     return Base.isempty(fv.map)
 end
 
-#TODO look into the merge function for Dict
 function find_common_type(fv1::FeatureVector,fv2::FeatureVector)
     if isempty(fv1) && isempty(fv2)
         commonType = (Any,Number)
@@ -47,34 +48,27 @@ function find_common_type(fv1::FeatureVector,fv2::FeatureVector)
 	return commonType
 end
 
-# function +(fv1::FeatureVector, fv2::FeatureVector)
-#     dict_type = find_common_type(fv1,fv2)
-#     dict = Dict{dict_type[1],dict_type[2]}(fv1.map)
-#     fv1_keys = keys(fv1)
-#     fv2_keys = keys(fv2)
-#     for key in fv2_keys
-# 		if key in fv1_keys
-# 	    	dict[key] += fv2[key]
-# 		else
-# 	    	dict[key] = fv2[key]
-# 		end
-#     end
-#     return FeatureVector(dict)
-# end
-
 function +(fv1::FeatureVector, fv2::FeatureVector)
-    # dict_type = find_common_type(fv1,fv2)
-    dict = Base.merge(fv1.map,fv2.map)
+    dict_type = find_common_type(fv1,fv2)
+    dict = Dict{dict_type[1],dict_type[2]}(fv1.map)
     fv1_keys = keys(fv1)
     fv2_keys = keys(fv2)
     for key in fv2_keys
-        if key in fv1_keys
-            dict[key] = fv1[key] + fv2[key]
-        end
+		if key in fv1_keys
+	    	dict[key] += fv2[key]
+		else
+	    	dict[key] = fv2[key]
+		end
     end
     return FeatureVector(dict)
 end
 
+#=
+# Should we have a check that for < 0? 
+# How do you have less that zero words? 
+# Are we even using this in the english project? 
+# If not, forget this comment.
+=#
 function -(fv1::FeatureVector, fv2::FeatureVector)
     dict_type = find_common_type(fv1,fv2)
     dict = Dict{dict_type[1],dict_type[2]}(fv1.map)
@@ -90,8 +84,10 @@ function -(fv1::FeatureVector, fv2::FeatureVector)
     return FeatureVector(dict)
 end
 
-#needs error checking? if fv is empty error obviously
 function *(fv::FeatureVector, value)
+    if isempty(fv)
+        return fv
+    end
     fv_keys = keys(fv)
     fv_type = typeof(first(fv.map)[2])
     dict = Dict{typeof(first(fv_keys)), promote_type(fv_type,typeof(value))}()
@@ -101,8 +97,10 @@ function *(fv::FeatureVector, value)
     return FeatureVector(dict)
 end
 
-#needs error checking? if fv is empty error obviously
 function /(fv::FeatureVector, value)
+    if isempty(fv)
+        return fv
+    end
     fv_keys = keys(fv)
     dict = Dict{typeof(first(fv_keys)), typeof(fv[first(fv_keys)]/value)}()
     for key in fv_keys
@@ -112,6 +110,9 @@ function /(fv::FeatureVector, value)
 end
 
 function //(fv::FeatureVector, value::Number)
+    if isempty(fv)
+        return fv
+    end
     fv_keys = keys(fv)
     dict = Dict{typeof(first(fv_keys)), Rational}()
     for key in fv_keys

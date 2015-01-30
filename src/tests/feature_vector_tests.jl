@@ -3,84 +3,171 @@ using FactCheck
 
 export FeatureVector
 
-	facts("Adding Two FeatureVectors") do
+	facts("Creating a FeatureVector") do
 		dict1 = ["word" => 4, "another" => 3]
-		dict2 = ["word" => 2, "kevin" => 3]
+		fv1 = FeatureVector(dict1)
+		fv2 = FeatureVector()
+
+		@fact fv1.map => dict1
+		@fact typeof(fv1.map) => typeof(dict1)
+		@fact typeof(fv2.map) => typeof(Dict{Any,Number}())
+	end
+
+	facts("Get value of FeatureVector given key") do
+		dict1 = ["word" => 4, "another" => 3]
+		fv1 = FeatureVector(dict1)
+
+		@fact fv1["word"] => fv1.map["word"]
+	end
+
+	facts("Set value of FeatureVector given key") do
+		dict1 = ["word" => 4, "another" => 3]
+		fv1 = FeatureVector(dict1)
+		value = fv1["word"]
+
+		fv1["word"] = 7
+
+		#test to see that the dictionary isn't changed 
+		#if we want it like that
+		# @fact (fv1["word"] != dict1["word"]) => true
+		@fact fv1["word"] => 7
+	end
+
+	facts("Get keys of FeatureVector") do
+		dict1 = ["word" => 4, "another" => 3]
+		fv1 = FeatureVector(dict1)
+
+		@fact keys(fv1) => Base.keys(fv1.map)
+	end
+
+	facts("Get values of FeatureVector") do
+		dict1 = ["word" => 4, "another" => 3]
+		fv1 = FeatureVector(dict1)
+
+		@fact values(fv1) => Base.values(fv1.map)
+	end
+
+	facts("Check isempty on a FeatureVector") do
+		fv1 = FeatureVector()
+
+		@fact isempty(fv1) => Base.isempty(fv1.map)
+	end
+
+	facts("Find common type of a FeatureVector and an empty FeatureVector") do
+		dict1 = ["word" => 4, "∂" => 3]
+		fv1 = FeatureVector(dict1)
+		fv2 = FeatureVector()
+
+		@fact find_common_type(fv1,fv2) => (UTF8String,Int64)
+		@fact find_common_type(fv2,fv1) => (UTF8String,Int64)
+	end
+
+	facts("Find common type of two FeatureVector") do
+		dict1 = ["word" => 4, "another" => 3]
+		dict2 = ["word" => .2, "∂" => .8]
 		fv1 = FeatureVector(dict1)
 		fv2 = FeatureVector(dict2)
-		dict3 = ["word"=>6,"kevin"=>3,"another"=>3]
+
+		@fact find_common_type(fv1,fv2) => (UTF8String,Float64)
+	end
+
+	facts("Adding two FeatureVectors") do
+		dict1 = ["word" => 4, "another" => 3]
+		dict2 = ["word" => 2, "∂" => 3]
+		fv1 = FeatureVector(dict1)
+		fv2 = FeatureVector(dict2)
+		dict3 = ["word"=>6,"∂"=>3,"another"=>3]
 		fv3 = (fv1 + fv2)
+		fv4 = (fv2 + fv1)
 		for key in Base.keys(dict3)
 				@fact fv3[key] => dict3[key]
 		end
+		for key in Base.keys(dict3)
+				@fact fv4[key] => dict3[key]
+		end
 	end
 
-# inc(x) = x + 1
+	facts("Subtracting two FeatureVectors") do
+		dict1 = ["word" => 4, "another" => 3]
+		dict2 = ["word" => 2, "∂" => 3]
+		fv1 = FeatureVector(dict1)
+		fv2 = FeatureVector(dict2)
+		dict3 = ["word"=>2,"∂"=>-3,"another"=>3]
+		fv3 = (fv1 - fv2)
+		dict4 = ["word"=>-2,"∂"=>3,"another"=>-3]
+		fv4 = (fv2 - fv1)
+		for key in Base.keys(dict3)
+				@fact fv3[key] => dict3[key]
+		end
+		for key in Base.keys(dict4)
+				@fact fv4[key] => dict4[key]
+		end
+	end
 
-# facts("Succeeding examples") do
+	facts("Multiply a FeatureVector by a scalar") do
+		dict1 = ["word" => 4, "another" => 3]
+		dict2 = ["word" => .4, "∂" => .3]
+		fv1 = FeatureVector(dict1)
+		fv2 = FeatureVector(dict2)
+		fv3 = FeatureVector()
 
-#     @fact 1 => 1
+		fv1 = fv1 * 2
+		fv2 = fv2 * 2
+		fv4 = fv3 * 2
 
-#     context("You can define contexts") do
-#         @fact 1 => 1
-#     end
+		@fact fv1["word"] => 8
+		@fact fv1["another"] => 6
+		@fact fv2["word"] => .8
+		@fact fv2["∂"] => .6
+		@fact fv3 => fv4
+	end
 
-#     @fact_throws error("neat")
+	facts("Divide a FeatureVector by a scalar") do
+		dict1 = ["word" => 4, "another" => 3]
+		dict2 = ["word" => .4, "∂" => .3]
+		fv1 = FeatureVector(dict1)
+		fv2 = FeatureVector(dict2)
+		fv3 = FeatureVector()
 
-#     context("group facts") do
-#         @fact 1 => not(2)
-#         @fact 2 => not(isodd)
-#     end
+		fv1 = fv1 / 2
+		fv2 = fv2 / 2
+		fv4 = fv3 / 2
 
-#     context("generating facts") do
-#         for i=1:5
-#             @fact i => i
-#         end
-#     end
+		@fact fv1["word"] => 2
+		@fact fv1["another"] => 1.5
+		@fact fv2["word"] => .2
+		@fact fv2["∂"] => .15
+		@fact fv3 => fv4
+	end
 
-# end
+	facts("Rationalize a FeatureVector by a scalar") do
+		dict1 = ["word" => 4, "another" => 3]
+		fv1 = FeatureVector(dict1)
+		fv2 = FeatureVector()
 
-# facts("Failing examples") do
+		fv1 = fv1 // 2
+		fv3 = fv2 // 2
 
-#     @fact 1 => 2
+		@fact fv1["word"] => 2//1
+		@fact fv1["another"] => 3//2
+		@fact fv2 => fv3
+	end
 
-#     context("strings are strings") do
-#         @fact "bar" => "barr"
-#         @fact "baz" => "bazz"
-#     end
+	#=
+	facts("Find zero distance between two FeatureVectors") do
+	end
 
-#     context("some numbers are even") do
-#         @fact 3 => iseven
-#     end
+	facts("Find manhattan distance between two FeatureVectors") do
+	end
 
-#     context() do
-#         x = 10
-#         @fact inc(inc(inc(0))) => 2
-#     end
+	facts("Find euclidean distance between two FeatureVectors") do
+	end
 
-#     context() do
-#         x = 5
-#         y = 10
-#         @fact x => y
-#     end
+	facts("Find infinite distance between two FeatureVectors") do
+	end
 
-#     context("throws an error") do
-#         @fact error("foo") => 1
-#     end
-
-# end
-
-# facts("Assertion helpers") do
-
-#     @fact 1 => not(iseven)
-#     @fact 1 => truthy
-#     @fact nothing => falsey
-#     @fact false => anything
-#     @fact iseven => exactly(iseven)
-#     @fact 2.499999 => roughly(2.5)
-#     @fact 1 => less_than(2)
-#     @fact 1 => less_than_or_equal(1)
-#     @fact 2 => greater_than(1)
-#     @fact 2 => greater_than_or_equal(2)
-
-# end
+	#may need this/may not
+	function runTests()
+		reload("tests/feature_vector_tests.jl")
+	end
+	=#
