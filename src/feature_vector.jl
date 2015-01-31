@@ -2,6 +2,8 @@ import Base.isempty
 
 #TODO comment code!
 
+
+#should the dict be copied so the original dictionary isn't changed?
 type FeatureVector{K,V<:Number}
     map::Dict{K,V}
     FeatureVector() = new(Dict{Any,Number}())
@@ -61,6 +63,12 @@ function +(fv1::FeatureVector, fv2::FeatureVector)
     return FeatureVector(dict)
 end
 
+#=
+# Should we have a check that for < 0? 
+# How do you have less that zero words? 
+# Are we even using this in the english project? 
+# If not, forget this comment.
+=#
 function -(fv1::FeatureVector, fv2::FeatureVector)
     dict_type = find_common_type(fv1,fv2)
     dict = Dict{dict_type[1],dict_type[2]}(fv1.map)
@@ -77,6 +85,9 @@ function -(fv1::FeatureVector, fv2::FeatureVector)
 end
 
 function *(fv::FeatureVector, value)
+    if isempty(fv)
+        return fv
+    end
     fv_keys = keys(fv)
     fv_type = typeof(first(fv.map)[2])
     dict = Dict{typeof(first(fv_keys)), promote_type(fv_type,typeof(value))}()
@@ -87,6 +98,9 @@ function *(fv::FeatureVector, value)
 end
 
 function /(fv::FeatureVector, value)
+    if isempty(fv)
+        return fv
+    end
     fv_keys = keys(fv)
     dict = Dict{typeof(first(fv_keys)), typeof(fv[first(fv_keys)]/value)}()
     for key in fv_keys
@@ -96,6 +110,9 @@ function /(fv::FeatureVector, value)
 end
 
 function //(fv::FeatureVector, value::Number)
+    if isempty(fv)
+        return fv
+    end
     fv_keys = keys(fv)
     dict = Dict{typeof(first(fv_keys)), Rational}()
     for key in fv_keys
