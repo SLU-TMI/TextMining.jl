@@ -27,9 +27,7 @@ export FeatureVector
 
 		fv1["word"] = 7
 
-		#test to see that the dictionary isn't changed 
-		#if we want it like that
-		# @fact (fv1["word"] != dict1["word"]) => true
+		@fact (fv1["word"] != dict1["word"]) => true
 		@fact fv1["word"] => 7
 	end
 
@@ -154,6 +152,9 @@ export FeatureVector
 	end
 
 	#=
+	facts("Find cos_similarity distance between two FeatureVectors") do
+	end
+
 	facts("Find zero distance between two FeatureVectors") do
 	end
 

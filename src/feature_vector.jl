@@ -1,37 +1,44 @@
 import Base.isempty
 
-#TODO comment code!
-
-
-#should the dict be copied so the original dictionary isn't changed?
+#= 
+# Type definition for a FeatureVector.
+# Wrapper around a Dict type.
+# Restricted to Any [key] value => Subtype of number.
+=# 
 type FeatureVector{K,V<:Number}
     map::Dict{K,V}
     FeatureVector() = new(Dict{Any,Number}())
     FeatureVector{K,V}(map::Dict{K,V}) = new(map)
 end
 FeatureVector() = FeatureVector{Any,Number}()
-FeatureVector(map::Dict) = FeatureVector{Any,Number}(map)
+FeatureVector(map::Dict) = FeatureVector{Any,Number}(copy(map))
 
+# gets value of [key] in a FeatureVector
 function getindex(fv::FeatureVector, key)
   return fv.map[key]
 end
 
-function setindex!(fv::FeatureVector, value::Number, key)
+# sets value of [key] in a FeatureVector. Must be subtype of number/dict type
+function setindex!(fv::FeatureVector, value, key)
     fv.map[key] = value
 end
 
+# gets all keys of a FeatureVector
 function keys(fv::FeatureVector)
   return Base.keys(fv.map)
 end
 
+# gets all values of a FeaturVector
 function values(fv::FeatureVector)
   return Base.values(fv.map)
 end
 
+# check to see if the FeatureVector is empty.
 function isempty(fv::FeatureVector)
     return Base.isempty(fv.map)
 end
 
+# finds common type of two FeatureVectors 
 function find_common_type(fv1::FeatureVector,fv2::FeatureVector)
     if isempty(fv1) && isempty(fv2)
         commonType = (Any,Number)
@@ -48,6 +55,7 @@ function find_common_type(fv1::FeatureVector,fv2::FeatureVector)
 	return commonType
 end
 
+# adds two FeatureVectors together
 function +(fv1::FeatureVector, fv2::FeatureVector)
     dict_type = find_common_type(fv1,fv2)
     dict = Dict{dict_type[1],dict_type[2]}(fv1.map)
@@ -63,12 +71,7 @@ function +(fv1::FeatureVector, fv2::FeatureVector)
     return FeatureVector(dict)
 end
 
-#=
-# Should we have a check that for < 0? 
-# How do you have less that zero words? 
-# Are we even using this in the english project? 
-# If not, forget this comment.
-=#
+# subtracts two FeatureVectors (value can go negative)
 function -(fv1::FeatureVector, fv2::FeatureVector)
     dict_type = find_common_type(fv1,fv2)
     dict = Dict{dict_type[1],dict_type[2]}(fv1.map)
@@ -84,6 +87,7 @@ function -(fv1::FeatureVector, fv2::FeatureVector)
     return FeatureVector(dict)
 end
 
+# multiplies a FeatureVector by a scalar
 function *(fv::FeatureVector, value)
     if isempty(fv)
         return fv
@@ -97,6 +101,7 @@ function *(fv::FeatureVector, value)
     return FeatureVector(dict)
 end
 
+# divides a FeatureVector by a scalar
 function /(fv::FeatureVector, value)
     if isempty(fv)
         return fv
@@ -109,7 +114,8 @@ function /(fv::FeatureVector, value)
     return FeatureVector(dict)
 end
 
-function //(fv::FeatureVector, value::Number)
+# rationalizes a FeatureVectors values
+function //(fv::FeatureVector, value)
     if isempty(fv)
         return fv
     end
