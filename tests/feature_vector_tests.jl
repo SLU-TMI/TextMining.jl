@@ -51,6 +51,18 @@ export FeatureVector
 		@fact isempty(fv1) => Base.isempty(fv1.map)
 	end
 
+	facts("Make copy of a FeatureVector") do
+		dict1 = ["word" => 4, "another" => 3]
+		fv1 = FeatureVector(dict1)
+		fv2 = copy(fv1)
+
+		for key in keys(fv1)
+			@fact fv1[key] => fv2[key]
+		end
+		@fact fv2 == fv1 => false
+		@fact typeof(fv1) => typeof(fv2)
+	end
+
 	facts("Find common type of a FeatureVector and an empty FeatureVector") do
 		dict1 = ["word" => 4, "∂" => 3]
 		fv1 = FeatureVector(dict1)

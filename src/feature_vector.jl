@@ -7,11 +7,15 @@ import Base.isempty
 =# 
 type FeatureVector{K,V<:Number}
     map::Dict{K,V}
-    FeatureVector() = new(Dict{Any,Number}())
+    FeatureVector() = new(Dict{K,V}())
     FeatureVector{K,V}(map::Dict{K,V}) = new(map)
 end
 FeatureVector() = FeatureVector{Any,Number}()
-FeatureVector(map::Dict) = FeatureVector{Any,Number}(copy(map))
+FeatureVector{K,V}(map::Dict{K,V}) = FeatureVector{K,V}(Base.copy(map))
+
+# copies selected fv, and makes a new one.
+#TODO make sure this doesn't make a memory leak/take up too much memory
+copy{K,V}(fv::FeatureVector{K,V}) = FeatureVector{K,V}(fv.map)
 
 # gets value of [key] in a FeatureVector
 function getindex(fv::FeatureVector, key)
