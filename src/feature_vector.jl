@@ -149,8 +149,10 @@ function cos_similarity(fv1::FeatureVector, fv2::FeatureVector)
     end
 
     cosine = dot_product/(sqrt(fv1_magnitude)*sqrt(fv2_magnitude))
-    cosine = 1 - cosine
-    return cosine
+    if cosine < 1*e^-15
+        cosine = 0
+    end
+    return 1 - cosine
 end
 
 function zero_dist(fv1::FeatureVector, fv2::FeatureVector)
