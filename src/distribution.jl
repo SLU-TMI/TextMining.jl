@@ -21,7 +21,13 @@ function getindex(d::Distribution, key)
 end
 
 function setindex!(d::Distribution, value::Number, key)
-    d.fv.map[key] = value
+    if key in keys(d)
+      value = abs(value - d.fv.map[key])
+      d.fv.map[key] += value
+    else
+      d.fv.map[key] = value
+    end
+    d.total += value
 end
 
 function keys(d::Distribution)

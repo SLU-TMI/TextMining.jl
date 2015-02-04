@@ -3,6 +3,8 @@ using FactCheck
 
 export FeatureVector
 
+println("**********Testing FeatureVector**********")
+
 	facts("Creating a FeatureVector") do
 		dict1 = ["word" => 4, "another" => 3]
 		fv1 = FeatureVector(dict1)
@@ -29,6 +31,7 @@ export FeatureVector
 
 		@fact (fv1["word"] != dict1["word"]) => true
 		@fact fv1["word"] => 7
+		@fact dict1["word"] => 4
 	end
 
 	facts("Get keys of FeatureVector") do

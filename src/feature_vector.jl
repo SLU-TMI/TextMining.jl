@@ -14,8 +14,13 @@ FeatureVector() = FeatureVector{Any,Number}()
 FeatureVector{K,V}(map::Dict{K,V}) = FeatureVector{K,V}(Base.copy(map))
 
 # copies selected fv, and makes a new one.
-#TODO make sure this doesn't make a memory leak/take up too much memory
-copy{K,V}(fv::FeatureVector{K,V}) = FeatureVector{K,V}(fv.map)
+function copy{K,V}(fv::FeatureVector{K,V})
+	new_fv = FeatureVector{K,V}()
+	for key in keys(fv)
+		new_fv[key] = fv[key]
+	end
+	return new_fv
+end
 
 # gets value of [key] in a FeatureVector
 function getindex(fv::FeatureVector, key)
