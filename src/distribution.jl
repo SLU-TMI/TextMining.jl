@@ -1,25 +1,27 @@
 import Base.isempty
 
-type Distribution{K,V<:Rational}
+type Distribution{K,V<:Number}
     fv::FeatureVector{K,V}
-    #total::Number - TODO use to normalize dist to sum to 1
-    Distribution() = new(FeatureVector{Any,Rational}())
-    Distribution{K,V}(fv::FeatureVector{K,V}) = new(fv)
+    total::Number #- TODO use to normalize dist to sum to 1
+    Distribution() = new(FeatureVector{Any,Number}(),0)
+    Distribution{K,V}(fv::FeatureVector{K,V}) = new(fv,get_total(fv))
+    function get_total(fv::FeatureVector)
+    	total = 0
+    	for value in values(fv)
+    		total += value
+    	end
+    	return total
+    end
 end
-Distribution() = Distribution{Any,Rational}()
-Distribution(fv::FeatureVector) = Distribution{Any,Rational}(norm(fv))
-
-function norm(d::Distribution)
-#TODO - modify values so dist sums to 1
-end
+Distribution() = Distribution{Any,Number}()
+Distribution{K,V}(fv::FeatureVector{K,V}) = Distribution{K,V}(copy(fv))
 
 function getindex(d::Distribution, key)
-  return d.fv.map[key]
+  return d.fv.map[key]/d.total
 end
 
 function setindex!(d::Distribution, value::Number, key)
     d.fv.map[key] = value
-    norm(d)
 end
 
 function keys(d::Distribution)

@@ -27,9 +27,7 @@ export FeatureVector
 
 		fv1["word"] = 7
 
-		#test to see that the dictionary isn't changed 
-		#if we want it like that
-		# @fact (fv1["word"] != dict1["word"]) => true
+		@fact (fv1["word"] != dict1["word"]) => true
 		@fact fv1["word"] => 7
 	end
 
@@ -51,6 +49,18 @@ export FeatureVector
 		fv1 = FeatureVector()
 
 		@fact isempty(fv1) => Base.isempty(fv1.map)
+	end
+
+	facts("Make copy of a FeatureVector") do
+		dict1 = ["word" => 4, "another" => 3]
+		fv1 = FeatureVector(dict1)
+		fv2 = copy(fv1)
+
+		for key in keys(fv1)
+			@fact fv1[key] => fv2[key]
+		end
+		@fact fv2 == fv1 => false
+		@fact typeof(fv1) => typeof(fv2)
 	end
 
 	facts("Find common type of a FeatureVector and an empty FeatureVector") do
@@ -154,6 +164,9 @@ export FeatureVector
 	end
 
 	#=
+	facts("Find cos_similarity distance between two FeatureVectors") do
+	end
+
 	facts("Find zero distance between two FeatureVectors") do
 	end
 
