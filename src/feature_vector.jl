@@ -131,7 +131,7 @@ function //(fv::FeatureVector, value)
     return FeatureVector(dict)
 end
 
-#TODO - implement threshold, if less than e^-15 return 0?
+
 function cos_similarity(fv1::FeatureVector, fv2::FeatureVector)
     fv1_keys = keys(fv1)
     fv2_keys = keys(fv2)
@@ -153,8 +153,8 @@ function cos_similarity(fv1::FeatureVector, fv2::FeatureVector)
     end
 
     cosine = dot_product/(sqrt(fv1_magnitude)*sqrt(fv2_magnitude))
-    if cosine < 1*e^-15
-        cosine = 0
+    if cosine > 1 - 1e-15
+        cosine = 1
     end
     return 1 - cosine
 end
