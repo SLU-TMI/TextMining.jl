@@ -1,6 +1,6 @@
 import Base.isempty
 
-type Distribution{K,V}
+type Distribution{K,V<:Number}
     fv::FeatureVector{K,V}
     total::Number #- TODO use to normalize dist to sum to 1
     Distribution() = new(FeatureVector{Any,Number}(),0)
