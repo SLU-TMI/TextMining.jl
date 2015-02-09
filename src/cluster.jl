@@ -4,12 +4,12 @@ type Cluster
 end
 
 # returns FeatureVector indexed by [key]
-function getindex(c::Cluster, key::AbstractString)
+function getindex(c::Cluster, key)
   return c.clust[key]
 end
 
 # maps a string [key] to a FeatureVector [fv] 
-function setindex!(c::Cluster, fv::FeatureVector, key::AbstractString)
+function setindex!(c::Cluster, fv::FeatureVector, key)
   if haskey(c.clust, key)
     c.centroid - c.clust[key]
   end
