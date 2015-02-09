@@ -22,11 +22,9 @@ function kmeans(k::Integer, clust::Dict, dist_func::Function, max_iter::Integer)
 		for fv in features
 			current_min_max_dist = Inf
 			for centroid in centroids
-				if fv.map != centroid.map
-					min_max_dist = dist_func(centroid,fv)
-					if min_max_dist < current_min_max_dist
-						current_min_max_dist = min_max_dist
-					end
+				min_max_dist = dist_func(centroid,fv)
+				if min_max_dist < current_min_max_dist
+					current_min_max_dist = min_max_dist
 				end
 			end
 			if current_min_max_dist > best_dist
@@ -41,6 +39,8 @@ function kmeans(k::Integer, clust::Dict, dist_func::Function, max_iter::Integer)
 	# make Array of clusters
 	new_clusters = vcat()
 	for centroid in centroids
+		# todo
+		println(centroid)
 		new_clusters = vcat(new_clusters, Cluster(Dict(),FeatureVector()))
 	end
 
@@ -60,8 +60,12 @@ function kmeans(k::Integer, clust::Dict, dist_func::Function, max_iter::Integer)
 					dist = current_dist
 					min_dist_cluster = new_clusters[j]
 				end
+				j += 1
 			end
 			min_dist_cluster[i] = fv
+			print(min_dist_cluster[i])
+			print("   has    ")
+			println(fv)
 			i += 1
 		end
 
@@ -82,6 +86,7 @@ function kmeans(k::Integer, clust::Dict, dist_func::Function, max_iter::Integer)
 			dist = dist_func(old_centroids[i],new_centroids[i])
 			if dist > .000001
 				no_change = false
+				println("gothere")
 			end
 		end
 
