@@ -39,12 +39,13 @@ Pkg.add("LightXML")
 
 These tools are being developed in **Julia** with the goal of making them fast, generic, and easily usable in Julia's REPL. The tools can be broken down into the following catagories.
 
-### 1. Vector Space Model (developing)
+1. Vector Space Model (developing)
+------
 
 These tools will utilize the [bag-of-words model](http://en.wikipedia.org/wiki/Bag-of-words_model) and the [hashing trick](http://en.wikipedia.org/wiki/Feature_hashing) to vectorize texts into [feature vectors](http://en.wikipedia.org/wiki/Feature_vector). 
 
-##### Feature Vectors (testing)
-------
+#### Feature Vectors (testing)
+
 The **FeatureVector** type is a wrapper around a **Dictionary (hashtable)** that restricts **key => value** mappings to **Any => Number** types and subtypes.
 
 An empty *FeatureVector* can be constructed as so:
@@ -58,25 +59,25 @@ d = Dict(["my"=>2, "example"=>4])
 fv = FeatureVector(d)
 ```
 
-##### Clusters (testing)
-------
-##### DataSet (developing)
-------
+#### Clusters (testing)
+
+#### DataSet (developing)
+
 #### Distribution (developing)
 ---
-### 2. Text Processing (uncommenced)
+2. Text Processing (uncommenced)
 ------
-##### Processing XML Files (uncommenced)
+#### Processing XML Files (uncommenced)
 ---
-### 3. Clustering (developing)
+3. Clustering (developing)
 ------
-##### Hierarchical Clustering (developing)
-------
-##### K-Means Clustering (developing)
+#### Hierarchical Clustering (developing)
+
+#### K-Means Clustering (developing)
 ---
-### 4. Classification (uncommenced)
+4. Classification (uncommenced)
 ------
-##### Naive Bayes (uncommenced)
+#### Naive Bayes (uncommenced)
 ---
 ## Examples
 
