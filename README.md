@@ -1,8 +1,13 @@
-<a name="logo"/>
 <div align="center">
+
+<a href="http://www.slu.edu/" target="_blank">
+<img src="http://www.slu.edu/Images/marketing_communications/logos/slu/slu_4c.bmp" alt="SLU Logo" width="182" height="247"></img>
+</a>
+
 <a href="http://julialang.org/" target="_blank">
 <img src="http://julialang.org/images/logo_hires.png" alt="Julia Logo" width="210" height="142"></img>
 </a>
+
 </div>
 
 ## SLU-TextMining.jl
