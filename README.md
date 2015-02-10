@@ -12,7 +12,7 @@
 
 This package is a set of tools being used by **Saint Louis University** to facilitate interdisciplinary research using data mining, machine learning, and natural language processing techniques of how time passage affects language.
 
-### Setup
+### Setup (uncommenced)
 
 Like other Julia packages, you will be able to checkout *SLU-TextMining* from METADATA repo, as
 
@@ -27,7 +27,7 @@ Pkg.add("LightXML")
 ```
 
 ---
-## Code Base
+## Code Base (unfinished)
 
 
 
@@ -39,12 +39,12 @@ Pkg.add("LightXML")
 
 These tools are being developed in **Julia** with the goal of making them fast, generic, and easily usable in Julia's REPL. The tools can be broken down into the following catagories.
 
-### * Vector Space Model
+### 1. Vector Space Model (developing)
 
 These tools will utilize the [bag-of-words model](http://en.wikipedia.org/wiki/Bag-of-words_model) and the [hashing trick](http://en.wikipedia.org/wiki/Feature_hashing) to vectorize texts into [feature vectors](http://en.wikipedia.org/wiki/Feature_vector). 
 
-##### Feature Vectors
-
+##### Feature Vectors (testing)
+------
 The **FeatureVector** type is a wrapper around a **Dictionary (hashtable)** that restricts **key => value** mappings to **Any => Number** types and subtypes.
 
 An empty *FeatureVector* can be constructed as so:
@@ -58,23 +58,25 @@ d = Dict(["my"=>2, "example"=>4])
 fv = FeatureVector(d)
 ```
 
-##### Clusters
-
-##### DataSet
+##### Clusters (testing)
+------
+##### DataSet (developing)
+------
+#### Distribution (developing)
 ---
-### * Text Processing
-
-##### Processing XML Files
+### 2. Text Processing (uncommenced)
+------
+##### Processing XML Files (uncommenced)
 ---
-### * Clustering
-
-##### Hierarchical Clustering
-
-##### K-Means Clustering
+### 3. Clustering (developing)
+------
+##### Hierarchical Clustering (developing)
+------
+##### K-Means Clustering (developing)
 ---
-### * Classification
-
-##### Naive Bayes
+### 4. Classification (uncommenced)
+------
+##### Naive Bayes (uncommenced)
 ---
 ## Examples
 
@@ -82,4 +84,4 @@ fv = FeatureVector(d)
 
 The following examples show how you may use this package to accomplish common tasks.
 
-### * Read an XML file
+### Read an XML file
