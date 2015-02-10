@@ -1,11 +1,7 @@
 <div align="center">
 
 <a href="http://www.slu.edu/" target="_blank">
-<img src="http://www.slu.edu/Images/marketing_communications/logos/slu/slu_4c.bmp" alt="SLU Logo" width="182" height="247"></img>
-</a>
-
-<a href="http://julialang.org/" target="_blank">
-<img src="http://julialang.org/images/logo_hires.png" alt="Julia Logo" width="210" height="142"></img>
+<img src="http://www.slu.edu/Images/marketing_communications/logos/Higher%20Purpose.%20Greater%20Good/HPGG_horizontal/HPGG_Horz_blue.jpg" alt="SLU Logo" width="640" height="247.5"></img>
 </a>
 
 </div>
@@ -14,7 +10,7 @@
 
 
 
-This package is a set of tools being used to facilitate the interdisciplinary research using data mining, machine learning, and natural language processing techniques of how time passage affects language.
+This package is a set of tools being used by **Saint Louis University** to facilitate interdisciplinary research using data mining, machine learning, and natural language processing techniques of how time passage affects language.
 
 ### Setup
 
@@ -24,10 +20,49 @@ Like other Julia packages, you will be able to checkout *SLU-TextMining* from ME
 Pkg.add("SLU-TextMining")
 ```
 
-**Note:** This package relies on *LightXML.jl* to parse xml files. Please ensure you have
+**Note:** This package relies on *LightXML.jl* to parse xml files. Please ensure you have installed the *LightXML.jl* package
+
+```julia
+Pkg.add("LightXML")
+```
+
+---
+## Code Base
 
 
-### Examples
+
+### Text Processing
+
+#### Processing XML Files
+
+---
+### Vector Space Model
+
+
+
+#### Feature Vectors
+
+#### Clusters
+
+#### DataSet
+---
+### Clustering
+
+
+
+#### Hierarchical Clustering
+
+#### K-Means Clustering
+---
+### Classification
+
+
+#### Naive Bayes
+---
+## Examples
+
+
+
 
 The following examples show how you may use this package to accomplish common tasks.
 
