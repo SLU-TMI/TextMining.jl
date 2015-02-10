@@ -5,13 +5,13 @@ function hclust(data, dist)
 end
 
 #TODO
-# function kmeans(k::Integer, clust::Dict) = kmeans(k,clust,cos_simularity(),10000)
-# function kmeans(k::Integer, clust::Dict, max_iter::Integer) = kmeans(k,clust,cos_simularity(),max_iter)
+# function kmeans(k::Integer, clust::Dict) = kmeans(k,clust,cos_simularity,10000)
+# function kmeans(k::Integer, clust::Dict, max_iter::Integer) = kmeans(k,clust,cos_simularity,max_iter)
 # function kmeans(k::Integer, clust::Dict, dist_func::Function) = kmeans(k,clust,dist_func,10000)
 
-function kmeans(k::Integer, clust::Dict, dist_func::Function, max_iter::Integer)
+function kmeans(clust::Dict, k=1, dist_func=cos_similarity, max_iter=10000)
 	# find initial centroids
-	rand_num = abs(rand(Int64)%Base.length(clust) + 1)
+	rand_num = (abs(rand(Int64)%Base.length(clust)) + 1)
 	features = Base.values(clust)
 	orig_cent = collect(features)[rand_num]
 	centroids = vcat(orig_cent)
@@ -39,9 +39,7 @@ function kmeans(k::Integer, clust::Dict, dist_func::Function, max_iter::Integer)
 	# make Array of clusters
 	new_clusters = vcat()
 	for centroid in centroids
-		# todo
-		println(centroid)
-		new_clusters = vcat(new_clusters, Cluster(Dict(),FeatureVector()))
+		new_clusters = vcat(new_clusters, Cluster())
 	end
 
 	# find distance between fv and centroid
@@ -49,45 +47,42 @@ function kmeans(k::Integer, clust::Dict, dist_func::Function, max_iter::Integer)
 	no_change = false
 	while (!no_change) && (iteration < max_iter)
 		i = 1
-		println(i)
 		for fv in features
 			dist = Inf
 			j = 1
-			min_dist_cluster = Cluster(Dict(),FeatureVector())
-			for centroid in centroids
-				current_dist = dist_func(centroid,fv)
+			min_dist_cluster = Cluster()
+			for cluster in new_clusters
+				current_dist = dist_func(centroids[j],fv)
 				if current_dist < dist
 					dist = current_dist
-					min_dist_cluster = new_clusters[j]
+					min_dist_cluster = cluster
 				end
 				j += 1
 			end
 			min_dist_cluster[i] = fv
-			print(min_dist_cluster[i])
-			print("   has    ")
-			println(fv)
 			i += 1
 		end
 
 		# recompute new clusters
 		old_centroids = centroids
-		i = 1
 		new_centroids = vcat()
-		for centroid in centroids
-			cluster = new_clusters[i]
-			new_centroids = vcat(new_centroids, cluster.centroid)
+		for cluster in new_clusters
+			new_cent = centroid(cluster)
+			new_centroids = vcat(new_centroids, new_cent)
 		end
 		# set the new centroids
 		centroids = new_centroids
 
 		# checking if centroids moved.
 		no_change = true
-		for i = 0; i < k; i+=1
-			dist = dist_func(old_centroids[i],new_centroids[i])
+		i = 1
+		for centroid in old_centroids
+			dist = dist_func(centroid,new_centroids[i])
 			if dist > .000001
 				no_change = false
-				println("gothere")
+				break
 			end
+			i += 1
 		end
 
 		# reset clusters if there are no changes.
