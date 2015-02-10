@@ -9,7 +9,7 @@ function getindex(c::Cluster, key)
   return c.vectors[key]
 end
 
-# maps a string [key] to a FeatureVector [fv] 
+# maps a [key] to a FeatureVector [fv] 
 function setindex!(c::Cluster, fv::FeatureVector, key)
   if haskey(c.vectors, key)
     c.centroid -= c.vectors[key]

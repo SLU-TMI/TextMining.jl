@@ -31,7 +31,7 @@ function kmeans(clust::Dict, k=1, dist_func=cos_similarity, max_iter=10000)
 		cents_to_be_found -= 1
 	end
 
-	# make Array of clusters
+	# make Array of k clusters
 	new_clusters = vcat()
 	for centroid in centroids
 		new_clusters = vcat(new_clusters, Cluster())
@@ -40,7 +40,7 @@ function kmeans(clust::Dict, k=1, dist_func=cos_similarity, max_iter=10000)
 	# find distance between fv and centroid
 	iteration = 1
 	no_change = false
-	while (!no_change) && (iteration < max_iter)
+	while !no_change && iteration < max_iter
 		i = 1
 		for fv in features
 			dist = Inf
@@ -64,9 +64,7 @@ function kmeans(clust::Dict, k=1, dist_func=cos_similarity, max_iter=10000)
 		for cluster in new_clusters
 			new_cent = centroid(cluster)
 			new_centroids = vcat(new_centroids, new_cent)
-		end
-		# set the new centroids
-		centroids = new_centroids
+		end		
 
 		# checking if centroids moved.
 		no_change = true
@@ -75,13 +73,14 @@ function kmeans(clust::Dict, k=1, dist_func=cos_similarity, max_iter=10000)
 			dist = dist_func(centroid,new_centroids[i])
 			if dist > .000001
 				no_change = false
+				centroids = new_centroids
 				break
 			end
 			i += 1
 		end
 
 		# reset clusters if there are no changes.
-		if (!no_change)
+		if !no_change
 			new_clusters = vcat()
 			for centroid in centroids
 				new_clusters = vcat(new_clusters, Cluster())
