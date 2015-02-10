@@ -4,13 +4,8 @@
 function hclust(data, dist)
 end
 
-#TODO
-# function kmeans(k::Integer, clust::Dict) = kmeans(k,clust,cos_simularity,10000)
-# function kmeans(k::Integer, clust::Dict, max_iter::Integer) = kmeans(k,clust,cos_simularity,max_iter)
-# function kmeans(k::Integer, clust::Dict, dist_func::Function) = kmeans(k,clust,dist_func,10000)
-
 function kmeans(clust::Dict, k=1, dist_func=cos_similarity, max_iter=10000)
-	# find initial centroids
+	# find initial k centroids
 	rand_num = (abs(rand(Int64)%Base.length(clust)) + 1)
 	features = Base.values(clust)
 	orig_cent = collect(features)[rand_num]
