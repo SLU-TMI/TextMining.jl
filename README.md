@@ -31,39 +31,55 @@ Pkg.add("LightXML")
 
 
 
-### Text Processing
+<div align="center">
+<a href="http://julialang.org/" target="_blank">
+<img src="http://julialang.org/images/logo_hires.png" alt="Julia Logo" width="105" height="71"></img>
+</a>
+</div>
 
-#### Processing XML Files
+These tools are being developed in **Julia** with the goal of making them fast, generic, and easily usable in Julia's REPL. The tools can be broken down into the following catagories.
 
+### * Vector Space Model
+
+These tools will utilize the [bag-of-words model](http://en.wikipedia.org/wiki/Bag-of-words_model) and the [hashing trick](http://en.wikipedia.org/wiki/Feature_hashing) to vectorize texts into [feature vectors](http://en.wikipedia.org/wiki/Feature_vector). 
+
+##### Feature Vectors
+
+The **FeatureVector** type is a wrapper around a **Dictionary (hashtable)** that restricts **key => value** mappings to **Any => Number** types and subtypes.
+
+An empty *FeatureVector* can be constructed as so:
+```julia
+fv = FeatureVector()
+```
+
+A *FeatureVector* can also be constructed using an existing *Dictionary*: 
+```julia
+d = Dict(["my"=>2, "example"=>4])
+fv = FeatureVector(d)
+```
+
+##### Clusters
+
+##### DataSet
 ---
-### Vector Space Model
+### * Text Processing
 
-
-
-#### Feature Vectors
-
-#### Clusters
-
-#### DataSet
+##### Processing XML Files
 ---
-### Clustering
+### * Clustering
 
+##### Hierarchical Clustering
 
-
-#### Hierarchical Clustering
-
-#### K-Means Clustering
+##### K-Means Clustering
 ---
-### Classification
+### * Classification
 
-
-#### Naive Bayes
+##### Naive Bayes
 ---
 ## Examples
 
 
 
-
 The following examples show how you may use this package to accomplish common tasks.
 
-#### Read an XML file
+### * Read an XML file
