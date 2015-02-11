@@ -6,13 +6,13 @@
 
 </div>
 
-## SLU-TextMining.jl
+## SLU - TextMining
 
 
 
 This package is a set of tools being used by **Saint Louis University** to facilitate interdisciplinary research using data mining, machine learning, and natural language processing techniques of how time passage affects language.
 
-### Setup (uncommenced)
+### Setup
 
 Like other Julia packages, you will be able to checkout *SLU-TextMining* from METADATA repo, as
 
@@ -20,7 +20,7 @@ Like other Julia packages, you will be able to checkout *SLU-TextMining* from ME
 Pkg.add("SLU-TextMining")
 ```
 
-**Note:** This package relies on *LightXML.jl* to parse xml files. Please ensure you have installed the *LightXML.jl* package
+**Note:** This package relies on [LightXML.jl](https://github.com/JuliaLang/LightXML.jl) to parse xml files. Please ensure you have installed the *LightXML.jl* package
 
 ```julia
 Pkg.add("LightXML")
@@ -61,28 +61,45 @@ fv = FeatureVector(d)
 
 #### Clusters (testing)
 
+The **Cluster** type is also a wrapper around a **Dictionary**. However, it restricts mappings to **Any => FeatureVector** types and subtypes. This allows users to meaningfully label groups of *FeatureVectors* for Classification. The *Cluster* type also computes the centroid of the set.
+
+An empty *Cluster* can be constructed as so:
+```julia
+cl = Cluster()
+```
+
 #### DataSet (developing)
 
+The **DataSet** type is also a wrapper around a **Dictionary**. However, it restricts mappings to **Any => Cluster** types and subtypes.
+
+An empty *DataSet* can be constructed as so:
+```julia
+ds = DataSet()
+```
+
 #### Distribution (developing)
+
+The **Distribution** type is an immutable **FeatureVector** which ensures the [axioms of probability](http://en.wikipedia.org/wiki/Probability_axioms).
+
+An empty *Distribution* can be constructed as so:
+```julia
+ds = Distribution()
+```
+
 ---
 2. Text Processing (uncommenced)
 ------
+
 #### Processing XML Files (uncommenced)
 ---
 3. Clustering (developing)
 ------
+
 #### Hierarchical Clustering (developing)
 
 #### K-Means Clustering (developing)
 ---
 4. Classification (uncommenced)
 ------
+
 #### Naive Bayes (uncommenced)
----
-## Examples
-
-
-
-The following examples show how you may use this package to accomplish common tasks.
-
-### Read an XML file
