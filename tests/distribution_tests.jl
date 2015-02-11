@@ -39,51 +39,12 @@ facts("Get probability of seeing key in Distribution") do
 	@fact value => 4/7
 end
 
-facts("Set a value given key") do
-	dict1 = ["word" => 4, "another" => 3]
-	fv1 = FeatureVector(dict1)
-	d1 = Distribution(fv1)
-
-	d1["word"] = 7
-
-	@fact d1.fv["word"] => 7
-end
-
-facts("Modifying FeatureVector of Distribution does not modify original FeatureVector") do
-	dict1 = ["word" => 4, "another" => 3]
-	fv1 = FeatureVector(dict1)
-	d1 = Distribution(fv1)
-
-	d1["word"] = 7
-
-	@fact d1.fv["word"] => 7
-	@fact fv1["word"] => 4
-end
-
-facts("Set a value will change Distribution.total") do
-	dict1 = ["word" => 4, "another" => 3]
-	fv1 = FeatureVector(dict1)
-	d1 = Distribution(fv1)
-
-	@fact d1.total => 7
-	d1["word"] = 7
-	@fact d1.total => 10
-end
-
 facts("Get keys of Distribution") do
 	dict1 = ["word" => 4, "another" => 3]
 	fv1 = FeatureVector(dict1)
 	d1 = Distribution(fv1)
 
 	@fact keys(d1) => Base.keys(d1.fv.map)
-end
-
-facts("Get values of Distribution") do
-	dict1 = ["word" => 4, "another" => 3]
-	fv1 = FeatureVector(dict1)
-	d1 = Distribution(fv1)
-
-	@fact values(d1) => Base.values(d1.fv.map)
 end
 
 facts("Check isempty on a Distribution") do
