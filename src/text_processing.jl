@@ -6,7 +6,7 @@ punctuation = ['!','"','#','$','%','&','\'','(',')','*','+',',',
 
 function clean(string)
 	string = Base.lowercase(string)
-	sarray = Base.split(string)
+	sarray = convert(Array{typeof(string)}, Base.split(string))
 	x = 1 
 	while x <= length(sarray)
 		sarray[x] = Base.strip(sarray[x], punctuation)

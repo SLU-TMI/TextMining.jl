@@ -8,7 +8,7 @@ function kmeans(clust::Dict, k=1, dist_func=cos_similarity, max_iter=10000)
 	# find initial k centroids
 	rand_num = (abs(rand(Int64)%Base.length(clust)) + 1)
 	features = Base.values(clust)
-	orig_cent = collect(features)[rand_num]
+	orig_cent = clust[rand_num]
 	centroids = vcat(orig_cent)
 	cents_to_be_found = k-1
 	while cents_to_be_found > 0
@@ -88,7 +88,6 @@ function kmeans(clust::Dict, k=1, dist_func=cos_similarity, max_iter=10000)
 		end
 		iteration += 1
 	end
-
 
 	return new_clusters
 end 
