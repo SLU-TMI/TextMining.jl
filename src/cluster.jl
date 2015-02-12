@@ -11,7 +11,7 @@ end
 
 # maps a [key] to a FeatureVector [fv] 
 function setindex!(c::Cluster, fv::FeatureVector, key)
-  if haskey(c.vectors, key)
+  if Base.haskey(c.vectors, key)
     c.vector_sum -= c.vectors[key]
   end
   c.vector_sum += fv
