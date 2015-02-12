@@ -24,7 +24,10 @@ end
 
 # gets value of [key] in a FeatureVector
 function getindex(fv::FeatureVector, key)
-  return fv.map[key]
+  if haskey(fv.map,key)
+    return fv.map[key]
+  end
+  return 0
 end
 
 # sets value of [key] in a FeatureVector. Must be subtype of number/dict type
@@ -147,9 +150,7 @@ function cos_similarity(fv1::FeatureVector, fv2::FeatureVector)
     for key in fv1_keys
         fv1_value = fv1[key]
         fv1_magnitude += fv1_value*fv1_value
-        if key in fv2_keys
-            dot_product += fv1_value*fv2[key]
-        end
+        dot_product += fv1_value*fv2[key]
     end
 
     for key in fv2_keys
