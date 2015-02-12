@@ -1,6 +1,6 @@
 type Cluster
     vectors::Dict{Any, FeatureVector}
-    centroid::FeatureVector
+    vector_sum::FeatureVector
     Cluster() = new(Dict{Any,FeatureVector}(),FeatureVector())
 end
 
@@ -11,10 +11,10 @@ end
 
 # maps a [key] to a FeatureVector [fv] 
 function setindex!(c::Cluster, fv::FeatureVector, key)
-  if haskey(c.vectors, key)
-    c.centroid -= c.vectors[key]
+  if Base.haskey(c.vectors, key)
+    c.vector_sum -= c.vectors[key]
   end
-  c.centroid += fv
+  c.vector_sum += fv
   c.vectors[key] = fv
 end
 
@@ -24,16 +24,21 @@ function keys(c::Cluster)
 end
 
 # returns all FeaturVectors in the cluster
-function values(fv::FeatureVector)
-  return Base.values(fv.map)
+function values(c::Cluster)
+  return Base.values(c.vectors)
 end
 
 # check to see if the Cluster is empty.
-function isempty(fv::FeatureVector)
-    return Base.isempty(fv.map)
+function isempty(c::Cluster)
+    return Base.isempty(c.vectors)
 end
 
 # returns cluster centroid
 function centroid(c::Cluster)
-  return c.centroid/length(c.vectors)
+  return c.vector_sum/length(c.vectors)
+end
+
+# returns the distance between the centroids of the provided clusters
+function distance(c1::Cluster, c2::Cluster, dist::Function = cos_similarity)
+    return dist(centroid(c1),centroid(c2))
 end
