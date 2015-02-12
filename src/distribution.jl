@@ -39,3 +39,7 @@ end
 function info_gain(d1::Distribution, d2::Distribution)
   return abs(entropy(d1)-entropy(d2))
 end
+
+function perplexity(d::Distribution)
+  return 2^entropy(d)
+end
