@@ -4,8 +4,8 @@ include("../src/cluster.jl")
 include("../src/clustering.jl")
 
 function run_tests()
-  reload("../tests/feature_vector_tests.jl")
-  reload("../tests/distribution_tests.jl")
-  reload("../tests/cluster_tests.jl")
-  reload("../tests/clustering_tests.jl")
+  reload("./test/feature_vector_tests.jl")
+  reload("./test/distribution_tests.jl")
+  reload("./test/cluster_tests.jl")
+  reload("./test/clustering_tests.jl")
 end

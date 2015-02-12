@@ -185,8 +185,8 @@ facts("Find cos_dist between two FeatureVectors") do
  	fv4 = FeatureVector(Dict(["x"=>1.0, "y"=>sqrt(3)]))
 	
 	@fact cos_dist(fv3,fv3) => 0
-	@fact cos_dist(fw,fv3) => 1
-	@fact 1 - cos(90*pi/180) - 1e-15 <= cos_dist(fv,fv1) <= 1 - cos(90*pi/180) + 1e-15 => true
+	@fact isnan(cos_dist(fw,fv3)) => true
+	@fact isnan(cos_dist(fv,fv1)) => true
  	@fact 1 - cos(90*pi/180) - 1e-15 <= cos_dist(fv1,fv2) <= 1 - cos(90*pi/180) + 1e-15 => true
  	@fact 1 - cos(45*pi/180) - 1e-15 <= cos_dist(fv2,fv3) <= 1 - cos(45*pi/180) + 1e-15 => true
  	@fact 1 - cos(45*pi/180) - 1e-15 <= cos_dist(fv1,fv3) <= 1 - cos(45*pi/180) + 1e-15 => true
