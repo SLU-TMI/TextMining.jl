@@ -188,6 +188,7 @@ function cos_dist(fv1::FeatureVector, fv2::FeatureVector)
 end
 
 # number of disjoint nonzero dimensions between vectors
+# tabor distance
 function zero_dist(fv1::FeatureVector, fv2::FeatureVector)
   fv1_keys = keys(fv1)
   fv2_keys = keys(fv2)
@@ -206,6 +207,37 @@ function zero_dist(fv1::FeatureVector, fv2::FeatureVector)
   end
 
   return distance
+end
+
+# TEST charlie distance
+# tabor distance divided by number of dimensions
+function weighted_zero_dist(fv1::FeatureVector, fv2::FeatureVector)
+  fv1_keys = keys(fv1)
+  fv2_keys = keys(fv2)
+  d1 = 0
+  d2 = 0
+  l1 = 0
+  l2 = 0
+
+  for key in fv1_keys
+    if fv1[key] != 0 
+      l1 += 1
+      if fv2[key] == 0
+	d1 += 1
+      end
+    end
+  end
+
+  for key in fv2_keys
+    if fv2[key] != 0 
+      l2 += 1
+      if fv1[key] == 0 
+	d2 += 1
+      end
+    end
+  end
+
+  return d1/l1 + d2/l2
 end
 
 # sum of absolute distance between dimensions
