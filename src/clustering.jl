@@ -4,6 +4,8 @@
 function hclust(data, dist)
 end
 
+# make function iterable
+# change vcat() calls
 function kmeans(clust::Dict, k=1, dist_func=cos_similarity, max_iter=10000)
 	# find initial k centroids
 	rand_num = (abs(rand(Int64)%Base.length(clust)) + 1)

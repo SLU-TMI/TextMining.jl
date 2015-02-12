@@ -166,14 +166,27 @@ facts("Rationalize a FeatureVector by a scalar") do
 	@fact fv2 => fv3
 end
 
-#=
+
 facts("Find cos_similarity distance between two FeatureVectors") do
+ 	fv1 = FeatureVector(Dict(["x"=>1, "y"=>0]))
+ 	fv2 = FeatureVector(Dict(["x"=>0, "y"=>1]))
+ 	fv3 = FeatureVector(Dict(["x"=>1, "y"=>1]))
+ 	fv4 = FeatureVector(Dict(["x"=>1.0, "y"=>sqrt(3)]))
+
+ 	@fact 1 - cos(90*pi/180) - 1e-15 <= cos_similarity(fv1,fv2) <= 1 - cos(90*pi/180) + 1e-15 => true
+ 	@fact 1 - cos(45*pi/180) - 1e-15 <= cos_similarity(fv2,fv3) <= 1 - cos(45*pi/180) + 1e-15 => true
+ 	@fact 1 - cos(45*pi/180) - 1e-15 <= cos_similarity(fv1,fv3) <= 1 - cos(45*pi/180) + 1e-15 => true
+ 	@fact 1 - cos(60*pi/180) - 1e-15 <= cos_similarity(fv1,fv4) <= 1 - cos(60*pi/180) + 1e-15 => true
+ 	@fact 1 - cos(30*pi/180) - 1e-15 <= cos_similarity(fv2,fv4) <= 1 - cos(30*pi/180) + 1e-15 => true
+ 	@fact 1 - cos(0*pi/180) - 1e-15 <= cos_similarity(fv1,fv1) <= 1 - cos(0*pi/180) + 1e-15 => true
 end
 
+#=
 facts("Find zero distance between two FeatureVectors") do
 end
 
 facts("Find manhattan distance between two FeatureVectors") do
+
 end
 
 facts("Find euclidean distance between two FeatureVectors") do
