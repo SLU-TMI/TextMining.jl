@@ -6,7 +6,9 @@
 
 </div>
 
-## SLU - TextMining
+[![Build Status](https://travis-ci.org/mtabor150/SLU-TextMining.svg)](https://travis-ci.org/mtabor150/SLU-TextMining)
+
+## SLU - TextMining 
 
 
 
@@ -20,7 +22,7 @@ Like other Julia packages, you will be able to checkout *SLU-TextMining* from ME
 Pkg.add("SLU-TextMining")
 ```
 
-**Note:** This package relies on [LightXML.jl](https://github.com/JuliaLang/LightXML.jl) to parse xml files. Please ensure you have installed the *LightXML.jl* package
+**Note:** This package relies on [LightXML.jl](https://github.com/JuliaLang/LightXML.jl) to parse xml files. Please ensure you have installed the LightXML.jl package
 
 ```julia
 Pkg.add("LightXML")
