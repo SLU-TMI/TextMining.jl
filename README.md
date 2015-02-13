@@ -29,7 +29,7 @@ Pkg.add("LightXML")
 ```
 
 ---
-## Code Base (unfinished)
+## Code Base
 
 
 
@@ -78,6 +78,16 @@ An empty *DataSet* can be constructed as so:
 ```julia
 ds = DataSet()
 ```
+---
+2. Clustering (developing)
+------
+
+#### Hierarchical Clustering (developing)
+
+#### K-Means Clustering (developing)
+---
+3. Classification (developing)
+------
 
 #### Distribution (developing)
 
@@ -88,20 +98,10 @@ An empty *Distribution* can be constructed as so:
 ds = Distribution()
 ```
 
+#### Naive Bayes (uncommenced)
 ---
-2. Text Processing (uncommenced)
+4. Text Processing (uncommenced)
 ------
 
 #### Processing XML Files (uncommenced)
 ---
-3. Clustering (developing)
-------
-
-#### Hierarchical Clustering (developing)
-
-#### K-Means Clustering (developing)
----
-4. Classification (uncommenced)
-------
-
-#### Naive Bayes (uncommenced)
