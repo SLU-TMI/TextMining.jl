@@ -8,7 +8,7 @@
 
 [![Build Status](https://travis-ci.org/mtabor150/SLU-TextMining.svg)](https://travis-ci.org/mtabor150/SLU-TextMining)
 
-## SLU - TextMining 
+## TextMining.jl 
 
 
 
