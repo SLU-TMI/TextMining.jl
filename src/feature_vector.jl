@@ -1,4 +1,5 @@
 import Base.isempty
+import Base.copy
 
 #= 
 # Type definition for a FeatureVector.

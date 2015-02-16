@@ -4,13 +4,21 @@
 function hclust(data, dist)
 end
 
-# make function iterable
-# change vcat() calls
-function kmeans(clust::Dict, k=1, dist_func=cos_similarity, max_iter=10000)
-	# find initial k centroids
-	rand_num = (abs(rand(Int64)%Base.length(clust)) + 1)
-	features = Base.values(clust)
-	orig_cent = clust[rand_num]
+
+function random_init(features,k)
+	features = shuffle!(features)
+	centroids = Array(FeatureVector,k)
+	while k > 0
+		centroids[k] = features[k]
+		k-=1
+	end
+	return centroids
+end
+random_init(features,k,dist_func) = random_init(features,k)
+
+function max_min_init(features,k,dist_func)
+	rand_num = (abs(rand(Int64)%Base.length(features)) + 1)
+	orig_cent = features[rand_num]
 	centroids = vcat(orig_cent)
 	cents_to_be_found = k-1
 	while cents_to_be_found > 0
@@ -32,6 +40,13 @@ function kmeans(clust::Dict, k=1, dist_func=cos_similarity, max_iter=10000)
 		centroids = vcat(centroids,next_cent)
 		cents_to_be_found -= 1
 	end
+	return centroids
+end
+
+function kmeans(clust::Dict, k=1, init_cent_func=max_min_init, dist_func=cos_dist, max_iter=10000)
+	# find initial k centroids
+	features = collect(Base.values(clust))
+	centroids = init_cent_func(features,k,dist_func)
 
 	# make Array of k clusters
 	new_clusters = vcat()
@@ -93,4 +108,6 @@ function kmeans(clust::Dict, k=1, dist_func=cos_similarity, max_iter=10000)
 
 	return new_clusters
 end 
+
+
 
