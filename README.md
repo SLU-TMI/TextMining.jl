@@ -6,7 +6,7 @@
 
 </div>
 
-[![Build Status](https://travis-ci.org/mtabor150/SLU-TextMining.svg)](https://travis-ci.org/mtabor150/SLU-TextMining)
+[![Build Status](https://travis-ci.org/SLU-TMI/TextMining.jl.svg?branch=master)](https://travis-ci.org/SLU-TMI/TextMining.jl)
 
 ## TextMining.jl 
 
