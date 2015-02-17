@@ -43,3 +43,22 @@ end
 function perplexity(d::Distribution)
   return 2^entropy(d)
 end
+
+#=
+function laplace_smoothing(ds::DataSet)
+  unique_keys = 0
+  total_keys = 0 
+# ADD VECTORS TOGETHER
+  for cluster in ds
+    for fv in ds 
+      if !isempty(fv)
+	for key in keys(fv)
+	  unique_keys += 1 
+	  total_keys += fv[key]
+	end
+      end
+    end
+  end
+  
+end
+=#
