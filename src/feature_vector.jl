@@ -130,6 +130,11 @@ function *(fv::FeatureVector, value)
   return FeatureVector(dict)
 end
 
+# handles commutativity of multiplication
+function *(value, fv::FeatureVector)
+  return fv*value
+end
+
 # divides a FeatureVector by a scalar
 function /(fv::FeatureVector, value)
   if isempty(fv)
