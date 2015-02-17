@@ -58,9 +58,14 @@ facts("Get values of FeatureVector") do
 end
 
 facts("Check isempty on a FeatureVector") do
-	fv1 = FeatureVector()
+  fv1 = FeatureVector()
 
-	@fact isempty(fv1) => Base.isempty(fv1.map)
+  @fact isempty(fv1) => true
+
+  fv1["the"] = 3
+
+  @fact isempty(fv1) => false
+
 end
 
 facts("Make copy of a FeatureVector") do
