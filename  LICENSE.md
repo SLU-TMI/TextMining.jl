@@ -2,7 +2,7 @@ The SLU-TextMining package is licensed under the MIT License:
 
 > Copyright (c) 2015: Mark Tabor and other contributors:
 >
-> https://github.com/mtabor150/SLU-TextMining/contributors
+> https://github.com/SLU-TMI/TextMining.jl/contributors
 >
 > Permission is hereby granted, free of charge, to any person obtaining
 > a copy of this software and associated documentation files (the
