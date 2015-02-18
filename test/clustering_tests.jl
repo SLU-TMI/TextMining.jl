@@ -58,7 +58,7 @@ facts("kmeans returns correct amount of clusters") do
 	b = FeatureVector(Dict(["hello"=>0, "word"=>5]))
 	c = FeatureVector(Dict(["kim"=>4, "julia"=>8]))
 	dict = Dict([1=>a,2=>b,3=>c])
-	clusters = kmeans(dict,3)
+	clusters = kmeans(dict,[],3)
 
 	@fact length(clusters) => 3
 end 
@@ -68,7 +68,7 @@ facts("kmeans returns no empty clusters") do
 	b = FeatureVector(Dict(["hello"=>0, "word"=>5]))
 	c = FeatureVector(Dict(["kim"=>4, "julia"=>8]))
 	dict = Dict([1=>a,2=>b,3=>c])
-	clusters = kmeans(dict,3)
+	clusters = kmeans(dict,[],3)
 
 	for cluster in clusters
 		@fact cluster.vectors != Cluster().vectors => true
@@ -87,7 +87,7 @@ facts("kmeans returns the correct clustering of features") do
 	bbb = FeatureVector(Dict(["part"=>3, "science"=>1]))
 	ccc = FeatureVector(Dict(["kim"=>15, "julia"=>12]))
 	dict = Dict([1=>a,2=>b,3=>c,4=>aa,5=>bb,6=>cc,7=>aaa,8=>bbb,9=>ccc])
-	clusters = kmeans(dict,3)
+	clusters = kmeans(dict,[],3)
 
 	# what the clusters should be
 	clust1_values = [a,aa,aaa]
@@ -104,6 +104,38 @@ facts("kmeans returns the correct clustering of features") do
 	end
 end 
 
+
+facts("kmeans lets you put in array of pre-defined centroids") do
+	a = FeatureVector(Dict(["hello"=>4, "word"=>3]))
+	b = FeatureVector(Dict(["part"=>3, "science"=>5]))
+	c = FeatureVector(Dict(["kim"=>4, "julia"=>8]))
+	aa = FeatureVector(Dict(["hello"=>7, "word"=>5]))
+	bb = FeatureVector(Dict(["part"=>8, "science"=>9]))
+	cc = FeatureVector(Dict(["kim"=>2, "julia"=>3]))
+	aaa = FeatureVector(Dict(["hello"=>1, "word"=>3]))
+	bbb = FeatureVector(Dict(["part"=>3, "science"=>1]))
+	ccc = FeatureVector(Dict(["kim"=>15, "julia"=>12]))
+	dict = Dict([1=>a,2=>b,3=>c,4=>aa,5=>bb,6=>cc,7=>aaa,8=>bbb,9=>ccc])
+	array = [a,b,c]
+	clusters = kmeans(dict,array)
+
+	# what the clusters should be
+	clust1_values = [a,aa,aaa]
+	clust2_values = [b,bb,bbb]
+	clust3_values = [c,cc,ccc]
+	array = [clust1_values,clust2_values,clust3_values]
+
+	# getting each cluster's FVs and making sure they are all there.
+	for cluster in clusters
+		fvs = collect(Base.values(cluster.vectors))
+		for value in fvs
+			@fact value in array => true
+		end
+	end
+
+
+
+end 
 
 
 

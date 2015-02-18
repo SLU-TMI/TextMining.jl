@@ -43,13 +43,23 @@ function max_min_init(features,k,dist_func)
 	return centroids
 end
 
-function kmeans(clust::Dict, k=1, init_cent_func=max_min_init, dist_func=cos_dist, max_iter=10000)
+function kmeans(clust::Dict, cents::Array=[], k=1, init_cent_func=max_min_init, dist_func=cos_dist, max_iter=10000)
 	# find initial k centroids
 	features = collect(Base.values(clust))
-	centroids = init_cent_func(features,k,dist_func)
+	# check if user sent in own array of centroids
+	if Base.length(cents) == 0
+		centroids = init_cent_func(features,k,dist_func)
+	else
+		centroids = cents
+		length_array = length(centroids)
+		if k > length_array
+			Base.warn("The k($k) you entered is bigger than the amount of centroids in the array, reverting k to $length_array")
+		end
+	end
+	
 
 	# make Array of k clusters
-	new_clusters = vcat()
+	new_clusters = []
 	for centroid in centroids
 		new_clusters = vcat(new_clusters, Cluster())
 	end
@@ -75,9 +85,9 @@ function kmeans(clust::Dict, k=1, init_cent_func=max_min_init, dist_func=cos_dis
 			i += 1
 		end
 
-		# recompute new clusters
+		# recompute new centroids
 		old_centroids = centroids
-		new_centroids = vcat()
+		new_centroids = []
 		for cluster in new_clusters
 			new_cent = centroid(cluster)
 			new_centroids = vcat(new_centroids, new_cent)
@@ -98,7 +108,7 @@ function kmeans(clust::Dict, k=1, init_cent_func=max_min_init, dist_func=cos_dis
 
 		# reset clusters if there are no changes.
 		if !no_change
-			new_clusters = vcat()
+			new_clusters = []
 			for centroid in centroids
 				new_clusters = vcat(new_clusters, Cluster())
 			end
@@ -108,6 +118,10 @@ function kmeans(clust::Dict, k=1, init_cent_func=max_min_init, dist_func=cos_dis
 
 	return new_clusters
 end 
+kmeans(clust::Dict, k, init_cent_func, dist_func) = kmeans(clust,[],k,init_cent_func,dist_func)
+kmeans(clust::Dict, k, dist_func) = kmeans(clust,[],k,dist_func)
+kmeans(clust::Dict, k, init_cent_func) = kmeans(clust,[],k,init_cent_func)
+kmeans(clust::Dict, k) = kmeans(clust,[],k)
 
 
 
