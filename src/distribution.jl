@@ -17,8 +17,6 @@ Distribution() = Distribution{Any,Number}()
 Distribution{K,V}(fv::FeatureVector{K,V}) = Distribution{K,V}(copy(fv))
 
 function getindex(d::Distribution, key)
-  # if d.fv[key] == 0
-    # then smoothing? 
   return d.fv[key]/d.total
 end
 
@@ -45,21 +43,3 @@ end
 function perplexity(d::Distribution)
   return 2^entropy(d)
 end
-
-#=
-function laplace_smoothing(ds::DataSet)
-  unique_keys = 0
-  total_keys = 0
-  ds_fv = FeatureVector()
-  for cluster in ds
-    if !isempty(cluster)
-      ds_fv += cluster.vector_sum
-    end 
-  end
-  for key in keys(ds_fv.vector_sum)
-    unique_keys += 1
-    total_keys += ds_fv[key]
-  end
-  
-end
-=#
