@@ -1,9 +1,6 @@
+using FactCheck
+
 include("../src/TextMining.jl")
-include("../src/feature_vector.jl")
-include("../src/cluster.jl")
-include("../src/data_set.jl")
-include("../src/clustering.jl")
-include("../src/distribution.jl")
 
 function run_tests()
   reload("./test/feature_vector_tests.jl")

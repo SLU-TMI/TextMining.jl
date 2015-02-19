@@ -32,7 +32,7 @@ function load_dir(files)
 
   for file in files
     files[x] = parse_xml(file)
-     x+=1
+    x+=1
   end
 
   return files

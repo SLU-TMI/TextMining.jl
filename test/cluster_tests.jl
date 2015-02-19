@@ -1,8 +1,3 @@
-using FactCheck
-
-
-export Cluster
-
 println("**********Testing Cluster**********")
 
 facts("Creating a Cluster") do
@@ -33,5 +28,4 @@ facts("Getting Keys and Values") do
  
   @fact [key for key in  keys(cl1)] => ["fv1","fv2"]
   @fact [value for value in  values(cl1)] => [fv1, fv2]
-  
 end

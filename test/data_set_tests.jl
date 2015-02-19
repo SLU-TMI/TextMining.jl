@@ -1,8 +1,3 @@
-using FactCheck
-
-
-export DataSet
-
 println("**********Testing DataSet**********")
 
 facts("Creating a DataSet") do
@@ -36,7 +31,6 @@ facts("Indexing a DataSet") do
   @fact ds["cl1"] => cl1
   @fact ds["cl2"] => cl2
   @fact ds["cl3"] => cl3
- 
 end
 
 facts("Getting Keys and Values") do
@@ -78,6 +72,4 @@ facts("Getting Keys and Values") do
   @fact cl2 in v => true
   @fact cl3 in v => true
   @fact cl4 in v => false
-
-  
 end 
