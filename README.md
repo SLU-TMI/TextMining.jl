@@ -16,13 +16,13 @@ This package is a set of tools being used by **Saint Louis University** to facil
 
 ### Setup
 
-Like other Julia packages, you will be able to checkout *SLU-TextMining* from METADATA repo, as
+Like other Julia packages, you will be able to checkout *TextMining* from METADATA repo, as
 
 ```julia
 Pkg.add("TextMining")
 ```
 
-**Note:** This package relies on [LightXML.jl](https://github.com/JuliaLang/LightXML.jl) to parse xml files. Please ensure you have installed the LightXML.jl package
+**Note:** This package relies on [LightXML.jl](https://github.com/JuliaLang/LightXML.jl) to parse xml files. Please ensure you have installed the *LightXML* package
 
 ```julia
 Pkg.add("LightXML")
@@ -91,7 +91,7 @@ ds = DataSet()
 
 #### Distribution (developing)
 
-The **Distribution** type is an immutable **FeatureVector** which ensures the [axioms of probability](http://en.wikipedia.org/wiki/Probability_axioms).
+The **Distribution** type is a container which ensures the [axioms of probability](http://en.wikipedia.org/wiki/Probability_axioms).
 
 An empty *Distribution* can be constructed as so:
 ```julia

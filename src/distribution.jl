@@ -1,19 +1,16 @@
-import Base.isempty
-import TextMining: FeatureSpace
-
 type Distribution{FS<:FeatureSpace}
-    space::FS
-    unique_keys::Integer
-    total::Number
-    Distribution() = new(FS(),0,0)
-    Distribution(fv::FeatureVector) = new(fv,length(fv),get_total(fv))
-    function get_total(fv::FeatureVector)
-    	total = 0
-    	for value in values(fv)
-    		total += value
-    	end
-    	return total
+  space::FS
+  unique_keys::Integer
+  total::Number
+  Distribution() = new(FS(),0,0)
+  Distribution(fv::FeatureVector) = new(fv,length(fv),get_total(fv))
+  function get_total(fv::FeatureVector)
+    total = 0
+    for value in values(fv)
+      total += value
     end
+    return total
+  end
 end
 Distribution(fv::FeatureVector) = Distribution{FeatureVector}(fv)
 Distribution(c::Cluster) = Distribution{Cluster}(c)
@@ -68,7 +65,7 @@ function laplace_smoothed_prob(ds::Distribution, target)
 end
 
 
-#add-1 smoothing that returns a giant feature vector of the data set with new counts
+# add-1 smoothing that returns a giant feature vector of the data set with new counts
 function laplace_smoothing(ds::Distribution)
   unique_keys = 0
   total_keys = 0
@@ -88,4 +85,3 @@ function laplace_smoothing(ds::Distribution)
   end 
   return ds_fv
 end
-

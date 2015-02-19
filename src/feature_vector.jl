@@ -1,6 +1,3 @@
-import Base: copy, isempty
-import TextMining: FeatureSpace
-
 #= 
 # Type definition for a FeatureVector.
 # Wrapper around a Dict type.

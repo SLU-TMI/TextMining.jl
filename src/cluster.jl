@@ -1,10 +1,7 @@
-import Base.isempty
-import TextMining: FeatureSpace
-
 type Cluster <: FeatureSpace
-    vectors::Dict{Any, FeatureVector}
-    vector_sum::FeatureVector
-    Cluster() = new(Dict{Any,FeatureVector}(),FeatureVector())
+  vectors::Dict{Any, FeatureVector}
+  vector_sum::FeatureVector
+  Cluster() = new(Dict{Any,FeatureVector}(),FeatureVector())
 end
 
 # returns FeatureVector indexed by [key]
@@ -33,7 +30,7 @@ end
 
 # check to see if the Cluster is empty.
 function isempty(c::Cluster)
-    return Base.isempty(c.vectors)
+  return Base.isempty(c.vectors)
 end
 
 # returns cluster centroid
@@ -42,6 +39,6 @@ function centroid(c::Cluster)
 end
 
 # returns the distance between the centroids of the provided clusters
-function distance(c1::Cluster, c2::Cluster, dist::Function = cos_similarity)
-    return dist(centroid(c1),centroid(c2))
+function distance(c1::Cluster, c2::Cluster, dist::Function = cos_dist)
+  return dist(centroid(c1),centroid(c2))
 end
