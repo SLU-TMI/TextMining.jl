@@ -1,4 +1,7 @@
-type Cluster
+import Base.isempty
+import TextMining: FeatureSpace
+
+type Cluster <: FeatureSpace
     vectors::Dict{Any, FeatureVector}
     vector_sum::FeatureVector
     Cluster() = new(Dict{Any,FeatureVector}(),FeatureVector())
@@ -35,7 +38,7 @@ end
 
 # returns cluster centroid
 function centroid(c::Cluster)
-  return c.vector_sum/length(c.vectors)
+  return c.vector_sum/Base.length(c.vectors)
 end
 
 # returns the distance between the centroids of the provided clusters

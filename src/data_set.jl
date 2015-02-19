@@ -1,4 +1,7 @@
-type DataSet
+import Base.isempty
+import TextMining: FeatureSpace
+
+type DataSet <: FeatureSpace
     clusters::Dict{Any, Cluster}
     DataSet() = new(Dict{Any,Cluster}())
 end

@@ -51,7 +51,7 @@ function kmeans(clust::Dict, cents::Array=[], k=1, init_cent_func=max_min_init, 
 		centroids = init_cent_func(features,k,dist_func)
 	else
 		centroids = cents
-		length_array = length(centroids)
+		length_array = Base.length(centroids)
 		if k > length_array
 			Base.warn("The k($k) you entered is bigger than the amount of centroids in the array, reverting k to $length_array")
 		end

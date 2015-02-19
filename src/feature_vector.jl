@@ -1,5 +1,5 @@
-import Base.isempty
-import Base.copy
+import Base: copy, isempty
+import TextMining: FeatureSpace
 
 #= 
 # Type definition for a FeatureVector.
@@ -7,7 +7,7 @@ import Base.copy
 # Restricted to Any type [key] => [value] of Number type.
 =#
  
-type FeatureVector{K,V<:Number}
+type FeatureVector{K,V<:Number} <: FeatureSpace
   map::Dict{K,V}
   FeatureVector() = new(Dict{K,V}())
   FeatureVector{K,V}(map::Dict{K,V}) = new(map)
@@ -36,7 +36,11 @@ end
 
 # sets value of [key] in a FeatureVector. Must be subtype of number/dict type
 function setindex!(fv::FeatureVector, value, key)
-  fv.map[key] = value
+  if value == 0
+    Base.delete!(fv.map, key)
+  else
+    fv.map[key] = value
+  end
 end
 
 # check to see if the FeatureVector has key.
@@ -57,6 +61,11 @@ end
 # check to see if the FeatureVector is empty.
 function isempty(fv::FeatureVector)
   return Base.isempty(fv.map)
+end
+
+# returns length of FeatureVector
+function length(fv::FeatureVector)
+  return Base.length(fv.map)
 end
 
 # finds common type of two FeatureVectors 
@@ -114,7 +123,7 @@ function -(fv1::FeatureVector, fv2::FeatureVector)
 end
 
 # multiplies a FeatureVector by a scalar
-function *(fv::FeatureVector, value)
+function *(fv::FeatureVector, value::Number)
   if isempty(fv)
     return fv
   end
@@ -131,12 +140,12 @@ function *(fv::FeatureVector, value)
 end
 
 # handles commutativity of multiplication
-function *(value, fv::FeatureVector)
+function *(value::Number, fv::FeatureVector)
   return fv*value
 end
 
 # divides a FeatureVector by a scalar
-function /(fv::FeatureVector, value)
+function /(fv::FeatureVector, value::Number)
   if isempty(fv)
     return fv
   end
@@ -152,7 +161,7 @@ function /(fv::FeatureVector, value)
 end
 
 # rationalizes a FeatureVectors values
-function //(fv::FeatureVector, value)
+function //(fv::FeatureVector, value::Integer)
   if isempty(fv)
     return fv
   end
