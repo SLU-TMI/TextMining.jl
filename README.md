@@ -19,7 +19,7 @@ This package is a set of tools being used by **Saint Louis University** to facil
 Like other Julia packages, you will be able to checkout *SLU-TextMining* from METADATA repo, as
 
 ```julia
-Pkg.add("SLU-TextMining")
+Pkg.add("TextMining")
 ```
 
 **Note:** This package relies on [LightXML.jl](https://github.com/JuliaLang/LightXML.jl) to parse xml files. Please ensure you have installed the LightXML.jl package

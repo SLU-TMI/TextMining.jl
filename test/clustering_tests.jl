@@ -16,7 +16,7 @@ facts("Random init provides k initial centroids") do
 	features = collect(Base.values(dict))
 	centroids = random_init(features,2)
 
-	@fact length(centroids) => 2
+	@fact Base.length(centroids) => 2
 	@fact centroids[1] != centroids[2] => true
 end 
 
@@ -31,7 +31,7 @@ facts("Max-min init provides k initial distinct centroids") do
 	features = collect(Base.values(dict))
 	centroids = max_min_init(features,3,cos_dist)
 
-	@fact length(centroids) => 3
+	@fact Base.length(centroids) => 3
 	@fact centroids[1] != centroids[2] => true
 	@fact centroids[1] != centroids[3] => true
 	@fact centroids[2] != centroids[3] => true
@@ -60,7 +60,7 @@ facts("kmeans returns correct amount of clusters") do
 	dict = Dict([1=>a,2=>b,3=>c])
 	clusters = kmeans(dict,[],3)
 
-	@fact length(clusters) => 3
+	@fact Base.length(clusters) => 3
 end 
 
 facts("kmeans returns no empty clusters") do
