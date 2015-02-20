@@ -9,5 +9,3 @@ function run_tests()
   reload("./test/clustering_tests.jl")
   reload("./test/distribution_tests.jl")
 end
-
-run_tests()
