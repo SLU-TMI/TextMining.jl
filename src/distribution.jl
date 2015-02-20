@@ -1,10 +1,10 @@
 type Distribution{FS<:FeatureSpace}
   space::FS
-  unique_keys::Integer
   total::Number
-  unk_key::Number
-  Distribution() = new(FS(),0,0, 0)
-  Distribution(fv::FeatureVector) = new(fv,length(fv),get_total(fv)) 
+  smooth::Function
+  smooth_data::Array
+  Distribution() = new(FS(),0,_no_smoothing,[])
+  Distribution(fv::FeatureVector) = new(fv,get_total(fv),_no_smoothing,[]) 
   function get_total(fv::FeatureVector)
     total = 0
     for value in values(fv)
@@ -18,10 +18,7 @@ Distribution(c::Cluster) = Distribution{Cluster}(c)
 Distribution(ds::DataSet) = Distribution{DataSet}(ds)
 
 function getindex(d::Distribution{FeatureVector}, key)
-  if !haskey(d.space[key])
-    return d.unk_key/d.total
-  end
-  return d.space[key]/d.total
+  return d.smooth(d, key, d.smooth_data)
 end
 
 function keys(d::Distribution)
@@ -48,26 +45,32 @@ function perplexity(d::Distribution)
   return 2^entropy(d)
 end
 
-#add-one smoothing
-function smoothing_add_one(d::Distribution{FeatureVector})
-  d.total = d.total + (d.unique_keys + 1)
-  #standard assumption: +1 to unique_keys to include unknown key in unique_keys
-  d.unk_key += 1
-  for key in keys(d)
-    d[key] += 1
-  end
-  return d
+function set_smooth(d::Distribution{FeatureVector}, f::Function, sd::Array)
+  d.smooth = f
+  d.smooth_data = sd
 end
 
-#add-delta smoothing
-function smoothing_add_delta(d::Distribution{FeatureVector}, δ::Number=0.1)
+#no smoothing default
+function remove_smoothing(d::Distribution)
+  set_smooth(d,_no_smoothing,[])
+end
+
+function _no_smoothing(d::Distribution, key, data::Array)
+  return d.space[key] / d.total
+end
+
+#add-delta smoothing, default to add-one smoothing
+function delta_smoothing(d::Distribution, δ::Number=1)
   if δ <= 0
     Base.warn("δ must be greater than 0") 
   end
-  d.total = d.total + δ*(d.unique_keys + 1)
-  d.unk_key += δ
-  for key in keys(d)
-    d[key] += δ
+  unique = length(d.space)
+  set_smooth(d,_δ_smoothing,[δ,unique,d.total])
+end
+
+function _δ_smoothing(d::Distribution, key, data::Array)
+  if !haskey(d.space, key)
+    return (data[1])/(data[1]*(data[2]+1)+data[3])
   end
-  return d
+  return (d.space[key]+data[1])/(data[1]*(data[2]+1)+data[3])
 end

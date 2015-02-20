@@ -1,7 +1,7 @@
 # module TextMining
 
 import Base: getindex, setindex!, isempty, keys, values,
-             copy, length
+             copy, length, haskey
 
 abstract FeatureSpace
 

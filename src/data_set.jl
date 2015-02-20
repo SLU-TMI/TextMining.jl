@@ -27,3 +27,7 @@ end
 function isempty(ds::DataSet)
   return Base.isempty(ds.clusters)
 end
+
+function haskey(ds::DataSet) 
+  return Base.haskey(ds.clusters)
+end
