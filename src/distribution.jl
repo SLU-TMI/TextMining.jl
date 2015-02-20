@@ -1,9 +1,10 @@
 type Distribution{FS<:FeatureSpace}
   space::FS
-  unique_keys::Integer
   total::Number
-  Distribution() = new(FS(),0,0)
-  Distribution(fv::FeatureVector) = new(fv,length(fv),get_total(fv))
+  smooth::Function
+  smooth_data::Array
+  Distribution() = new(FS(),0,_no_smoothing,[])
+  Distribution(fv::FeatureVector) = new(fv,get_total(fv),_no_smoothing,[]) 
   function get_total(fv::FeatureVector)
     total = 0
     for value in values(fv)
@@ -17,7 +18,7 @@ Distribution(c::Cluster) = Distribution{Cluster}(c)
 Distribution(ds::DataSet) = Distribution{DataSet}(ds)
 
 function getindex(d::Distribution{FeatureVector}, key)
-  return d.space[key]/d.total
+  return d.smooth(d, key, d.smooth_data)
 end
 
 function keys(d::Distribution)
@@ -44,44 +45,32 @@ function perplexity(d::Distribution)
   return 2^entropy(d)
 end
 
-# really slow add-1 unigram smoothed probability for target key 
-function laplace_smoothed_prob(ds::Distribution, target)
-  unique_keys = 0
-  total_keys = 0
-  ds_fv = FeatureVector() #will be feature vector of entire data set
-  for cluster in ds
-    if !isempty(cluster)
-      ds_fv += cluster.vector_sum
-    end
-  end
-  for key in keys(ds_fv)
-    unique_keys += 1
-    total_keys += ds_fv[key]
-  end
-  if !haskey(ds_fv, target)
-    return 1 / (total_keys + unique_keys) 
-  end
-  return (ds_fv[target] + 1) / (total_keys + unique_keys) 
+function set_smooth!(d::Distribution{FeatureVector}, f::Function, sd::Array)
+  d.smooth = f
+  d.smooth_data = sd
 end
 
+#no smoothing default
+function remove_smoothing!(d::Distribution)
+  set_smooth!(d,_no_smoothing,[])
+end
 
-# add-1 smoothing that returns a giant feature vector of the data set with new counts
-function laplace_smoothing(ds::Distribution)
-  unique_keys = 0
-  total_keys = 0
-  ds_fv = FeatureVector() #will be feature vector of entire data set
-  for cluster in ds
-    if !isempty(cluster)
-      ds_fv += cluster.vector_sum
-    end
+function _no_smoothing(d::Distribution, key, data::Array)
+  return d.space[key] / d.total
+end
+
+#add-delta smoothing, default to add-one smoothing
+function delta_smoothing!(d::Distribution, δ::Number=1)
+  if δ <= 0
+    Base.warn("δ must be greater than 0") 
   end
-  for key in keys(ds_fv)
-    unique_keys += 1
-    total_keys += ds_fv[key]
+  unique = length(d.space)
+  set_smooth!(d,_δ_smoothing,[δ,unique,d.total])
+end
+
+function _δ_smoothing(d::Distribution, key, data::Array)
+  if !haskey(d.space, key)
+    return (data[1])/(data[1]*(data[2]+1)+data[3])
   end
-  ds_fv["<UNK>"] = 0       #placeholder for "unknown" key that is not present in data set
-  for key in keys(ds_fv)
-    ds_fv[key] = (ds_fv[key] + 1) * (total_keys / (total_keys + unique_keys))
-  end 
-  return ds_fv
+  return (d.space[key]+data[1])/(data[1]*(data[2]+1)+data[3])
 end

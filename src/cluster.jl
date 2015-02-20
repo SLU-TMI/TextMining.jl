@@ -42,3 +42,7 @@ end
 function distance(c1::Cluster, c2::Cluster, dist::Function = cos_dist)
   return dist(centroid(c1),centroid(c2))
 end
+
+function haskey(c::Cluster) 
+  return Base.haskey(c.vectors)
+end

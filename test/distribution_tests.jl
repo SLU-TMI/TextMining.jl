@@ -81,3 +81,27 @@ facts("info_gain(Distribution,Distribution) returns info_gain of Distribution") 
 
   @fact info_gain(d1,d2) => 0.17395001157511858
 end
+
+facts("Smoothing FeatureVector has correct probabilties before and after") do
+  dict1 = ["word" => 7, "another" => 13]
+  fv1 = FeatureVector(dict1)
+  d1 = Distribution(fv1)
+
+  #no smoothing
+  @fact d1["word"] => (7/20)
+  @fact d1["another"] => (13/20)
+  @fact d1["unk"] => (0/20)
+  
+  #delta smoothing
+  delta_smoothing!(d1)
+  @fact d1["word"] => (8/(3+20))
+  @fact d1["another"] => (14/(3+20))
+  @fact d1["unk"] => (1/(3+20))
+
+  #removing smoothing
+  remove_smoothing!(d1)
+  @fact d1["word"] => (7/20)
+  @fact d1["another"] => (13/20)
+  @fact d1["unk"] => (0/20)
+  
+end
