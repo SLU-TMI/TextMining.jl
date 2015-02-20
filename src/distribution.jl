@@ -45,14 +45,14 @@ function perplexity(d::Distribution)
   return 2^entropy(d)
 end
 
-function set_smooth(d::Distribution{FeatureVector}, f::Function, sd::Array)
+function set_smooth!(d::Distribution{FeatureVector}, f::Function, sd::Array)
   d.smooth = f
   d.smooth_data = sd
 end
 
 #no smoothing default
-function remove_smoothing(d::Distribution)
-  set_smooth(d,_no_smoothing,[])
+function remove_smoothing!(d::Distribution)
+  set_smooth!(d,_no_smoothing,[])
 end
 
 function _no_smoothing(d::Distribution, key, data::Array)
@@ -60,12 +60,12 @@ function _no_smoothing(d::Distribution, key, data::Array)
 end
 
 #add-delta smoothing, default to add-one smoothing
-function delta_smoothing(d::Distribution, δ::Number=1)
+function delta_smoothing!(d::Distribution, δ::Number=1)
   if δ <= 0
     Base.warn("δ must be greater than 0") 
   end
   unique = length(d.space)
-  set_smooth(d,_δ_smoothing,[δ,unique,d.total])
+  set_smooth!(d,_δ_smoothing,[δ,unique,d.total])
 end
 
 function _δ_smoothing(d::Distribution, key, data::Array)

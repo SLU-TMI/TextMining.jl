@@ -93,13 +93,13 @@ facts("Smoothing FeatureVector has correct probabilties before and after") do
   @fact d1["unk"] => (0/20)
   
   #delta smoothing
-  delta_smoothing(d1)
+  delta_smoothing!(d1)
   @fact d1["word"] => (8/(3+20))
   @fact d1["another"] => (14/(3+20))
   @fact d1["unk"] => (1/(3+20))
 
   #removing smoothing
-  remove_smoothing(d1)
+  remove_smoothing!(d1)
   @fact d1["word"] => (7/20)
   @fact d1["another"] => (13/20)
   @fact d1["unk"] => (0/20)
