@@ -101,6 +101,15 @@ function +(fv1::FeatureVector, fv2::FeatureVector)
   return FeatureVector(dict)
 end
 
+# adds two FeatureVectors together
+function add!(fv1::FeatureVector, fv2::FeatureVector)
+  fv2_keys = keys(fv2)
+  
+  for key in fv2_keys
+      fv1[key] += fv2[key]
+  end
+end
+
 # subtracts two FeatureVectors
 function -(fv1::FeatureVector, fv2::FeatureVector)
   dict_type = find_common_type(fv1,fv2)
