@@ -66,6 +66,7 @@ function kmeans(clust::Dict, cents::Array=[], k=1, init_cent_func=max_min_init, 
   iteration = 1
   changed = true
   while changed && iteration < max_iter
+    println(iteration)
     i = 1
     for fv in features
       dist = Inf
