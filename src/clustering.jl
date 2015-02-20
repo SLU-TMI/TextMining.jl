@@ -20,18 +20,18 @@ function max_min_init(features,k,dist_func)
   centroids = vcat(orig_cent)
   cents_to_be_found = k-1
   while cents_to_be_found > 0
-    best_dist = 0
+    max_min_dist = 0
     next_cent = FeatureVector()
     for fv in features
-      current_min_max_dist = Inf
+      min_dist = Inf
       for centroid in centroids
-        min_max_dist = dist_func(centroid,fv)
-        if min_max_dist < current_min_max_dist
-          current_min_max_dist = min_max_dist
+        cent_dist = dist_func(centroid,fv)
+        if cent_dist < min_dist
+          min_dist = cent_dist
         end
       end
-      if current_min_max_dist > best_dist
-        best_dist = current_min_max_dist
+      if min_dist > max_min_dist
+        max_min_dist = min_dist
         next_cent = fv
       end
     end
@@ -64,8 +64,9 @@ function kmeans(clust::Dict, cents::Array=[], k=1, init_cent_func=max_min_init, 
 
   # find distance between fv and centroid
   iteration = 1
-  no_change = false
-  while !no_change && iteration < max_iter
+  changed = true
+  while changed && iteration < max_iter
+    println(iteration)
     i = 1
     for fv in features
       dist = Inf
@@ -92,20 +93,20 @@ function kmeans(clust::Dict, cents::Array=[], k=1, init_cent_func=max_min_init, 
     end		
 
     # checking if centroids moved.
-    no_change = true
+    changed = false
     i = 1
     for centroid in old_centroids
       dist = dist_func(centroid,new_centroids[i])
       if dist > .000001
-        no_change = false
+        changed = true
         centroids = new_centroids
         break
       end
       i += 1
     end
 
-    # reset clusters if there are no changes.
-    if !no_change
+    # reset clusters if there are no changed.
+    if changed
       new_clusters = []
       for centroid in centroids
         new_clusters = vcat(new_clusters, Cluster())
