@@ -101,7 +101,7 @@ function +(fv1::FeatureVector, fv2::FeatureVector)
   return FeatureVector(dict)
 end
 
-# adds two FeatureVectors together
+# adds two FeatureVectors together in place
 function add!(fv1::FeatureVector, fv2::FeatureVector)
   fv2_keys = keys(fv2)
   
@@ -126,6 +126,15 @@ function -(fv1::FeatureVector, fv2::FeatureVector)
   end
 
   return FeatureVector(dict)
+end
+
+# subtracts two FeatureVectors in place
+function subtract!(fv1::FeatureVector, fv2::FeatureVector)
+  fv2_keys = keys(fv2)
+  
+  for key in fv2_keys
+      fv1[key] -= fv2[key]
+  end
 end
 
 # multiplies a FeatureVector by a scalar

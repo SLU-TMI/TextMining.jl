@@ -1,6 +1,7 @@
 type Cluster <: FeatureSpace
   vectors::Dict{Any, FeatureVector}
   vector_sum::FeatureVector
+  data
   Cluster() = new(Dict{Any,FeatureVector}(),FeatureVector())
 end
 
@@ -12,9 +13,9 @@ end
 # maps a [key] to a FeatureVector [fv] 
 function setindex!(c::Cluster, fv::FeatureVector, key)
   if Base.haskey(c.vectors, key)
-    c.vector_sum -= c.vectors[key]
+    subtract!(c.vector_sum,c.vectors[key])
   end
-  c.vector_sum += fv
+  add!(c.vector_sum,fv)
   c.vectors[key] = fv
 end
 
