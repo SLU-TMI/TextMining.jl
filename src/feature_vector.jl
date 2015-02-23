@@ -23,6 +23,20 @@ function copy{K,V}(fv::FeatureVector{K,V})
   return new_fv
 end
 
+function gt(a,b)
+  return a[2]>b[2]
+end
+
+function sort(fv::FeatureVector)
+  words = Array(find_common_type(fv,fv),length(fv))
+  i = 1
+  for word in fv.map
+    words[i] = word
+    i+=1
+  end
+  return sort!(words,lt=gt)
+end
+
 # gets value of [key] in a FeatureVector
 function getindex(fv::FeatureVector, key)
   if haskey(fv,key)
