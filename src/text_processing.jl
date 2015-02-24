@@ -29,11 +29,11 @@ end
 
 function load_dir(files)
   x = 1
-
+  new_texts = Array(Any,Base.length(files))
   for file in files
-    files[x] = parse_xml(file)
+    new_texts[x] = parse_xml(file)
     x+=1
   end
 
-  return files
+  return new_texts
 end
