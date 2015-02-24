@@ -44,6 +44,7 @@ end
 function kmeans(clust::Dict, cents::Array=[], k=1, init_cent_func=max_min_init, dist_func=cos_dist, max_iter=10000)
   # find initial k centroids
   features = collect(Base.values(clust))
+  clust_keys = collect(Base.keys(clust))
   
   # check if user sent in own array of centroids
   if Base.length(cents) == 0
@@ -80,16 +81,18 @@ function kmeans(clust::Dict, cents::Array=[], k=1, init_cent_func=max_min_init, 
         end
         j += 1
       end
-      min_dist_cluster[i] = fv
-      i += 1
+      min_dist_cluster[clust_keys[i]] = fv
+      i+=1
     end
 
     # recompute new centroids
     old_centroids = centroids
-    new_centroids = []
+    new_centroids = Array(typeof(centroid(new_clusters[1])),length(centroids))
+    x = 1
     for cluster in new_clusters
       new_cent = centroid(cluster)
-      new_centroids = vcat(new_centroids, new_cent)
+      new_centroids[x] = new_cent
+      x+=1
     end		
 
     # checking if centroids moved.
