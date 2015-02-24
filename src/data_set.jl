@@ -1,5 +1,6 @@
 type DataSet <: FeatureSpace
   clusters::Dict{Any, Cluster}
+  mdata::Any
   DataSet() = new(Dict{Any,Cluster}())
 end
 

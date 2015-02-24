@@ -1,7 +1,7 @@
 type Cluster <: FeatureSpace
   vectors::Dict{Any, FeatureVector}
   vector_sum::FeatureVector
-  data
+  mdata::Any
   Cluster() = new(Dict{Any,FeatureVector}(),FeatureVector())
 end
 

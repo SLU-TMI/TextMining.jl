@@ -3,6 +3,7 @@ type Distribution{FS<:FeatureSpace}
   total::Number
   smooth::Function
   smooth_data::Array
+  mdata::Any
   Distribution() = new(FS(),0,_no_smoothing,[])
   Distribution(fv::FeatureVector) = new(fv,get_total(fv),_no_smoothing,[]) 
   function get_total(fv::FeatureVector)

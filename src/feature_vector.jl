@@ -6,6 +6,7 @@
  
 type FeatureVector{K,V<:Number} <: FeatureSpace
   map::Dict{K,V}
+  mdata::Any
   FeatureVector() = new(Dict{K,V}())
   FeatureVector{K,V}(map::Dict{K,V}) = new(map)
 end
