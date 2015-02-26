@@ -1,3 +1,5 @@
+using Gadfly;
+
 #TODO
 function hclust(data, dist)
 end
@@ -41,7 +43,7 @@ function max_min_init(features,k,dist_func)
   return centroids
 end
 
-function kmeans(clust::Dict, cents::Array=[], k=1, init_cent_func=max_min_init, dist_func=cos_dist, max_iter=10000)
+function kmeans(clust::Dict, cents::Array=[], k=iceil(sqrt(length(clust)/2)), init_cent_func=max_min_init, dist_func=cos_dist, max_iter=10000)
   # find initial k centroids
   features = collect(Base.values(clust))
   clust_keys = collect(Base.keys(clust))
@@ -67,7 +69,7 @@ function kmeans(clust::Dict, cents::Array=[], k=1, init_cent_func=max_min_init, 
   iteration = 1
   changed = true
   while changed && iteration < max_iter
-    println(iteration)
+    println("Start iteration: $iteration")
     i = 1
     for fv in features
       dist = Inf
@@ -87,7 +89,7 @@ function kmeans(clust::Dict, cents::Array=[], k=1, init_cent_func=max_min_init, 
 
     # recompute new centroids
     old_centroids = centroids
-    new_centroids = Array(typeof(centroid(new_clusters[1])),length(centroids))
+    new_centroids = Array(Any,length(centroids))
     x = 1
     for cluster in new_clusters
       new_cent = centroid(cluster)
@@ -115,15 +117,39 @@ function kmeans(clust::Dict, cents::Array=[], k=1, init_cent_func=max_min_init, 
         new_clusters = vcat(new_clusters, Cluster())
       end
     end
+    println("End iteration: $iteration")
     iteration += 1
   end
 
   return new_clusters
 end 
 kmeans(clust::Dict, k, init_cent_func, dist_func) = kmeans(clust,[],k,init_cent_func,dist_func)
-kmeans(clust::Dict, k, dist_func) = kmeans(clust,[],k,dist_func)
 kmeans(clust::Dict, k, init_cent_func) = kmeans(clust,[],k,init_cent_func)
 kmeans(clust::Dict, k) = kmeans(clust,[],k)
 
 
+function elbow_method(clust::Dict, dist_func::Function, low_bound, high_bound)
+  temp_low = copy(low_bound)
+  distances = []
+  while temp_low < high_bound
+    println("Start Elbow cluster $temp_low")
+    clusters = kmeans(clust,temp_low,max_min_init,dist_func)
+    avg_dist = 0
+    for cluster in clusters
+      features = values(cluster.vectors)
+      cluster_avg_dist = 0
+      cent = centroid(cluster)
+      for fv in features
+        cluster_avg_dist += dist_func(cent,fv)
+      end
+       avg_dist += (cluster_avg_dist/length(features))
+    end
+    distances = vcat(distances,(avg_dist/length(clusters)))
+    println("End Elbow cluster $temp_low")
+    temp_low += 1
+  end
 
+  draw(SVG("myplot.svg",6inch,3inch),plot(x=collect(1:14), y=array,
+          Guide.XLabel("# of Clusters"), Guide.YLabel("Distances")))
+  return distances
+end

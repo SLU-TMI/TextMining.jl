@@ -181,7 +181,7 @@ function /(fv::FeatureVector, value::Number)
   end
 
   fv_keys = keys(fv)
-  dict = Dict{typeof(first(fv_keys)), typeof(fv[first(fv_keys)]/value)}()
+  dict = Dict{Any, typeof(fv[first(fv_keys)]/value)}()
   
   for key in fv_keys
     dict[key] = fv[key]/value
