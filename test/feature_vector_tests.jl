@@ -20,8 +20,11 @@ end
 facts("Sanitize Dictionary values of 0") do
   dict = ["word" => 4, "another" => 3, "help"=>0]
   fv = FeatureVector(dict)
+  fv["the"] = 0
 
   @fact fv.map => ["word"=>4,"another"=>3]
+  add!(fv,(-1*fv))
+  @fact isempty(fv) => true
 end
 
 facts("Set value of FeatureVector given key") do
