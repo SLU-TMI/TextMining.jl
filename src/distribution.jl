@@ -60,7 +60,7 @@ function _no_smoothing(d::Distribution, key, data::Array)
   return d.space[key] / d.total
 end
 
-#add-delta smoothing, default to add-one smoothing
+#add-delta smoothing, defaults to add-one smoothing
 function delta_smoothing!(d::Distribution, δ::Number=1)
   if δ <= 0
     Base.warn("δ must be greater than 0") 
@@ -75,3 +75,17 @@ function _δ_smoothing(d::Distribution, key, data::Array)
   end
   return (d.space[key]+data[1])/(data[1]*(data[2]+1)+data[3])
 end
+
+#=simple good-turing smoothing
+function goodturing_smoothing!(d::Distribution)
+	#need frequencies of frequencies here
+	#aka there are 120 words that occur 1 time, 20 words that occur 2 times, etc
+	set_smooth!(d,_gt_smoothing, [d.total, #frequencies])
+end
+
+function _gt_smoothing(d::Distribution, key, data::Array)
+	if !haskey(d.space, key)
+		#return "number of words that occur once" / data[1]
+	end
+	#return distribution smoothed by good-turing, see papers
+=#
