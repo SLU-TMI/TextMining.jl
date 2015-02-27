@@ -17,6 +17,13 @@ facts("Get value of FeatureVector given key") do
   @fact fv1["word"] => fv1.map["word"]
 end
 
+facts("Sanitize Dictionary values of 0") do
+  dict = ["word" => 4, "another" => 3, "help"=>0]
+  fv = FeatureVector(dict)
+
+  @fact fv.map => ["word"=>4,"another"=>3]
+end
+
 facts("Set value of FeatureVector given key") do
   dict1 = ["word" => 4, "another" => 3]
   fv1 = FeatureVector(dict1)
