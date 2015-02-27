@@ -87,7 +87,7 @@ function kmeans(clust::Dict, cents::Array=[], k=1, init_cent_func=max_min_init, 
 
     # recompute new centroids
     old_centroids = centroids
-    new_centroids = Array(typeof(centroid(new_clusters[1])),length(centroids))
+    new_centroids = Array(Any,length(centroids))
     x = 1
     for cluster in new_clusters
       new_cent = centroid(cluster)
