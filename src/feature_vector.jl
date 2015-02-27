@@ -11,7 +11,7 @@ type FeatureVector{K,V<:Number} <: FeatureSpace
   FeatureVector{K,V}(map::Dict{K,V}) = new(map)
 end
 FeatureVector() = FeatureVector{Any,Number}()
-FeatureVector{K,V}(map::Dict{K,V}) = FeatureVector{K,V}(Base.copy(map))
+FeatureVector{K,V}(map::Dict{K,V}) = FeatureVector{K,V}(sanitize(Base.copy(map)))
 
 # copies selected fv, and makes a new one.
 function copy{K,V}(fv::FeatureVector{K,V})
@@ -26,6 +26,15 @@ end
 
 function gt(a,b)
   return a[2]>b[2]
+end
+
+function sanitize(dict::Dict)
+  for key in keys(dict)
+    if dict[key] == 0
+      Base.delete!(dict,key)
+    end
+  end
+  return dict
 end
 
 function sort(fv::FeatureVector)
@@ -181,7 +190,7 @@ function /(fv::FeatureVector, value::Number)
   end
 
   fv_keys = keys(fv)
-  dict = Dict{typeof(first(fv_keys)), typeof(fv[first(fv_keys)]/value)}()
+  dict = Dict{Any, typeof(fv[first(fv_keys)]/value)}()
   
   for key in fv_keys
     dict[key] = fv[key]/value
