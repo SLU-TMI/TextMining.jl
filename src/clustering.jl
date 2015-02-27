@@ -1,4 +1,4 @@
-using Gadfly;
+
 
 #TODO
 function hclust(data, dist)
@@ -148,8 +148,5 @@ function elbow_method(clust::Dict, dist_func::Function, low_bound, high_bound)
     println("End Elbow cluster $temp_low")
     temp_low += 1
   end
-
-  draw(SVG("myplot.svg",6inch,3inch),plot(x=collect(1:14), y=array,
-          Guide.XLabel("# of Clusters"), Guide.YLabel("Distances")))
   return distances
 end
