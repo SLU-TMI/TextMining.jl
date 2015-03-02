@@ -1,4 +1,4 @@
-
+using ASCIIPlots;
 
 #TODO
 function hclust(data, dist)
@@ -131,7 +131,8 @@ kmeans(clust::Dict, k) = kmeans(clust,[],k)
 function elbow_method(clust::Dict, dist_func::Function, low_bound, high_bound)
   temp_low = copy(low_bound)
   distances = []
-  while temp_low < high_bound
+  elbow_array = []
+  while temp_low <= high_bound
     println("Start Elbow cluster $temp_low")
     clusters = kmeans(clust,temp_low,max_min_init,dist_func)
     avg_dist = 0
@@ -145,8 +146,11 @@ function elbow_method(clust::Dict, dist_func::Function, low_bound, high_bound)
        avg_dist += (cluster_avg_dist/length(features))
     end
     distances = vcat(distances,(avg_dist/length(clusters)))
+    elbow_array = vcat(elbow_array,(temp_low,(avg_dist/length(clusters))))
     println("End Elbow cluster $temp_low")
     temp_low += 1
   end
-  return distances
+  println(scatterplot(collect(low_bound:high_bound),distances,sym='*'))
+
+  return elbow_array
 end
