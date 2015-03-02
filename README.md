@@ -1,11 +1,3 @@
-<div align="center">
-
-<a href="http://www.slu.edu/" target="_blank">
-<img src="http://www.slu.edu/Images/marketing_communications/logos/Higher%20Purpose.%20Greater%20Good/HPGG_horizontal/HPGG_Horz_blue.jpg" alt="SLU Logo" width="640" height="247.5"></img>
-</a>
-
-</div>
-
 [![Build Status](https://travis-ci.org/SLU-TMI/TextMining.jl.svg?branch=master)](https://travis-ci.org/SLU-TMI/TextMining.jl)
 
 ## TextMining.jl 
