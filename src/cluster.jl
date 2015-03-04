@@ -19,6 +19,10 @@ function setindex!(c::Cluster, fv::FeatureVector, key)
   c.vectors[key] = fv
 end
 
+function length(c::Cluster)
+  return Base.length(c.vectors)
+end
+
 # returns all keys in the cluster
 function keys(c::Cluster)
   return Base.keys(c.vectors)

@@ -14,6 +14,14 @@ function setindex!(ds::DataSet, c::Cluster, key)
   ds.clusters[key] = c
 end
 
+function length(ds::DataSet)
+  size = 0
+  for clust in ds.clusters
+    size += length(clust[2])
+  end
+  return size
+end
+
 # returns all keys in the DataSet
 function keys(ds::DataSet)
   return Base.keys(ds.clusters)
