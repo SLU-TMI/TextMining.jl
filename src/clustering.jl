@@ -117,7 +117,6 @@ function kmeans(clust::Dict, cents::Array=[], k=iceil(sqrt(length(clust)/2)), in
         new_clusters = vcat(new_clusters, Cluster())
       end
     end
-    println("End iteration: $iteration")
     iteration += 1
   end
 
@@ -129,6 +128,17 @@ kmeans(clust::Dict, k) = kmeans(clust,[],k)
 
 
 function elbow_method(clust::Dict, dist_func::Function, low_bound, high_bound)
+  if high_bound > length(clust)
+    k = high_bound
+    high_bound = length(clust)
+    Base.warn("The high_bound($k) you entered is bigger than the amount of centroids in the array, reverting k to $high_bound")
+  end
+  if low_bound < 1
+    k = low_bound
+    low_bound = 1
+    Base.warn("The low_bound($k) you entered is bigger than the amount of centroids in the array, reverting k to $low_bound")
+  end
+
   temp_low = copy(low_bound)
   distances = []
   elbow_array = []
@@ -147,7 +157,6 @@ function elbow_method(clust::Dict, dist_func::Function, low_bound, high_bound)
     end
     distances = vcat(distances,(avg_dist/length(clusters)))
     elbow_array = vcat(elbow_array,(temp_low,(avg_dist/length(clusters))))
-    println("End Elbow cluster $temp_low")
     temp_low += 1
   end
   println(scatterplot(collect(low_bound:high_bound),distances,sym='*'))
