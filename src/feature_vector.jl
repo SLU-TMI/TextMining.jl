@@ -11,7 +11,7 @@ type FeatureVector{K,V<:Number} <: FeatureSpace
   FeatureVector{K,V}(map::Dict{K,V}) = new(map)
 end
 FeatureVector() = FeatureVector{Any,Number}()
-FeatureVector{K,V}(map::Dict{K,V}) = FeatureVector{K,V}(sanitize(Base.copy(map)))
+FeatureVector{K,V}(map::Dict{K,V}) = FeatureVector{K,V}(sanitize!(Base.copy(map)))
 
 # copies selected fv, and makes a new one.
 function copy{K,V}(fv::FeatureVector{K,V})
@@ -24,11 +24,8 @@ function copy{K,V}(fv::FeatureVector{K,V})
   return new_fv
 end
 
-function gt(a,b)
-  return a[2]>b[2]
-end
-
-function sanitize(dict::Dict)
+# deletes 0 value keys in a dictionary
+function sanitize!(dict::Dict)
   for key in keys(dict)
     if dict[key] == 0
       Base.delete!(dict,key)
@@ -37,14 +34,17 @@ function sanitize(dict::Dict)
   return dict
 end
 
-function sort(fv::FeatureVector)
+# returns an Array of the (key, value) tuples
+# in fv using the provided boolean expression
+# by default it sorts by largest value
+function freq_list(fv::FeatureVector, expression::Function = (a,b) -> a[2]>b[2])
   words = Array(find_common_type(fv,fv),length(fv))
   i = 1
   for word in fv.map
     words[i] = word
     i+=1
   end
-  return Base.sort!(words,lt=gt)
+  return Base.sort!(words,lt=expression)
 end
 
 # gets value of [key] in a FeatureVector
@@ -242,7 +242,6 @@ function cos_dist(fv1::FeatureVector, fv2::FeatureVector)
 end
 
 # number of disjoint nonzero dimensions between vectors
-# tabor distance
 function zero_dist(fv1::FeatureVector, fv2::FeatureVector)
   fv1_keys = keys(fv1)
   fv2_keys = keys(fv2)
