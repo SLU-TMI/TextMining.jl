@@ -110,7 +110,7 @@ ERROR: `//` has no method matching //(::Float64, ::Int64)
 > Checks **fv** for **key** and returns **true** if found or **false** if not present.
 
 **isempty(fv)**
-> Returns **true** if **fv** contains any elements, **false** otherwise.
+> Returns **false** if **fv** contains any elements, **true** otherwise.
 
 **length(fv)**
 > Returns the number of elements in **fv**.
