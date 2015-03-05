@@ -98,7 +98,6 @@ but returns an error otherwise:
 ```julia
 julia> fv = FeatureVector(["word1" => 1.0, "word2" => 3.0])
 julia> fv//3
-FeatureVector{ASCIIString,Rational{T<:Integer}}(["word1"=>1//3,"word2"=>1//1])
 ERROR: `//` has no method matching //(::Float64, ::Int64)
 ```
 
@@ -120,9 +119,7 @@ ERROR: `//` has no method matching //(::Float64, ::Int64)
 > Returns the number of elements in **fv**.
 
 **freq\_list(fv, expression = (a,b) -> a[2]>b[2])**
-> Returns a [frequency list](http://en.wikipedia.org/wiki/Word_lists_by_frequency) represented by an **Array** of
-> (key,value) tuples sorted using the provided boolean expression. If an **expression** is
-> not passed in, the Array will be sorted by largest value.
+> Returns a [frequency list](http://en.wikipedia.org/wiki/Word_lists_by_frequency) represented by an **Array** of (key,value) tuples sorted using the provided boolean expression. If an **expression** is not passed in, the Array will be sorted by largest value.
 
 **add!(fv1, fv2)**
 > In place addition. Modifies **fv1** by adding **fv2** to it. 
@@ -131,26 +128,19 @@ ERROR: `//` has no method matching //(::Float64, ::Int64)
 > In place subtraction. Modifies **fv1** by subtracting **fv2** from it. 
 
 **cos\_dist(fv1, fv2)** 
-> Returns 1-[cosine similarity](http://en.wikipedia.org/wiki/Cosine_similarity) between two feature vectors. If the angle
-> between **fv1** and **fv2** is 0, the function will return 0. If **fv1** and **fv2** are orthogonal,
-> meaning they share no features, the function will return 1. Otherwise the function returns values
-> between 0 and 1. **Note:** The zero vector is both parallel and orthogonal to every vector, as such
-> **cos\_dist(fv, zero_vector)** will return **NaN** (not a number). 
+> Returns 1-[cosine similarity](http://en.wikipedia.org/wiki/Cosine_similarity) between two feature vectors. If the angle between **fv1** and **fv2** is 0, the function will return 0. If **fv1** and **fv2** are orthogonal, meaning they share no features, the function will return 1. Otherwise the function returns values between 0 and 1. **Note:** The zero vector is both parallel and orthogonal to every vector, as such **cos\_dist(fv, zero_vector)** will return **NaN** (not a number). 
 
 **zero\_dist(fv1, fv2)**
-> Derived from the L0 Norm, this function returns the number of non-zero elements that differ 
-> between **fv1** and **fv2**. 
+> Derived from the L0 Norm, this function returns the number of non-zero elements that differ between **fv1** and **fv2**. 
 
 **taxicab\_dist(fv1, fv2)**
-> Derived from the [L1 Norm](http://en.wikipedia.org/wiki/Taxicab_geometry) and also know as the Manhattan distance,
-> this function returns the sum of the absolute difference between **fv1** and **fv2**. 
+> Derived from the [L1 Norm](http://en.wikipedia.org/wiki/Taxicab_geometry) and also know as the Manhattan distance, this function returns the sum of the absolute difference between **fv1** and **fv2**. 
 
 **euclidean\_dist(fv1, fv2)**
 > Returns the [standard distance](http://en.wikipedia.org/wiki/Euclidean_distance) between **fv1** and **fv2**. 
 
 **infinite\_dist(fv1, fv2)**
-> Derived from the [L∞ Norm](http://en.wikipedia.org/wiki/Chebyshev_distance) and often referd to as the Chebyshev distance,
-> this function returns the maximum absolute difference between any feature in **fv1** or **fv2**.
+> Derived from the [L∞ Norm](http://en.wikipedia.org/wiki/Chebyshev_distance) and often referd to as the Chebyshev distance, this function returns the maximum absolute difference between any feature in **fv1** or **fv2**.
 
 
 #### Clusters
