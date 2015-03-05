@@ -84,9 +84,6 @@ FeatureVector{ASCIIString,Int64}(["word1"=>3,"word2"=>9])
 
 julia> fv/3
 FeatureVector{Any,Float64}(["word1"=>0.3333333333333333,"word2"=>1.0])
-
-julia> fv//3
-FeatureVector{ASCIIString,Rational{T<:Integer}}(["word1"=>1//3,"word2"=>1//1])
 ```
 
 If a *FeatureVector* contains Integer value types it can be rationalized by a divisor:
