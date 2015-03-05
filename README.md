@@ -35,7 +35,7 @@ These tools will utilize the [bag-of-words model](http://en.wikipedia.org/wiki/B
 
 #### Feature Vectors
 
-The **FeatureVector** type is container for a **Dictionary (hashtable)** that restricts **key => value** mappings to **Any => Number** mappings, where *Any* and *Number* are Julia types, or their subtypes. 
+The **FeatureVector** type is a container for a **Dictionary (hashtable)** that restricts **key => value** mappings to **Any => Number** mappings, where *Any* and *Number* are Julia types, or their subtypes. 
 
 ###### Using FeatureVector:
 
