@@ -14,12 +14,6 @@ Like other Julia packages, you will be able to checkout *TextMining* from METADA
 Pkg.add("TextMining")
 ```
 
-**Note:** This package relies on [LightXML.jl](https://github.com/JuliaLang/LightXML.jl) to parse xml files. Please ensure you have installed the *LightXML* package
-
-```julia
-Pkg.add("LightXML")
-```
-
 ---
 ## Code Base
 
@@ -33,27 +27,36 @@ Pkg.add("LightXML")
 
 These tools are being developed in **Julia** with the goal of making them fast, generic, and easily usable in Julia's REPL. The tools can be broken down into the following catagories.
 
-1. Vector Space Model (developing)
+1. Feature Space Model
 ------
 
-These tools will utilize the [bag-of-words model](http://en.wikipedia.org/wiki/Bag-of-words_model) and the [hashing trick](http://en.wikipedia.org/wiki/Feature_hashing) to vectorize texts into [feature vectors](http://en.wikipedia.org/wiki/Feature_vector). 
+These tools will utilize the [bag-of-words model](http://en.wikipedia.org/wiki/Bag-of-words_model) and the [hashing trick](http://en.wikipedia.org/wiki/Feature_hashing) to vectorize texts into [feature vectors](http://en.wikipedia.org/wiki/Feature_vector). Feature vectors exist in an infinite dimensional vector space which is refered to as the **feature space**. In order to optimize calculations, dimensions where the feature vector has value 0 are removed from the feature vectors hashtable. We are defining **FeatureSpace** to be an abstract type which has 3 subtypes: FeatureVector, Cluster, and DataSet.
 
-#### Feature Vectors (testing)
 
-The **FeatureVector** type is a wrapper around a **Dictionary (hashtable)** that restricts **key => value** mappings to **Any => Number** types and subtypes.
+#### Feature Vectors
+
+The **FeatureVector** type is container for a **Dictionary (hashtable)** that restricts **key => value** mappings to **Any => Number** mappings, where *Any* and *Number* are Julia types, or their Julia subtypes. 
 
 An empty *FeatureVector* can be constructed as so:
 ```julia
-fv = FeatureVector()
+julia> fv = FeatureVector()
 ```
-
 A *FeatureVector* can also be constructed using an existing *Dictionary*: 
 ```julia
-d = Dict(["my"=>2, "example"=>4])
-fv = FeatureVector(d)
+julia> d = Dict(["my"=>2, "example"=>4])
+julia> fv = FeatureVector(d)
+```
+Modifying elements of a *FeatureVector*:
+```julia
+julia> fv["word"] = 4
+```
+Accessing elements of a *FeatureVector*:
+```julia
+julia> fv["word"]
+4
 ```
 
-#### Clusters (testing)
+#### Clusters
 
 The **Cluster** type is also a wrapper around a **Dictionary**. However, it restricts mappings to **Any => FeatureVector** types and subtypes. This allows users to meaningfully label groups of *FeatureVectors* for Classification. The *Cluster* type also computes the centroid of the set.
 
@@ -62,7 +65,7 @@ An empty *Cluster* can be constructed as so:
 cl = Cluster()
 ```
 
-#### DataSet (developing)
+#### DataSet
 
 The **DataSet** type is also a wrapper around a **Dictionary**. However, it restricts mappings to **Any => Cluster** types and subtypes.
 
@@ -74,14 +77,23 @@ ds = DataSet()
 2. Clustering (developing)
 ------
 
-#### Hierarchical Clustering (developing)
+#### Hierarchical Clustering
 
-#### K-Means Clustering (developing)
+#### K-Means Clustering
 ---
-3. Classification (developing)
+3. Classification
 ------
 
-#### Distribution (developing)
+### Distance Based Classifiers
+---
+
+#### k Nearest Neighbors
+
+---
+### Probability Based Classifiers
+---
+
+#### Distribution
 
 The **Distribution** type is a container which ensures the [axioms of probability](http://en.wikipedia.org/wiki/Probability_axioms).
 
