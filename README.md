@@ -24,8 +24,8 @@ Pkg.add("TextMining")
   2. **[Cluster](https://github.com/SLU-TMI/TextMining.jl#cluster)**
   3. **[DataSet](https://github.com/SLU-TMI/TextMining.jl#dataset)**
 2. **[Clustering](https://github.com/SLU-TMI/TextMining.jl#clustering)**
-  1. **[Hierarchical](https://github.com/SLU-TMI/TextMining.jl#hierarchical-clustering)**
-  2. **[k Means](https://github.com/SLU-TMI/TextMining.jl#k-means-clustering)**
+  1. **[k Means](https://github.com/SLU-TMI/TextMining.jl#k-means)**
+  2. **[Hierarchical](https://github.com/SLU-TMI/TextMining.jl#hierarchical)**
 3. **[Classification](https://github.com/SLU-TMI/TextMining.jl#classification)**
   1. **[Proximity Based Classification](https://github.com/SLU-TMI/TextMining.jl#proximity-based-classification)**
     1. **[k Nearest Neighbors](https://github.com/SLU-TMI/TextMining.jl#k-nearest-neighbors)**
@@ -41,7 +41,7 @@ Feature Space Model
 These tools will utilize the [bag-of-words model](http://en.wikipedia.org/wiki/Bag-of-words_model) and the [hashing trick](http://en.wikipedia.org/wiki/Feature_hashing) to vectorize texts into [feature vectors](http://en.wikipedia.org/wiki/Feature_vector). Feature vectors exist in an infinite dimensional vector space which is refered to as the **feature space**. In order to optimize calculations, dimensions where the feature vector has value 0 are removed from the feature vector's hashtable. We are defining **FeatureSpace** to be an abstract type which has 3 subtypes: FeatureVector, Cluster, and DataSet.
 
 
-#### Feature Vectors
+#### Feature Vector
 
 The **FeatureVector** type is a container for a **Dictionary (hashtable)** that restricts **key => value** mappings to **Any => Number** mappings, where *Any* and *Number* are Julia types, or their subtypes. 
 
@@ -183,15 +183,15 @@ ds = DataSet()
 Clustering
 ------
 
-#### k Means Clustering
+#### k Means
 
-#### Hierarchical Clustering
+#### Hierarchical
 
 ---
 Classification
 ------
 
-### Distance Based Classification
+### Proximity Based Classification
 ---
 
 #### k Nearest Neighbors
