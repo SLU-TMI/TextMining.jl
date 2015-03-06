@@ -7,27 +7,36 @@
 This package is a set of tools being used by **Saint Louis University** to facilitate interdisciplinary research using data mining, machine learning, and natural language processing techniques of how time passage affects language.
 
 ### Setup
-
-Like other Julia packages, installing the *TextMining* package is done like so:
-
-```julia
-Pkg.add("TextMining")
-```
-
 ---
-## Code Base
-
-
-
 <div align="center">
 <a href="http://julialang.org/" target="_blank">
 <img src="http://julialang.org/images/logo_hires.png" alt="Julia Logo" width="105" height="71"></img>
 </a>
 </div>
 
-These tools are being developed in **Julia** with the goal of making them fast, generic, and easily usable in Julia's REPL. The tools can be broken down into the following catagories.
+These tools are being developed in **Julia** with the goal of making them fast, generic, and easily usable in Julia's REPL. Like other Julia packages, installing the *TextMining* package is done like so:
 
-1. Feature Space Model
+```julia
+Pkg.add("TextMining")
+```
+---
+### Table of Contents
+1. **[Feature Space Model](https://github.com/SLU-TMI/TextMining.jl#feature-space-model)**
+  1. **[Feature Vector](https://github.com/SLU-TMI/TextMining.jl#feature-vector)**
+  2. **[Cluster](https://github.com/SLU-TMI/TextMining.jl#cluster)**
+  3. **[DataSet](https://github.com/SLU-TMI/TextMining.jl#dataset)**
+2. **[Clustering](https://github.com/SLU-TMI/TextMining.jl#clustering)**
+  1. **[Hierarchical](https://github.com/SLU-TMI/TextMining.jl#hierarchical-clustering)**
+  2. **[k Means](https://github.com/SLU-TMI/TextMining.jl#k-means-clustering)**
+3. **[Classification](https://github.com/SLU-TMI/TextMining.jl#classification)**
+  1. **[Proximity Based Classification](https://github.com/SLU-TMI/TextMining.jl#proximity-based-classification)**
+    1. **[k Nearest Neighbors](https://github.com/SLU-TMI/TextMining.jl#k-nearest-neighbors)**
+  2. **[Probability Based Classification](https://github.com/SLU-TMI/TextMining.jl#probability-based-classification)**
+    1. **[Distribution](https://github.com/SLU-TMI/TextMining.jl#distribution)**
+    2. **[Naive Bayes](https://github.com/SLU-TMI/TextMining.jl#naive-bayes)**
+4. **[Text Processing](https://github.com/SLU-TMI/TextMining.jl#text-processing)**
+---
+Feature Space Model
 ------
 
 These tools will utilize the [bag-of-words model](http://en.wikipedia.org/wiki/Bag-of-words_model) and the [hashing trick](http://en.wikipedia.org/wiki/Feature_hashing) to vectorize texts into [feature vectors](http://en.wikipedia.org/wiki/Feature_vector). Feature vectors exist in an infinite dimensional vector space which is refered to as the **feature space**. In order to optimize calculations, dimensions where the feature vector has value 0 are removed from the feature vector's hashtable. We are defining **FeatureSpace** to be an abstract type which has 3 subtypes: FeatureVector, Cluster, and DataSet.
@@ -140,7 +149,7 @@ ERROR: `//` has no method matching //(::Float64, ::Int64)
 > Derived from the [L∞ Norm](http://en.wikipedia.org/wiki/Chebyshev_distance) and often referd to as the Chebyshev distance, this function returns the maximum absolute difference between any feature in **fv1** or **fv2**.
 
 
-#### Clusters
+#### Cluster
 
 The **Cluster** type is also a **Dictionary** container. However, it restricts mappings to **Any => FeatureVector** types and subtypes. This allows users to meaningfully label groups of *FeatureVectors* for Classification. The *Cluster* type also computes the centroid of the set.
 
@@ -158,23 +167,24 @@ An empty *DataSet* can be constructed as so:
 ds = DataSet()
 ```
 ---
-2. Clustering (developing)
+Clustering
 ------
+
+#### k Means Clustering
 
 #### Hierarchical Clustering
 
-#### K-Means Clustering
 ---
-3. Classification
+Classification
 ------
 
-### Distance Based Classifiers
+### Distance Based Classification
 ---
 
 #### k Nearest Neighbors
 
 ---
-### Probability Based Classifiers
+### Probability Based Classification
 ---
 
 #### Distribution
@@ -186,10 +196,10 @@ An empty *Distribution* can be constructed as so:
 ds = Distribution()
 ```
 
-#### Naive Bayes (uncommenced)
+#### Naive Bayes
 ---
-4. Text Processing (uncommenced)
+Text Processing
 ------
 
-#### Processing XML Files (uncommenced)
+#### Processing XML Files
 ---
