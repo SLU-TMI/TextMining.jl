@@ -5,8 +5,6 @@
 [![Build Status](https://travis-ci.org/SLU-TMI/TextMining.jl.svg?branch=master)](https://travis-ci.org/SLU-TMI/TextMining.jl)
 
 This package is a set of tools being used by **Saint Louis University** to facilitate interdisciplinary research using data mining, machine learning, and natural language processing techniques of how time passage affects language.
-
-### Setup
 ---
 <div align="center">
 <a href="http://julialang.org/" target="_blank">
@@ -35,6 +33,7 @@ Pkg.add("TextMining")
     1. **[Distribution](https://github.com/SLU-TMI/TextMining.jl#distribution)**
     2. **[Naive Bayes](https://github.com/SLU-TMI/TextMining.jl#naive-bayes)**
 4. **[Text Processing](https://github.com/SLU-TMI/TextMining.jl#text-processing)**
+
 ---
 Feature Space Model
 ------
