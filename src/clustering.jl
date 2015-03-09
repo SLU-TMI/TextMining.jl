@@ -43,7 +43,7 @@ function max_min_init(features,k,dist_func)
   return centroids
 end
 
-function kmeans(clust::Dict, cents::Array=[], k=iceil(sqrt(length(clust)/2)), init_cent_func=max_min_init, dist_func=cos_dist, max_iter=10000)
+function kmeans(clust::Dict, cents::Array=[], k=iceil(sqrt(length(clust)/2)), init_cent_func=max_min_init, dist_func=dist_cos, max_iter=10000)
   # find initial k centroids
   features = collect(Base.values(clust))
   clust_keys = collect(Base.keys(clust))

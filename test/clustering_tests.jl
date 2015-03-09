@@ -24,7 +24,7 @@ facts("Max-min init provides k initial distinct centroids") do
   f = FeatureVector(Dict(["jello"=>4, "kim"=>0]))
   dict = Dict([1=>a,2=>b,3=>c,4=>d,5=>e,6=>f])
   features = collect(Base.values(dict))
-  centroids = max_min_init(features,3,cos_dist)
+  centroids = max_min_init(features,3,dist_cos)
 
   @fact Base.length(centroids) => 3
   @fact centroids[1] != centroids[2] => true
@@ -41,10 +41,10 @@ facts("Max-min init provides a random centroid and its furthest centroid") do
   f = FeatureVector(Dict(["jello"=>4, "kim"=>0]))
   dict = Dict([1=>a,2=>b,3=>c,4=>d,5=>e,6=>f])
   features = collect(Base.values(dict))
-  centroids = max_min_init(features,2,cos_dist)
+  centroids = max_min_init(features,2,dist_cos)
 
   for fv in features
-    @fact cos_dist(centroids[1], centroids[2]) >= cos_dist(centroids[1],fv) => true
+    @fact dist_cos(centroids[1], centroids[2]) >= dist_cos(centroids[1],fv) => true
   end
 end 
 
