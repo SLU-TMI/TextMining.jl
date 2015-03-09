@@ -1,11 +1,14 @@
 type Distribution{FS<:FeatureSpace}
   space::FS
+  features::Number
   total::Number
   smooth::Function
   smooth_data::Array
   mdata::Any
-  Distribution() = new(FS(),0,_no_smoothing,[])
-  Distribution(fv::FeatureVector) = new(fv,get_total(fv),_no_smoothing,[]) 
+  Distribution() = new(FS(),0,0,_no_smoothing,[])
+  Distribution(fv::FeatureVector) = new(fv,length(fv),get_total(fv),_no_smoothing,[])
+  Distribution(c::Cluster) = new(c,length(c.vector_sum),get_total(c.vector_sum),_no_smoothing,[])
+  Distribution(ds::DataSet) = new(ds,length(ds.vector_sum),get_total(ds.vector_sum),_no_smoothing,[])
   function get_total(fv::FeatureVector)
     total = 0
     for value in values(fv)
@@ -39,7 +42,7 @@ function entropy(d::Distribution)
 end
 
 function info_gain(d1::Distribution, d2::Distribution)
-  return abs(entropy(d1)-entropy(d2))
+  return entropy(d1)-entropy(d2)
 end
 
 function perplexity(d::Distribution)
@@ -65,8 +68,7 @@ function delta_smoothing!(d::Distribution, δ::Number=1)
   if δ <= 0
     Base.warn("δ must be greater than 0") 
   end
-  unique = length(d.space)
-  set_smooth!(d,_δ_smoothing,[δ,unique,d.total])
+  set_smooth!(d,_δ_smoothing,[δ,d.features,d.total])
 end
 
 function _δ_smoothing(d::Distribution, key, data::Array)
