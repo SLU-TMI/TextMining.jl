@@ -142,15 +142,15 @@ subtract!(fv1, fv2)
 ```julia
 multiply!(fv, value)
 ```
-* In place multiplication. Modifies scales **fv** by value. 
+* In place multiplication. Scales **fv** by value. 
 ```julia
 divide!(fv, value)
 ```
-* In place division. Modifies divides **fv** by value.
+* In place division. Divides **fv** by value.
 ```julia
 rationalize!(fv, value)
 ```
-* In place rationalization. Modifies rationalizes **fv** by value.
+* In place rationalization. Rationalizes **fv** by value.
 ```julia
 dist_cos(fv1, fv2)
 ```
