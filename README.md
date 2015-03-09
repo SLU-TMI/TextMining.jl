@@ -140,6 +140,18 @@ subtract!(fv1, fv2)
 ```
 * In place subtraction. Modifies **fv1** by subtracting **fv2** from it. 
 ```julia
+multiply!(fv, value)
+```
+* In place multiplication. Modifies scales **fv** by value. 
+```julia
+divide!(fv, value)
+```
+* In place division. Modifies divides **fv** by value.
+```julia
+rationalize!(fv, value)
+```
+* In place rationalization. Modifies rationalizes **fv** by value.
+```julia
 dist_cos(fv1, fv2)
 ```
 * Returns 1-[cosine similarity](http://en.wikipedia.org/wiki/Cosine_similarity) between two feature vectors. If the angle between **fv1** and **fv2** is 0, the function will return 0. If **fv1** and **fv2** are orthogonal, meaning they share no features, the function will return 1. Otherwise the function returns values between 0 and 1. **Note:** The zero vector is both parallel and orthogonal to every vector, as such **cos\_dist(fv, zero_vector)** will return **NaN** (not a number). 
