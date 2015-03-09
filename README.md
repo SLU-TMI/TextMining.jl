@@ -140,23 +140,23 @@ subtract!(fv1, fv2)
 ```
 * In place subtraction. Modifies **fv1** by subtracting **fv2** from it. 
 ```julia
-cos_dist(fv1, fv2)
+dist_cos(fv1, fv2)
 ```
 * Returns 1-[cosine similarity](http://en.wikipedia.org/wiki/Cosine_similarity) between two feature vectors. If the angle between **fv1** and **fv2** is 0, the function will return 0. If **fv1** and **fv2** are orthogonal, meaning they share no features, the function will return 1. Otherwise the function returns values between 0 and 1. **Note:** The zero vector is both parallel and orthogonal to every vector, as such **cos\_dist(fv, zero_vector)** will return **NaN** (not a number). 
 ```julia
-zero_dist(fv1, fv2)
+dist_zero(fv1, fv2)
 ```
 * Derived from the L0 Norm, this function returns the number of non-zero elements that differ between **fv1** and **fv2**. 
 ```julia
-taxicab_dist(fv1, fv2)
+dist_taxicab(fv1, fv2)
 ```
 * Derived from the [L1 Norm](http://en.wikipedia.org/wiki/Taxicab_geometry) and also know as the Manhattan distance, this function returns the sum of the absolute difference between **fv1** and **fv2**. 
 ```julia
-euclidean_dist(fv1, fv2)
+dist_euclidean(fv1, fv2)
 ```
 * Returns the [standard distance](http://en.wikipedia.org/wiki/Euclidean_distance) between **fv1** and **fv2**. 
 ```julia
-infinite_dist(fv1, fv2)
+dist_infinite(fv1, fv2)
 ```
 * Derived from the [L∞ Norm](http://en.wikipedia.org/wiki/Chebyshev_distance) and often referd to as the Chebyshev distance, this function returns the maximum absolute difference between any feature in **fv1** or **fv2**.
 

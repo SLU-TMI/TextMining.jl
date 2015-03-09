@@ -186,7 +186,7 @@ facts("Rationalize a FeatureVector by a scalar") do
 end
 
 
-facts("Find cos_dist between two FeatureVectors") do
+facts("Find dist_cos between two FeatureVectors") do
   fv = FeatureVector()
   fw = FeatureVector(Dict(["x"=>0, "y"=>0]))
   fv1 = FeatureVector(Dict(["x"=>1, "y"=>0]))
@@ -194,79 +194,79 @@ facts("Find cos_dist between two FeatureVectors") do
   fv3 = FeatureVector(Dict(["x"=>1, "y"=>1]))
   fv4 = FeatureVector(Dict(["x"=>1.0, "y"=>sqrt(3)]))
   
-  @fact cos_dist(fv3,fv3) => 0
-  @fact isnan(cos_dist(fw,fv3)) => true
-  @fact isnan(cos_dist(fv,fv1)) => true
-  @fact 1 - cos(90*pi/180) - 1e-15 <= cos_dist(fv1,fv2) <= 1 - cos(90*pi/180) + 1e-15 => true
-  @fact 1 - cos(45*pi/180) - 1e-15 <= cos_dist(fv2,fv3) <= 1 - cos(45*pi/180) + 1e-15 => true
-  @fact 1 - cos(45*pi/180) - 1e-15 <= cos_dist(fv1,fv3) <= 1 - cos(45*pi/180) + 1e-15 => true
-  @fact 1 - cos(60*pi/180) - 1e-15 <= cos_dist(fv1,fv4) <= 1 - cos(60*pi/180) + 1e-15 => true
-  @fact 1 - cos(30*pi/180) - 1e-15 <= cos_dist(fv2,fv4) <= 1 - cos(30*pi/180) + 1e-15 => true
-  @fact 1 - cos(0*pi/180) - 1e-15 <= cos_dist(fv1,fv1) <= 1 - cos(0*pi/180) + 1e-15 => true
+  @fact dist_cos(fv3,fv3) => 0
+  @fact isnan(dist_cos(fw,fv3)) => true
+  @fact isnan(dist_cos(fv,fv1)) => true
+  @fact 1 - cos(90*pi/180) - 1e-15 <= dist_cos(fv1,fv2) <= 1 - cos(90*pi/180) + 1e-15 => true
+  @fact 1 - cos(45*pi/180) - 1e-15 <= dist_cos(fv2,fv3) <= 1 - cos(45*pi/180) + 1e-15 => true
+  @fact 1 - cos(45*pi/180) - 1e-15 <= dist_cos(fv1,fv3) <= 1 - cos(45*pi/180) + 1e-15 => true
+  @fact 1 - cos(60*pi/180) - 1e-15 <= dist_cos(fv1,fv4) <= 1 - cos(60*pi/180) + 1e-15 => true
+  @fact 1 - cos(30*pi/180) - 1e-15 <= dist_cos(fv2,fv4) <= 1 - cos(30*pi/180) + 1e-15 => true
+  @fact 1 - cos(0*pi/180) - 1e-15 <= dist_cos(fv1,fv1) <= 1 - cos(0*pi/180) + 1e-15 => true
 end
 
 
-facts("Find zero_dist between two FeatureVectors") do
+facts("Find dist_zero between two FeatureVectors") do
   fv = FeatureVector()
   fv1 = FeatureVector(Dict(["x"=>2,"y"=>7]))
   fv2 = FeatureVector(Dict(["x"=>0,"y"=>4]))
   fv3 = FeatureVector(Dict(["x"=>3,"y"=>0]))
   fv4 = FeatureVector(Dict(["x"=>0,"y"=>0]))
 
-  @fact zero_dist(fv,fv4) => 0
-  @fact zero_dist(fv1,fv1) => 0
-  @fact zero_dist(fv1,fv) == zero_dist(fv1,fv4) == 2 => true
-  @fact zero_dist(fv2,fv) == zero_dist(fv3,fv4) == 1 => true
-  @fact zero_dist(fv1,fv2) == zero_dist(fv1,fv3) == 1 => true
-  @fact zero_dist(fv2,fv3) => 2
+  @fact dist_zero(fv,fv4) => 0
+  @fact dist_zero(fv1,fv1) => 0
+  @fact dist_zero(fv1,fv) == dist_zero(fv1,fv4) == 2 => true
+  @fact dist_zero(fv2,fv) == dist_zero(fv3,fv4) == 1 => true
+  @fact dist_zero(fv1,fv2) == dist_zero(fv1,fv3) == 1 => true
+  @fact dist_zero(fv2,fv3) => 2
 end
 
 
-facts("Find taxicab_dist between two FeatureVectors") do
+facts("Find dist_taxicab between two FeatureVectors") do
   fv = FeatureVector()
   fv1 = FeatureVector(Dict(["x"=>2,"y"=>2]))
   fv2 = FeatureVector(Dict(["x"=>0,"y"=>2]))
   fv3 = FeatureVector(Dict(["x"=>2,"y"=>0]))
   fv4 = FeatureVector(Dict(["x"=>0,"y"=>0]))
 
-  @fact taxicab_dist(fv,fv4) => 0
-  @fact taxicab_dist(fv1,fv1) => 0
-  @fact taxicab_dist(fv1,fv) == taxicab_dist(fv1,fv4) == 4 => true
-  @fact taxicab_dist(fv2,fv) == taxicab_dist(fv3,fv4) == 2 => true
-  @fact taxicab_dist(fv1,fv2) == taxicab_dist(fv1,fv3) == 2 => true
-  @fact taxicab_dist(fv2,fv3) => 4
+  @fact dist_taxicab(fv,fv4) => 0
+  @fact dist_taxicab(fv1,fv1) => 0
+  @fact dist_taxicab(fv1,fv) == dist_taxicab(fv1,fv4) == 4 => true
+  @fact dist_taxicab(fv2,fv) == dist_taxicab(fv3,fv4) == 2 => true
+  @fact dist_taxicab(fv1,fv2) == dist_taxicab(fv1,fv3) == 2 => true
+  @fact dist_taxicab(fv2,fv3) => 4
 end
 
 
-facts("Find euclidean_dist between two FeatureVectors") do
+facts("Find dist_euclidean between two FeatureVectors") do
   fv = FeatureVector()
   fv1 = FeatureVector(Dict(["x"=>2,"y"=>2]))
   fv2 = FeatureVector(Dict(["x"=>0,"y"=>2]))
   fv3 = FeatureVector(Dict(["x"=>2,"y"=>0]))
   fv4 = FeatureVector(Dict(["x"=>0,"y"=>0]))
 
-  @fact euclidean_dist(fv,fv4) => 0
-  @fact euclidean_dist(fv1,fv1) => 0
-  @fact euclidean_dist(fv1,fv) == euclidean_dist(fv1,fv4) == sqrt(8) => true
-  @fact euclidean_dist(fv2,fv) == euclidean_dist(fv3,fv4) == 2 => true
-  @fact euclidean_dist(fv1,fv2) == euclidean_dist(fv1,fv3) == 2 => true
-  @fact euclidean_dist(fv2,fv3) => sqrt(8)
+  @fact dist_euclidean(fv,fv4) => 0
+  @fact dist_euclidean(fv1,fv1) => 0
+  @fact dist_euclidean(fv1,fv) == dist_euclidean(fv1,fv4) == sqrt(8) => true
+  @fact dist_euclidean(fv2,fv) == dist_euclidean(fv3,fv4) == 2 => true
+  @fact dist_euclidean(fv1,fv2) == dist_euclidean(fv1,fv3) == 2 => true
+  @fact dist_euclidean(fv2,fv3) => sqrt(8)
 end
 
 
-facts("Find infinite_dist between two FeatureVectors") do
+facts("Find dist_infinite between two FeatureVectors") do
   fv = FeatureVector()
   fv1 = FeatureVector(Dict(["x"=>10,"y"=>5]))
   fv2 = FeatureVector(Dict(["x"=>0,"y"=>5]))
   fv3 = FeatureVector(Dict(["x"=>10,"y"=>0]))
   fv4 = FeatureVector(Dict(["x"=>0,"y"=>0]))
 
-  @fact infinite_dist(fv,fv4) => 0
-  @fact infinite_dist(fv1,fv) == infinite_dist(fv1,fv4) == 10 => true
-  @fact infinite_dist(fv1,fv1) => 0
-  @fact infinite_dist(fv2,fv) => 5
-  @fact infinite_dist(fv3,fv4) => 10
-  @fact infinite_dist(fv1,fv2) => 10
-  @fact infinite_dist(fv1,fv3) => 5
-  @fact infinite_dist(fv2,fv3) => 10
+  @fact dist_infinite(fv,fv4) => 0
+  @fact dist_infinite(fv1,fv) == dist_infinite(fv1,fv4) == 10 => true
+  @fact dist_infinite(fv1,fv1) => 0
+  @fact dist_infinite(fv2,fv) => 5
+  @fact dist_infinite(fv3,fv4) => 10
+  @fact dist_infinite(fv1,fv2) => 10
+  @fact dist_infinite(fv1,fv3) => 5
+  @fact dist_infinite(fv2,fv3) => 10
 end
