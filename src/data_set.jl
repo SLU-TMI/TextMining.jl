@@ -1,7 +1,8 @@
 type DataSet <: FeatureSpace
   clusters::Dict{Any, Cluster}
+  vector_sum::FeatureVector
   mdata::Any
-  DataSet() = new(Dict{Any,Cluster}())
+  DataSet() = new(Dict{Any,Cluster}(),FeatureVector())
 end
 
 # returns the Cluster indexed by [key]
@@ -11,6 +12,10 @@ end
 
 # maps a [key] to a Cluster [c] 
 function setindex!(ds::DataSet, c::Cluster, key)
+  if haskey(ds, key)
+    subtract!(ds.vector_sum,ds[key].vector_sum)
+  end
+  add!(ds.vector_sum,c.vector_sum)
   ds.clusters[key] = c
 end
 
@@ -37,6 +42,6 @@ function isempty(ds::DataSet)
   return Base.isempty(ds.clusters)
 end
 
-function haskey(ds::DataSet) 
-  return Base.haskey(ds.clusters)
+function haskey(ds::DataSet, key) 
+  return Base.haskey(ds.clusters, key)
 end
