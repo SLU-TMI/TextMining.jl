@@ -7,8 +7,8 @@ type Distribution{FS<:FeatureSpace}
   mdata::Any
   Distribution() = new(FS(),0,0,_no_smoothing,[])
   Distribution(fv::FeatureVector) = new(fv,length(fv),get_total(fv),_no_smoothing,[])
-  Distribution(c::Cluster) = new(c,length(c.vector_sum),get_total(c.vector_sum),_no_smoothing,[])
-  Distribution(ds::DataSet) = new(ds,length(ds.vector_sum),get_total(ds.vector_sum),_no_smoothing,[])
+  Distribution(c::Cluster) = new(c,length(c.vector_sum),get_total(c.vector_sum) ,_no_smoothing,[])
+  Distribution(ds::DataSet) = new(ds,length(ds.vector_sum),get_total(ds.vector_sum) ,_no_smoothing,[])
   function get_total(fv::FeatureVector)
     total = 0
     for value in values(fv)
@@ -21,12 +21,24 @@ Distribution(fv::FeatureVector) = Distribution{FeatureVector}(fv)
 Distribution(c::Cluster) = Distribution{Cluster}(c)
 Distribution(ds::DataSet) = Distribution{DataSet}(ds)
 
-function getindex(d::Distribution{FeatureVector}, key)
-  return d.smooth(d, key, d.smooth_data)
+function getindex(d::Distribution, key)
+  return d.space[key]
+end
+
+function probability(d::Distribution, feature)
+  return d.smooth(d, feature, d.smooth_data)
 end
 
 function keys(d::Distribution)
   return keys(d.space)
+end
+
+function features(d::Distribution{FeatureVector})
+  return keys(d.space)
+end
+
+function features(d::Distribution)
+  return keys(d.space.vector_sum)
 end
 
 function isempty(d::Distribution)
@@ -35,8 +47,8 @@ end
 
 function entropy(d::Distribution)
   ent = 0
-  for key in keys(d)
-    ent -= d[key]*log2(d[key])
+  for feature in features(d)
+    ent -= probability(d,feature)*log2(probability(d,feature))
   end
   return ent
 end
@@ -59,8 +71,12 @@ function remove_smoothing!(d::Distribution)
   set_smooth!(d,_no_smoothing,[])
 end
 
-function _no_smoothing(d::Distribution, key, data::Array)
+function _no_smoothing(d::Distribution{FeatureVector}, key, data::Array)
   return d.space[key] / d.total
+end
+
+function _no_smoothing(d::Distribution, feature, data::Array)
+  return d.space.vector_sum[feature] / d.total
 end
 
 #add-delta smoothing, default to add-one smoothing
