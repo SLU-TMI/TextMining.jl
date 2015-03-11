@@ -51,3 +51,29 @@ end
 function haskey(c::Cluster, key) 
   return Base.haskey(c.vectors, key)
 end
+
+# prints out the cluster cleanly.
+function Base.display(cl::Cluster)
+  println(typeof(cl))
+  cl_keys = collect(keys(cl))
+  k = length(cl_keys)
+  print("\tVectors:")
+  if k > 0
+    @printf("\n\t  # Of Vectors: %d\n", k)
+    display(cl.vector_sum)
+    print()
+    if k > 5
+     k = 5
+    end
+
+    @printf("\t  First %d Vectors:\n",k)
+    for key in cl_keys[1:k]
+      @printf("\t    %s:\n",key)
+      display(cl[key])
+      println()
+    end
+  else
+    println("  (EMPTY)")
+  end
+end
+

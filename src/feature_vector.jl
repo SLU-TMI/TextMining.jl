@@ -361,3 +361,25 @@ function dist_infinite(fv1::FeatureVector, fv2::FeatureVector)
 
   return max
 end
+
+# prints out the fv cleanly.
+function Base.display(fv::FeatureVector)
+  println(typeof(fv))
+  fv_list = freq_list(fv)
+  k = length(fv_list)
+  print("\tMap:")
+  if k > 0
+    @printf("\n\t  # Of Features: %d\n", k)
+    
+    if k > 5
+     k = 5
+    end
+
+    @printf("\t  Top %d Features:\n",k)
+    for key in fv_list[1:k]
+      @printf("\t    %s\n",key)
+    end
+  else
+    println("  (EMPTY)")
+  end
+end
