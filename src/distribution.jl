@@ -93,3 +93,7 @@ function _δ_smoothing(d::Distribution, key, data::Array)
   end
   return (d.space[key]+data[1])/(data[1]*(data[2]+1)+data[3])
 end
+
+function display(dist::Distribution)
+  display(dist.space)
+end

@@ -53,27 +53,27 @@ function haskey(c::Cluster, key)
 end
 
 # prints out the cluster cleanly.
-function Base.display(cl::Cluster)
-  println(typeof(cl))
-  cl_keys = collect(keys(cl))
-  k = length(cl_keys)
-  print("\tVectors:")
+function display(cl::Cluster)
+  print_with_color(:white,string(typeof(cl)))
+  k = length(cl)
+
+  print_with_color(:white," with $k FeatureVectors")
   if k > 0
-    @printf("\n\t  # Of Vectors: %d\n", k)
-    display(cl.vector_sum)
-    print()
+    print_with_color(:white,":\n")
     if k > 5
-     k = 5
+      k = 5
     end
 
-    @printf("\t  First %d Vectors:\n",k)
-    for key in cl_keys[1:k]
-      @printf("\t    %s:\n",key)
-      display(cl[key])
-      println()
+    for key in collect(keys(cl))[1:k]
+      l = length(cl[key])
+      if length(key) > 40
+        key = key[1:40]
+        key = key*"…"
+      end
+      print_with_color(:white,"    $key with $l features\n")
     end
-  else
-    println("  (EMPTY)")
+    if length(cl) > 5
+      print_with_color(:white,"\t\t\t⋮\n")
+    end
   end
 end
-
