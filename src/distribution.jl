@@ -78,14 +78,14 @@ end
 
 #=simple good-turing smoothing
 function goodturing_smoothing!(d::Distribution)
-	#need frequencies of frequencies here
-	#aka there are 120 words that occur 1 time, 20 words that occur 2 times, etc
-	set_smooth!(d,_gt_smoothing, [d.total, #frequencies])
+  #need frequencies of frequencies here
+  #aka there are 120 words that occur 1 time, 20 words that occur 2 times, etc
+  set_smooth!(d,_gt_smoothing, [d.total, #frequencies])
 end
 
 function _gt_smoothing(d::Distribution, key, data::Array)
-	if !haskey(d.space, key)
-		#return "number of words that occur once" / data[1]
-	end
-	#return distribution smoothed by good-turing, see papers
+  if !haskey(d.space, key)
+  #return "number of words that occur once" / data[1]
+  end
+  #return distribution smoothed by good-turing, see papers
 =#
