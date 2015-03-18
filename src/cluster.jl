@@ -51,3 +51,29 @@ end
 function haskey(c::Cluster, key) 
   return Base.haskey(c.vectors, key)
 end
+
+# prints out the cluster cleanly.
+function display(cl::Cluster)
+  print_with_color(:white,string(typeof(cl)))
+  k = length(cl)
+
+  print_with_color(:white," with $k FeatureVectors")
+  if k > 0
+    print_with_color(:white,":\n")
+    if k > 5
+      k = 5
+    end
+
+    for key in collect(keys(cl))[1:k]
+      l = length(cl[key])
+      if length(key) > 40
+        key = key[1:40]
+        key = key*"…"
+      end
+      print_with_color(:white,"    $key with $l features\n")
+    end
+    if length(cl) > 5
+      print_with_color(:white,"\t\t\t⋮\n")
+    end
+  end
+end

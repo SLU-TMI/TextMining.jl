@@ -45,3 +45,29 @@ end
 function haskey(ds::DataSet, key) 
   return Base.haskey(ds.clusters, key)
 end
+
+# prints out the dataset cleanly
+function display(ds::DataSet)
+  print_with_color(:white,string(typeof(ds)))
+  k = length(ds.clusters)
+
+  print_with_color(:white," with $k Clusters")
+  if k > 0
+    print_with_color(:white,":\n")
+    if k > 5
+      k = 5
+    end
+
+    for key in collect(keys(ds))[1:k]
+      l = length(ds[key])
+      if length(key) > 40
+        key = key[1:40]
+        key = key*"…"
+      end
+      print_with_color(:white,"    $key with $l FeatureVectors\n")
+    end
+    if length(ds) > 5
+      print_with_color(:white,"\t\t\t⋮\n")
+    end
+  end
+end

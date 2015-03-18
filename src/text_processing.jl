@@ -27,13 +27,63 @@ function parse_xml(doc)
   return text
 end
 
-function load_dir(files)
-  x = 1
-  new_texts = Array(Any,Base.length(files))
-  for file in files
-    new_texts[x] = parse_xml(file)
-    x+=1
+function load_featurevector(path)
+  if isfile(path)
+    fv = FeatureVector()
+    parsed_file = parse_xml(path)
+    clean_text = clean(parsed_file)
+    for word in clean_text
+      if word in keys(fv)
+        fv[word] += 1
+      else
+        setindex!(fv,1,word)
+      end
+    end
+    return fv
+  else
+    Base.warn("$path is not to a valid file. Please check the path and try again.")
   end
+end
 
-  return new_texts
+function load_cluster(path)
+  if isdir(path)
+    curdir = pwd()
+    cd(path)
+    files = readdir(pwd())
+    cl = Cluster()
+    for file in files
+      if endswith(file,"xml")
+        fv = load_featurevector(file)
+        cl[file] = fv
+      else
+        Base.warn("$file is not a valid file. Please enter a path to a directory of .xml files.")
+      end
+    end
+    cd(curdir)
+    return cl
+  else
+    Base.warn("$path is not to a valid directory. Please check the path and try again.")
+  end
+end
+
+function load_dataset(path)
+  if isdir(path)
+    curdir = pwd()
+    cd(path)
+    dirs = readdir(pwd())
+    ds = DataSet()
+    for dir in dirs
+      cl = Cluster()
+      if isdir(dir)
+        cl = load_cluster(dir)
+        ds[dir] = cl
+      else
+        Base.warn("$dir is not a valid Directory. This will not be added.")
+      end
+    end
+    cd(curdir)
+    return ds
+  else
+    Base.warn("$path is not to a valid directory. Please check the path and try again.")
+  end
 end

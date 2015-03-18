@@ -361,3 +361,22 @@ function dist_infinite(fv1::FeatureVector, fv2::FeatureVector)
 
   return max
 end
+
+# prints out the fv cleanly.
+function display(fv::FeatureVector)
+  print_with_color(:white,string(typeof(fv)))
+  fv_list = freq_list(fv)
+  k = length(fv_list)
+  print_with_color(:white," with $k features")
+  if k > 0
+    print_with_color(:white,":\n")
+    if k > 5
+      k = 5
+    end
+
+    print_with_color(:white,"  Top $k Features:\n")
+    for key in fv_list[1:k]
+      print_with_color(:white,"    $key\n")
+    end
+  end
+end
