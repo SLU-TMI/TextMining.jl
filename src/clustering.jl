@@ -45,6 +45,16 @@ function kmeans(clust::Dict, cents::Array=[], k=iceil(sqrt(length(clust)/2)), in
   # find initial k centroids
   features = collect(Base.values(clust))
   clust_keys = collect(Base.keys(clust))
+
+  j = 1
+  if k == 1
+    single_clust = Cluster()
+    for fv in features
+      single_clust[clust_keys[j]] = fv
+      j += 1
+    end
+    return [single_clust]
+  end
   
   # check if user sent in own array of centroids
   if Base.length(cents) == 0
