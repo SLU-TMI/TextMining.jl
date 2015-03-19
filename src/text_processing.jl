@@ -33,6 +33,26 @@ function parse_xml(doc)
   return text
 end
 
+function get_metadata(doc)
+  metadata=[]
+  xroot = root(doc)
+  ces = get_elements_by_tagname(xroot, "HEADER") 
+  ces = get_elements_by_tagname(ces[1], "FILEDESC")
+  ces = get_elements_by_tagname(ces[1], "TITLESTMT")	
+  ces1 = get_elements_by_tagname(ces[1], "TITLE")
+  body = content(ces1[1])
+  title = string(body)
+  push!(metadata,title)
+  
+  ces2 = get_elements_by_tagname(ces[3], "AUTHOR")
+  body2 = content(ces2[1])
+  author = string(body2)
+  push!(metadata,author)
+  
+  return metadata
+end
+  
+
 function load_featurevector(path)
   if isfile(path)
     fv = FeatureVector()
