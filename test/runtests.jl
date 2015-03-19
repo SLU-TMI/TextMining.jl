@@ -1,6 +1,3 @@
-using FactCheck
-
-include("../src/TextMining.jl")
 
 function run_tests()
   reload("./test/feature_vector_tests.jl")
