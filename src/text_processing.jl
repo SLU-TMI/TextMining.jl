@@ -21,7 +21,12 @@ function parse_xml(doc)
   xdoc = parse_file(doc)
   xroot = root(xdoc)
   ces = get_elements_by_tagname(xroot, "EEBO")
-  ces = get_elements_by_tagname(ces[1], "TEXT")
+  children = collect(child_elements(ces[1]))
+  if(name(children[2]) == "GROUP")
+    ces = get_elements_by_tagname(ces[1], "GROUP")
+  else
+    ces = get_elements_by_tagname(ces[1], "TEXT")
+  end
   body = content(ces[1])
   text = string(body)
 
