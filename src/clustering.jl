@@ -1,5 +1,3 @@
-using ASCIIPlots;
-
 #TODO
 function hclust(data, dist)
 end
