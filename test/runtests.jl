@@ -1,3 +1,4 @@
+using FactCheck
 
 function run_tests()
   reload("./test/feature_vector_tests.jl")
