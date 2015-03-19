@@ -20,7 +20,8 @@ end
 function parse_xml(doc)
   xdoc = parse_file(doc)
   xroot = root(xdoc)
-  ces = get_elements_by_tagname(xroot, "text")
+  ces = get_elements_by_tagname(xroot, "EEBO")
+  ces = get_elements_by_tagname(ces[1], "TEXT")
   body = content(ces[1])
   text = string(body)
 
