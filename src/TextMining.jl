@@ -1,6 +1,6 @@
 module TextMining
 
-using ASCIIPlots, LightXML
+using ASCIIPlots, LightXML, FactCheck
 
 import Base: getindex, setindex!, isempty, keys, values,
     copy, length, haskey, display
@@ -13,6 +13,7 @@ include("data_set.jl")
 include("clustering.jl")
 include("distribution.jl")
 include("text_processing.jl")
+include("../tests/runtests.jl")
 
 export  #types 
   Cluster, DataSet, Distribution, FeatureSpace, FeatureVector,
@@ -33,6 +34,8 @@ export  #types
   multiply!, divide!, rationalize!, dist_cos, dist_zero,
   dist_zero_weighted, dist_taxicab, dist_euclidean, dist_infinite,
   #text processing
-  clean, parse_xml, load_featurevector, load_cluster, load_dataset
+  clean, parse_xml, load_featurevector, load_cluster, load_dataset,
+  #tests
+  run_tests
 
 end
