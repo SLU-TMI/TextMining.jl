@@ -1,3 +1,4 @@
+using TextMining
 using FactCheck
 using Compat
 
