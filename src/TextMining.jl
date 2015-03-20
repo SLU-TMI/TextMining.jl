@@ -27,7 +27,7 @@ export  #types
   #data set
   #distribution
   probability, features, entropy, info_gain, perplexity, set_smooth,
-  remove_smoothing!, delta_smoothing,
+  remove_smoothing!, delta_smoothing!,
   #feature vector
   sanitize!, freq_list, find_common_type, add!, subtract!, 
   multiply!, divide!, rationalize!, dist_cos, dist_zero,

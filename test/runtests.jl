@@ -1,9 +1,10 @@
+using TextMining
 using FactCheck
+using Compat
 
-function run_tests()
-  reload("./test/feature_vector_tests.jl")
-  reload("./test/cluster_tests.jl")
-  reload("./test/data_set_tests.jl")
-  reload("./test/clustering_tests.jl")
-  reload("./test/distribution_tests.jl")
-end
+reload("feature_vector_tests.jl")
+reload("cluster_tests.jl")
+reload("data_set_tests.jl")
+reload("clustering_tests.jl")
+reload("distribution_tests.jl")
+exitstatus()

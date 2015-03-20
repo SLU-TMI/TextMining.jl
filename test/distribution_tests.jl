@@ -138,5 +138,4 @@ facts("Smoothing FeatureVector has correct probabilties before and after") do
   @fact probability(d1,"word") => (7/20)
   @fact probability(d1,"another") => (13/20)
   @fact probability(d1,"unk") => (0/20)
-  
 end
