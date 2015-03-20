@@ -33,6 +33,6 @@ export  #types
   multiply!, divide!, rationalize!, dist_cos, dist_zero,
   dist_zero_weighted, dist_taxicab, dist_euclidean, dist_infinite,
   #text processing
-  clean, parse_xml, load_featurevector, load_cluster, load_dataset,
+  clean, parse_xml, load_featurevector, load_cluster, load_dataset
 
 end
