@@ -29,6 +29,8 @@ function parse_xml(doc)
   body = content(ces[1])
   text = string(body)
 
+  free(xdoc)
+  
   return text
 end
 
