@@ -71,6 +71,10 @@ function remove_smoothing!(d::Distribution)
   set_smooth!(d,_no_smoothing,[])
 end
 
+function _no_smoothing(d::Distribution{FeatureVector}, key, data::Array)
+  return d.space[key] / d.total
+end
+
 function _no_smoothing(d::Distribution, feature, data::Array)
   return d.space.vector_sum[feature] / d.total
 end
@@ -95,8 +99,9 @@ function display(dist::Distribution)
 end
 
 #=simple good-turing smoothing
-function goodturing_smoothing!(d::Distribution)
-  #need frequencies of frequencies here
+function goodturing_smoothing!(d::Distribution{FeatureVector})
+  frequencies = [0, 0] 
+  for key in freq_list(d.space, (a,b) -> a[2]<b[2])
   #aka there are 120 words that occur 1 time, 20 words that occur 2 times, etc
   set_smooth!(d,_gt_smoothing, [d.total, #frequencies])
 end
