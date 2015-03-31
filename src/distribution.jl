@@ -112,5 +112,8 @@ function _gt_smoothing(d::Distribution, key, data::Array)
   if !haskey(d.space, key)
     return data[2][1] / data[1] #num of keys that occur once / total number of keys
   end
+  c = d.space[key]
+  return (c+1) * (data[2][c+1]/data[2][c])
+
   #return distribution smoothed by good-turing, see papers
 =#
