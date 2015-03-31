@@ -61,6 +61,7 @@ function perplexity(d::Distribution)
   return 2^entropy(d)
 end
 
+#helper function that sets the smoothing type
 function set_smooth!(d::Distribution{FeatureVector}, f::Function, sd::Array)
   d.smooth = f
   d.smooth_data = sd
@@ -100,15 +101,16 @@ end
 
 #=simple good-turing smoothing
 function goodturing_smoothing!(d::Distribution{FeatureVector})
-  frequencies = [0, 0] 
-  for key in freq_list(d.space, (a,b) -> a[2]<b[2])
-  #aka there are 120 words that occur 1 time, 20 words that occur 2 times, etc
-  set_smooth!(d,_gt_smoothing, [d.total, #frequencies])
+  freqs = Dict{Integer,Integer}() #frequency => num keys appearing with that frequency
+  for value in values(d.space)
+    freqs[value] += 1
+  end
+  set_smooth!(d,_gt_smoothing, [d.total, freqs])
 end
 
 function _gt_smoothing(d::Distribution, key, data::Array)
   if !haskey(d.space, key)
-  #return "number of words that occur once" / data[1]
+    return data[2][1] / data[1] #num of keys that occur once / total number of keys
   end
   #return distribution smoothed by good-turing, see papers
 =#
