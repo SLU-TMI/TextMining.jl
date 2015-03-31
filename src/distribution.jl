@@ -61,6 +61,10 @@ function perplexity(d::Distribution)
   return 2^entropy(d)
 end
 
+function display(dist::Distribution)
+  display(dist.space)
+end
+
 #helper function that sets the smoothing type
 function set_smooth!(d::Distribution{FeatureVector}, f::Function, sd::Array)
   d.smooth = f
@@ -88,21 +92,32 @@ function delta_smoothing!(d::Distribution, δ::Number=1)
   set_smooth!(d,_δ_smoothing,[δ,d.features,d.total])
 end
 
-function _δ_smoothing(d::Distribution, key, data::Array)
+function _δ_smoothing(d::Distribution{FeatureVector}, key, data::Array)
   if !haskey(d.space, key)
     return (data[1])/(data[1]*(data[2]+1)+data[3])
   end
   return (d.space[key]+data[1])/(data[1]*(data[2]+1)+data[3])
 end
 
-function display(dist::Distribution)
-  display(dist.space)
+function _δ_smoothing(d::Distribution, key, data::Array)
+  if !haskey(d.space.vector_sum, key)
+    return (data[1])/(data[1]*(data[2]+1)+data[3])
+  end
+  return (d.space[key]+data[1])/(data[1]*(data[2]+1)+data[3])
 end
 
 #=simple good-turing smoothing
 function goodturing_smoothing!(d::Distribution{FeatureVector})
   freqs = Dict{Integer,Integer}() #frequency => num keys appearing with that frequency
   for value in values(d.space)
+    freqs[value] += 1
+  end
+  set_smooth!(d,_gt_smoothing, [d.total, freqs])
+end
+
+function goodturing_smoothing!(d::Distribution)
+  freqs = Dict{Integer,Integer}() #frequency => num keys appearing with that frequency
+  for value in values(d.space.vector_sum)
     freqs[value] += 1
   end
   set_smooth!(d,_gt_smoothing, [d.total, freqs])
