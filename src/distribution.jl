@@ -61,6 +61,11 @@ function perplexity(d::Distribution)
   return 2^entropy(d)
 end
 
+function display(dist::Distribution)
+  display(dist.space)
+end
+
+#helper function that sets the smoothing type
 function set_smooth!(d::Distribution{FeatureVector}, f::Function, sd::Array)
   d.smooth = f
   d.smooth_data = sd
@@ -79,7 +84,7 @@ function _no_smoothing(d::Distribution, feature, data::Array)
   return d.space.vector_sum[feature] / d.total
 end
 
-#add-delta smoothing, default to add-one smoothing
+#add-delta smoothing, defaults to add-one smoothing
 function delta_smoothing!(d::Distribution, δ::Number=1)
   if δ <= 0
     Base.warn("δ must be greater than 0") 
@@ -87,13 +92,51 @@ function delta_smoothing!(d::Distribution, δ::Number=1)
   set_smooth!(d,_δ_smoothing,[δ,d.features,d.total])
 end
 
-function _δ_smoothing(d::Distribution, key, data::Array)
+function _δ_smoothing(d::Distribution{FeatureVector}, key, data::Array)
   if !haskey(d.space, key)
     return (data[1])/(data[1]*(data[2]+1)+data[3])
   end
   return (d.space[key]+data[1])/(data[1]*(data[2]+1)+data[3])
 end
 
-function display(dist::Distribution)
-  display(dist.space)
+function _δ_smoothing(d::Distribution, key, data::Array)
+  if !haskey(d.space.vector_sum, key)
+    return (data[1])/(data[1]*(data[2]+1)+data[3])
+  end
+  return (d.space[key]+data[1])/(data[1]*(data[2]+1)+data[3])
+end
+
+#simple good-turing smoothing
+function goodturing_smoothing!(d::Distribution{FeatureVector})
+  freqs = FeatureVector() 
+  for value in values(d.space)
+    freqs[value] += 1
+  end
+  set_smooth!(d,_gt_smoothing, [d.total, freqs])
+end
+
+function goodturing_smoothing!(d::Distribution)
+  freqs = FeatureVector() 
+  for value in values(d.space.vector_sum)
+    freqs[value] += 1
+  end
+  set_smooth!(d,_gt_smoothing, [d.total, freqs])
+end
+
+function _gt_smoothing(d::Distribution{FeatureVector}, key, data::Array)
+  if !haskey(d.space, key)
+    return data[2][1] / data[1] #num of keys that occur once / total number of keys
+  end
+  c = d.space[key]
+  c_adjust = (c+1) * (data[2][c+1]/data[2][c])
+  return c_adjust / data[1]
+end
+
+function _gt_smoothing(d::Distribution, key, data::Array)
+  if !haskey(d.space.vector_sum, key)
+    return data[2][1] / data[1] #num of keys that occur once / total number of keys
+  end
+  c = d.space.vector_sum[key]
+  c_adjust = (c+1) * (data[2][c+1]/data[2][c])
+  return c_adjust / data[1]
 end
