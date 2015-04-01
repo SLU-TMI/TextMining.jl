@@ -26,8 +26,8 @@ export  #types
   random_init, max_min_init, kmeans, elbow_method,
   #data set
   #distribution
-  probability, features, entropy, info_gain, perplexity, set_smooth,
-  remove_smoothing!, delta_smoothing!,
+  probability, features, entropy, info_gain, perplexity,
+  remove_smoothing!, delta_smoothing!, goodturing_smoothing!
   #feature vector
   sanitize!, freq_list, find_common_type, add!, subtract!, 
   multiply!, divide!, rationalize!, dist_cos, dist_zero,

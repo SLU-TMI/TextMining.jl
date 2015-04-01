@@ -106,9 +106,9 @@ function _δ_smoothing(d::Distribution, key, data::Array)
   return (d.space[key]+data[1])/(data[1]*(data[2]+1)+data[3])
 end
 
-#=simple good-turing smoothing
+#simple good-turing smoothing
 function goodturing_smoothing!(d::Distribution{FeatureVector})
-  freqs = Dict{Integer,Integer}() #frequency => num keys appearing with that frequency
+  freqs = FeatureVector() 
   for value in values(d.space)
     freqs[value] += 1
   end
@@ -116,19 +116,27 @@ function goodturing_smoothing!(d::Distribution{FeatureVector})
 end
 
 function goodturing_smoothing!(d::Distribution)
-  freqs = Dict{Integer,Integer}() #frequency => num keys appearing with that frequency
+  freqs = FeatureVector() 
   for value in values(d.space.vector_sum)
     freqs[value] += 1
   end
   set_smooth!(d,_gt_smoothing, [d.total, freqs])
 end
 
-function _gt_smoothing(d::Distribution, key, data::Array)
+function _gt_smoothing(d::Distribution{FeatureVector}, key, data::Array)
   if !haskey(d.space, key)
     return data[2][1] / data[1] #num of keys that occur once / total number of keys
   end
   c = d.space[key]
-  return (c+1) * (data[2][c+1]/data[2][c])
+  c_adjust = (c+1) * (data[2][c+1]/data[2][c])
+  return c_adjust / data[1]
+end
 
-  #return distribution smoothed by good-turing, see papers
-=#
+function _gt_smoothing(d::Distribution, key, data::Array)
+  if !haskey(d.space.vector_sum, key)
+    return data[2][1] / data[1] #num of keys that occur once / total number of keys
+  end
+  c = d.space.vector_sum[key]
+  c_adjust = (c+1) * (data[2][c+1]/data[2][c])
+  return c_adjust / data[1]
+end
