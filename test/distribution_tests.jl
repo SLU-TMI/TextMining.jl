@@ -134,7 +134,7 @@ facts("Smoothing FeatureVector has correct probabilties before and after") do
   @fact probability(d1,"unk") => (1/(3+20))
 
   #good-turing smoothing
-#=  dict3 = ["the" => 15, "of" => 16, "what" => 1, "a" => 1, "unique" => 1, "word" => 1, "twice" => 2, "two" => 2, "party" => 2, "three" => 3]
+  dict3 = ["the" => 15, "of" => 16, "what" => 1, "a" => 1, "unique" => 1, "word" => 1, "twice" => 2, "two" => 2, "party" => 2, "three" => 3]
   fv3 = FeatureVector(dict3)
   d3 = Distribution(fv3)
   goodturing_smoothing!(d3)
@@ -142,7 +142,7 @@ facts("Smoothing FeatureVector has correct probabilties before and after") do
   @fact probability(d3,"twice") => (((2+1)*(1/3))/44)
   @fact probability(d3,"three") => (((3+1)*(0/1))/44)
   @fact probability(d3,"unk") => (4/44) 
-=#
+
   #removing smoothing
   remove_smoothing!(d1)
   @fact probability(d1,"word") => (7/20)
