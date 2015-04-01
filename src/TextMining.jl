@@ -19,7 +19,7 @@ export  #types
   
   #functions
   #classification
-  knn, 
+  knn, hclust,
   #cluster
   centroid, distance, 
   #clustering
