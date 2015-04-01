@@ -13,9 +13,10 @@ include("data_set.jl")
 include("clustering.jl")
 include("distribution.jl")
 include("text_processing.jl")
+include(“tree.jl”)
 
 export  #types 
-  Cluster, DataSet, Distribution, FeatureSpace, FeatureVector,
+  Cluster, DataSet, Distribution, FeatureSpace, FeatureVector, BinaryTree, BinaryTreeNode, EmptyTree,
   
   #functions
   #classification
