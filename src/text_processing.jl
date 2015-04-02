@@ -42,12 +42,12 @@ function get_metadata(doc)
   ces1 = get_elements_by_tagname(ces[1], "TITLE")
   body = content(ces1[1])
   title = string(body)
-  push!(metadata,title)
+  metadata = [title]
   
   ces2 = get_elements_by_tagname(ces[3], "AUTHOR")
   body2 = content(ces2[1])
   author = string(body2)
-  metadata = [author]
+  push!(metadata, author)
   
   return metadata
 end
