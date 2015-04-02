@@ -35,7 +35,6 @@ function parse_xml(doc)
 end
 
 function get_metadata(doc)
-  metadata=[]
   xroot = root(doc)
   ces = get_elements_by_tagname(xroot, "HEADER") 
   ces = get_elements_by_tagname(ces[1], "FILEDESC")
@@ -48,7 +47,7 @@ function get_metadata(doc)
   ces2 = get_elements_by_tagname(ces[3], "AUTHOR")
   body2 = content(ces2[1])
   author = string(body2)
-  push!(metadata,author)
+  metadata = [author]
   
   return metadata
 end
