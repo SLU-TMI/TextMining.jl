@@ -1,5 +1,45 @@
 println("**********Testing Clustering**********")
 
+facts("Run hclust on multiple FeatureVectors") do
+
+  a = FeatureVector(Dict(["pickle"=>1, "wand"=>10]))
+  b = FeatureVector(Dict(["word"=>131, "war"=>5]))
+  c = FeatureVector(Dict(["saint"=>8, "waffle"=>44]))
+  d = FeatureVector(Dict(["kid"=>97, "taco"=>18]))
+  e = FeatureVector(Dict(["krap"=>49, "sock"=>22]))
+  f = FeatureVector(Dict(["sack"=>201, "chartreuse"=>30]))
+  g = FeatureVector(Dict(["knack"=>201, "balls"=>30]))
+  i = FeatureVector(Dict(["snot"=>1, "falcon"=>2, "water"=>19]))
+  j = FeatureVector(Dict(["fart"=>13, "snot"=>50, "calculator"=>11]))
+  k = FeatureVector(Dict(["waffle"=>8, "feather"=>41, "water"=>19]))
+  l = FeatureVector(Dict(["nard"=>197, "knock"=>45, "phanome"=>9]))
+  m = FeatureVector(Dict(["knock"=>73, "sock"=>20, "butter"=>1]))
+  n = FeatureVector(Dict(["knee"=>20, "falcon"=>300, "France"=>45]))
+  o = FeatureVector(Dict(["snot"=>1, "falcon"=>2, "wrench"=>9, "taco"=>74]))
+  p = FeatureVector(Dict(["fart"=>13, "snot"=>50, "water"=>74, "or"=>194]))
+  q = FeatureVector(Dict(["waffle"=>8, "feather"=>41, "chartreuse"=>24, "pickle"=>6]))
+  r = FeatureVector(Dict(["nard"=>197, "knock"=>45, "superhotdogmission"=>1, "androgyny"=>4]))
+  s = FeatureVector(Dict(["knock"=>73, "sock"=>20, "taco"=>35, "hoop"=>16]))
+  t = FeatureVector(Dict(["knee"=>20, "falcon"=>300, "fresh"=>88, "prince"=>88]))
+  u = FeatureVector(Dict(["snot"=>1, "falcon"=>1, "wrench"=>1, "taco"=>1, "prince"=>1]))
+  v = FeatureVector(Dict(["fart"=>1, "snot"=>1, "water"=>1, "or"=>1, "prince"=>1]))
+  w = FeatureVector(Dict(["waffle"=>1, "feather"=>1, "chartreuse"=>1, "pickle"=>1, "prince"=>1]))
+  x = FeatureVector(Dict(["nard"=>1, "knock"=>1, "superhotdogmission"=>1, "androgyny"=>1, "prince"=>1]))
+  y = FeatureVector(Dict(["knock"=>1, "sock"=>1, "taco"=>35, "hoop"=>1, "prince"=>1]))
+  z = FeatureVector(Dict(["knee"=>1, "falcon"=>1, "fresh"=>1, "prince"=>1, "princes"=>1]))
+
+  data = [a,b,c,d,e,f,g,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z]
+  h = hclust(data)
+  @fact isa(h,BinaryTree) => true
+
+end
+
+facts("hclust deals returns nothing on incorrect input") do
+  @fact hclust(3456787) => nothing
+  @fact hclust("taco sauce") => nothing
+  @fact hclust((4,5)) => nothing
+end
+
 facts("Random init provides k initial centroids") do
   a = FeatureVector(Dict(["hello"=>4, "word"=>0]))
   b = FeatureVector(Dict(["hello"=>0, "word"=>5]))

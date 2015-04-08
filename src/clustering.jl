@@ -1,5 +1,180 @@
-#TODO
-function hclust(data, dist)
+#build q-matrix from a distance matrix m (nxn)
+function qmake(m)
+  #print("inside qmake\n")
+  #print("ln 9\n")
+  n = size(m)[1]
+  #print("ln 11\n")
+  q = Array(Any,n,n)
+  #print("ln 13\n")
+  for i = 1:n
+    #print(i)
+    for j = 1:n
+      if j == i
+        q[i,j] = 0
+      else
+        #print("ln 20\n")
+        x = (n-2)*m[i,j]
+        y = sum(m[i,:])-sum(m[j,:])
+        #print("ln 23\n")
+        q[i,j] = x-y
+        #print("ln 25\n")
+      end
+    end
+  end
+  #print("q=\n")
+  #print(q)
+  #print("\n\n")
+  return q
+end
+#  find lowest value in a matrix q (nxn) and return its index
+function nfind(q)
+  #print("inside nfind\n")
+  n = size(q)[1]
+  if n <= 1
+    return nothing
+  end
+  lowest = q[1,2]
+  lowestIndex = (1,2)
+  for i = 1:n
+    for j = 1:n
+      current = q[i,j]
+      if current != 0
+        if current != NaN
+          if current < lowest
+            lowest = current
+            #print("lowest = \n")
+            #print(lowest)
+            #print("\n\n")
+            lowestIndex = (i,j)
+          end
+        end
+      end
+    end
+  end
+  return lowestIndex
+end
+
+function hclust(fvectors,dist = dist_cos)
+  #print("inside hclust\n")
+  if !isa(fvectors,Array)
+    return nothing
+  end
+  tree = EmptyTree{Any,Any}()
+  tree = setindex!(tree,1,"root")
+  if length(fvectors) == 0
+    b = BinaryTree{Any,Any}()
+    return b
+  end
+  if length(fvectors) == 1
+    tree.left = setindex!(tree.left,fvectors[1],"left")
+    b = BinaryTree{Any,Any}()
+    b.root = tree
+    return b
+  elseif length(fvectors) == 2
+    tree.left = setindex!(tree.left,fvectors[1],"left")
+    tree.right = setindex!(tree.right,fvectors[2],"right")
+    b = BinaryTree{Any,Any}()
+    b.root = tree
+    return b
+  end
+  ind = 1
+  data = Any[]
+  append!(data,fvectors)
+  while length(data) > 1
+    ind = ind + 1
+    #print("\n\nbeginning of loop, Data:\n")
+    #print(data)
+    #print("\n\n")
+    #print("LENGTH Data:\n")
+    #print(length(data))
+    #print("\n\n")
+    #make an empty distance matrix
+    d = Array(Any,length(data),length(data))
+    fill!(d,0)
+    # populate it with distances
+    for i = 1:length(data)
+      for j = 1:length(data)
+        if isa(data[i],Cluster) && isa(data[j],Cluster)
+          d[i,j] = dist_cos(centroid(data[i]),centroid(data[j]))
+        elseif isa(data[i],FeatureVector) && isa(data[j],Cluster)
+          d[i,j] = dist_cos(data[i],centroid(data[j]))
+        elseif isa(data[i],Cluster) && isa(data[j],FeatureVector)
+          d[i,j] = dist_cos(centroid(data[i]),data[j])
+        elseif isa(data[i],FeatureVector) && isa(data[j],FeatureVector)
+          d[i,j] = dist_cos(data[i],data[j])
+        else
+          continue
+        end
+      end
+    end
+    #print("\n\nexited loop, d:\n")
+    #print(d)
+    #print("\n\n")
+    q = Any
+    p = Any
+    if length(data) >= 3
+      q = qmake(d)
+      #print("ln 83\n")
+      p = nfind(q)
+      #print("ln 85\n")
+    else
+      p = (1,2)
+    end
+    if p == nothing
+      return nothing
+    end
+    u = Any
+    # merge neighbors into u
+    if isa(data[p[1]],FeatureVector) && isa(data[p[2]],FeatureVector)
+      u = Cluster()
+      u["v1"] = data[p[1]]
+      u["v2"] = data[p[2]]
+    else
+      u = EmptyTree{Any,Any}()
+      u = setindex!(u,ind,"node")
+      u.left = setindex!(u.left,data[p[1]],"left")
+      u.right = setindex!(u.right,data[p[2]],"right")
+    end
+
+    #print("\n\nu =\n")
+    #print(u)
+    #print("\n\n")
+
+# push u onto data
+    push!(data,u)
+
+    #print("\n\nbefore splice, Data:\n")
+    #print(data)
+    #print("\n\n")
+    #print("LENGTH Data:\n")
+    #print(length(data))
+    #print("\n\n")
+    #print("Removing these 2 indices from Data:\n")
+    #print(p[1])
+    #print("\n")
+    #print(p[2])
+#  ...
+    if p[1] > p[2]
+      splice!(data,p[1])
+      splice!(data,p[2])
+    else
+      splice!(data,p[2])
+      splice!(data,p[1])
+    end
+
+    #print("\n\nafter splice, Data:\n")
+    #print(data)
+    #print("\n\n")
+    #print("LENGTH Data:\n")
+    #print(length(data))
+    #print("\n\n")
+  end
+  if length(data) == 1
+    b = BinaryTree{Any,Any}()
+    b.root = data[1]
+    return b
+  end
+  return nothing
 end
 
 
