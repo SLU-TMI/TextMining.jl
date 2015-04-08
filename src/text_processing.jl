@@ -65,6 +65,7 @@ function load_featurevector(path)
         setindex!(fv,1,word)
       end
     end
+    fv[""] = 0
     return fv
   else
     Base.warn("$path is not to a valid file. Please check the path and try again.")
