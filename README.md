@@ -12,10 +12,10 @@ This package is a set of tools being used by Saint Louis University to facilitat
 </a>
 </div>
 
-These tools are being developed in **Julia** with the goal of making them fast, generic, and easily usable in Julia's REPL. Like other Julia packages, installing the *TextMining* package is done like so:
+These tools are being developed in **Julia** with the goal of making them fast, generic, and easily usable in Julia's REPL. Installing the *TextMining* package is done like so:
 
 ```julia
-Pkg.add("TextMining")
+Pkg.clone("https://github.com/SLU-TMI/TextMining.jl.git")
 ```
 ---
 ### Table of Contents
