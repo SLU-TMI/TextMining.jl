@@ -97,6 +97,56 @@ facts("entropy of different Distribution types") do
   @fact entropy(ds_dist) => 4
 end
 
+facts("Testing prob_* functions") do
+  fv1 = FeatureVector(["c"=>1,"b"=>1,"a"=>1,"d"=>1])
+  fv2 = FeatureVector(["f"=>1,"g"=>1,"e"=>1,"h"=>1])
+  fva = FeatureVector(["1"=>1,"2"=>1,"3"=>1,"4"=>1])
+  fvb = FeatureVector(["8"=>1,"7"=>1,"6"=>1,"5"=>1])
+
+  c1 = Cluster()
+  c2 = Cluster()
+  c1["fv1"] = fv1
+  c1["fv2"] = fv2
+  c2["fva"] = fva
+  c2["fvb"] = fvb
+
+  ds = DataSet()
+  ds["c1"] = c1
+  ds["c2"] = c2
+
+  c1_dist = Distribution(c1)
+  ds_dist = Distribution(ds)
+
+  @fact prob_fv(c1_dist, "fv1") => 4/8
+  @fact prob_fv(ds_dist, "c1", "fv1") => 4/16
+  @fact prob_cl(ds_dist, "c1") => 8/16
+end
+
+facts("Testing cond_prob_* functions") do
+  fv1 = FeatureVector(["c"=>1,"b"=>1,"a"=>1,"d"=>1])
+  fv2 = FeatureVector(["f"=>1,"g"=>1,"e"=>1,"h"=>1])
+  fva = FeatureVector(["1"=>1,"2"=>1,"3"=>1,"4"=>1])
+  fvb = FeatureVector(["8"=>1,"7"=>1,"6"=>1,"5"=>1])
+
+  c1 = Cluster()
+  c2 = Cluster()
+  c1["fv1"] = fv1
+  c1["fv2"] = fv2
+  c2["fva"] = fva
+  c2["fvb"] = fvb
+
+  ds = DataSet()
+  ds["c1"] = c1
+  ds["c2"] = c2
+
+  c1_dist = Distribution(c1)
+  ds_dist = Distribution(ds)
+
+  @fact cond_prob_f_given_fv(c1_dist, "fv1", "d") => 1/4
+  @fact cond_prob_f_given_fv(ds_dist, "c2", "fva", "3") => 1/4
+  @fact cond_prob_f_given_clust(ds_dist, "c1", "f") => 1/8
+  @fact cond_prob_fv_given_clust(ds_dist, "c2", "fva") => 4/8
+end
 
 facts("info_gain(Distribution,Distribution) returns 0 if empty Distributions") do
   d1 = Distribution{FeatureVector}()
