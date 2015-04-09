@@ -16,8 +16,8 @@ function clean(string)
   return sarray
 end
 
-function parse_xml(doc)
-  xdoc = parse_file(doc)
+function parse_xml(doc_path)
+  xdoc = parse_file(doc_path)
   xroot = root(xdoc)
   ces = get_elements_by_tagname(xroot, "EEBO")
   children = collect(child_elements(ces[1]))
@@ -34,20 +34,43 @@ function parse_xml(doc)
   return text
 end
 
-function get_metadata(doc)
-  xroot = root(doc)
-  ces = get_elements_by_tagname(xroot, "HEADER") 
+function get_metadata(doc_path)
+  metadata = Array(String,3)
+  xdoc = parse_file(doc_path)
+  xroot = root(xdoc)
+  ces = get_elements_by_tagname(xroot, "HEADER")
   ces = get_elements_by_tagname(ces[1], "FILEDESC")
-  ces = get_elements_by_tagname(ces[1], "TITLESTMT")	
-  ces1 = get_elements_by_tagname(ces[1], "TITLE")
-  body = content(ces1[1])
-  title = string(body)
-  metadata = [title]
   
-  #ces2 = get_elements_by_tagname(ces[3], "AUTHOR")
-  #body2 = content(ces2[1])
-  #author = string(body2)
-  #push!(metadata, author)
+  source = get_elements_by_tagname(ces[1], "SOURCEDESC")
+  bib = get_elements_by_tagname(source[1], "BIBLFULL")
+  titlestmt = get_elements_by_tagname(bib[1], "TITLESTMT")
+  author = get_elements_by_tagname(titlestmt[1], "AUTHOR")
+  if length(author) == 0
+    metadata[1] = "UNK"
+  else
+    author = content(author[1])
+    author = string(author)
+    metadata[1] = author
+  end
+
+  title = get_elements_by_tagname(titlestmt[1], "TITLE")
+  if length(title) == 0
+    metadata[2] = "UNK"
+  else
+    title = content(title[1])
+    title = string(title)
+    metadata[2]  = title
+  end
+
+  date = get_elements_by_tagname(bib[1], "PUBLICATIONSTMT")
+  date = get_elements_by_tagname(date[1], "DATE")
+  if length(date) == 0
+    metadata[3] = "UNK"
+  else
+    date = content(date[1])
+    date = string(date)
+    metadata[3] = date
+  end
   
   return metadata
 end
@@ -66,6 +89,7 @@ function load_featurevector(path)
       end
     end
     fv[""] = 0
+    fv.mdata = get_metadata(path)
     return fv
   else
     Base.warn("$path is not to a valid file. Please check the path and try again.")
