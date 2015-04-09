@@ -6,9 +6,25 @@
  
 type FeatureVector{K,V<:Number} <: FeatureSpace
   map::Dict{K,V}
+  total::Number
+  length::Number
   mdata::Any
-  FeatureVector() = new(Dict{K,V}())
-  FeatureVector{K,V}(map::Dict{K,V}) = new(map)
+  FeatureVector() = new(Dict{K,V}(),0,0)
+  FeatureVector{K,V}(map::Dict{K,V}) = new(map,get_total(map),get_length(map))
+  function get_total(fv::Dict{K,V})
+    total = 0
+    for value in values(fv)
+      total += value
+    end
+    return total
+  end
+  function get_length(fv::Dict{K,V})
+    length = 0
+    for value in values(fv)
+      length += value^2
+    end
+    return sqrt(length)
+  end
 end
 FeatureVector() = FeatureVector{Any,Number}()
 FeatureVector{K,V}(map::Dict{K,V}) = FeatureVector{K,V}(sanitize!(Base.copy(map)))
@@ -23,6 +39,11 @@ end
 
 # sets value of [key] in a FeatureVector. Must be subtype of number/dict type
 function setindex!(fv::FeatureVector, value, key)
+  fv.total -= fv[key]
+  fv.total += value
+  
+  fv.length = sqrt((fv.length^2-fv[key]^2)+value^2)
+  
   if value == 0
     Base.delete!(fv.map, key)
   else
@@ -54,7 +75,6 @@ end
 function length(fv::FeatureVector)
   return Base.length(fv.map)
 end
-
 
 # copies selected fv, and makes a new one.
 function copy{K,V}(fv::FeatureVector{K,V})
@@ -233,7 +253,7 @@ function rationalize!(fv::FeatureVector, value::Integer)
 end
 
 # finds the cosine between two vectors and returns 1-cos
-function dist_cos(fv1::FeatureVector, fv2::FeatureVector)
+function dist_cos(fv1::FeatureVector, fv2::FeatureVector, norm::Bool=false)
   fv1_magnitude = 0
   fv2_magnitude = 0
   dot_product = 0
@@ -258,7 +278,7 @@ function dist_cos(fv1::FeatureVector, fv2::FeatureVector)
 end
 
 # number of disjoint nonzero dimensions between vectors
-function dist_zero(fv1::FeatureVector, fv2::FeatureVector)
+function dist_zero(fv1::FeatureVector, fv2::FeatureVector, norm::Bool=false)
   distance = 0
 
   for key in keys(fv1)
@@ -277,7 +297,7 @@ function dist_zero(fv1::FeatureVector, fv2::FeatureVector)
 end
 
 # zero distance divided by number of dimensions
-function dist_zero_weighted(fv1::FeatureVector, fv2::FeatureVector)
+function dist_zero_weighted(fv1::FeatureVector, fv2::FeatureVector, norm::Bool=false)
   d1 = 0
   d2 = 0
   l1 = 0
@@ -305,16 +325,24 @@ function dist_zero_weighted(fv1::FeatureVector, fv2::FeatureVector)
 end
 
 # sum of absolute distance between dimensions
-function dist_taxicab(fv1::FeatureVector, fv2::FeatureVector)
+function dist_taxicab(fv1::FeatureVector, fv2::FeatureVector, norm::Bool = true)
   distance = 0
 
   for key in keys(fv1)
-    distance += abs(fv1[key]-fv2[key])
+    if norm
+      distance += abs((fv1[key]/fv1.total)-(fv2[key]/fv2.total))
+    else
+      distance += abs(fv1[key]-fv2[key])
+    end
   end
 
   for key in keys(fv2)
     if !haskey(fv1, key)
-      distance += abs(fv2[key])
+      if norm
+        distance += abs(fv2[key]/fv2.total)
+      else
+        distance += abs(fv2[key])
+      end
     end
   end
 
@@ -322,16 +350,24 @@ function dist_taxicab(fv1::FeatureVector, fv2::FeatureVector)
 end
 
 # ordinary distance between vectors
-function dist_euclidean(fv1::FeatureVector, fv2::FeatureVector)
+function dist_euclidean(fv1::FeatureVector, fv2::FeatureVector, norm::Bool = true)
   distance = 0
 
   for key in keys(fv1)
-    distance += (fv1[key]-fv2[key])^2
+    if norm
+      distance += ((fv1[key]/fv1.length)-(fv2[key]/fv2.length))^2
+    else
+      distance += (fv1[key]-fv2[key])^2
+    end
   end
 
   for key in keys(fv2)
     if !haskey(fv1, key)
-      distance += fv2[key]^2
+      if norm
+        distance += (fv2[key]/fv2.length)^2
+      else
+        distance += fv2[key]^2
+      end
     end
   end
 
@@ -339,28 +375,52 @@ function dist_euclidean(fv1::FeatureVector, fv2::FeatureVector)
 end
 
 # maximum absolute difference between dimensions
-function dist_infinite(fv1::FeatureVector, fv2::FeatureVector)
-  max = 0
+function dist_infinite(fv1::FeatureVector, fv2::FeatureVector, norm::Bool = true)
+  max_dist = 0
+  max_fv1 = 0
+  max_fv2
+  if norm
+    for value in values(fv1)
+      if value > max_fv1
+        max_fv1 = value
+      end
+    end
+    for value in values(fv2)
+      if value > max_fv2
+        max_fv2 = value
+      end
+    end 
+  end
 
   for key in keys(fv1)
-    current = abs(fv1[key]-fv2[key])
-    if current > max
-      max = current
+    if norm
+      current_dist = abs((fv1[key]/max_fv1)-(fv2[key]/max_fv2))
+    else
+      current_dist = abs(fv1[key]-fv2[key])
+    end
+
+    if current_dist > max_dist
+      max_dist = current_dist
     end
   end
 
   for key in keys(fv2)
-    current = 0
+    current_dist = 0
     if !haskey(fv1, key)
-      current = abs(fv2[key])
+      if norm
+        current_dist = abs(fv2[key]/max_fv2)
+      else
+        current_dist = abs(fv2[key])
+      end
     end
-    if current > max
-      max = current
+    if current_dist > max_dist
+      max_dist = current_dist
     end
   end
 
-  return max
+  return max_dist
 end
+
 
 # prints out the fv cleanly.
 function display(fv::FeatureVector)
@@ -379,4 +439,10 @@ function display(fv::FeatureVector)
       print_with_color(:white,"    $key\n")
     end
   end
+end
+
+function show(io::IO, fv::FeatureVector)
+  print(io,string(typeof(fv)))
+  k = length(fv.map)
+  print(io," with $k features")
 end
