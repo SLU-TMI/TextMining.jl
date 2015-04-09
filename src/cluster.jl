@@ -53,22 +53,22 @@ function distance(c1::Cluster, c2::Cluster, dist::Function = dist_cos)
 end
 
 # average distance to centroid
-function dist_centroid(cluster::Cluster, dist_func::Function=dist_euclidean)
+function dist_centroid(cluster::Cluster, dist_func::Function=dist_euclidean, norm::Bool=true)
   features = values(cluster.vectors)
   cluster_avg_dist = 0
   cent = centroid(cluster)
   for fv in features
     if dist_func == dist_euclidean
-      cluster_avg_dist += dist_func(cent,fv)^2
+      cluster_avg_dist += dist_func(cent,fv,norm)^2
     else
-      cluster_avg_dist += dist_func(cent,fv)
+      cluster_avg_dist += dist_func(cent,fv,norm)
     end
   end
   return (cluster_avg_dist/length(features))
 end
 
 # creates distance matrix for a cluster
-function dist_matrix(cluster::Cluster, dist_func::Function=dist_euclidean, write_csv::Bool=false)
+function dist_matrix(cluster::Cluster, dist_func::Function=dist_euclidean, norm::Bool=true, write_csv::Bool=false)
   len = length(cluster)
   dmatrix = Array(Number,(len,len))
   fvs = collect(keys(cluster))
@@ -77,7 +77,7 @@ function dist_matrix(cluster::Cluster, dist_func::Function=dist_euclidean, write
       if i == j
         dmatrix[i,j] = 0
       else
-        dist = dist_func(cluster[fvs[i]],cluster[fvs[j]])
+        dist = dist_func(cluster[fvs[i]],cluster[fvs[j]],norm)
         dmatrix[i,j] = dist
         dmatrix[j,i] = dist
       end
