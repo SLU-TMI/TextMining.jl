@@ -115,17 +115,17 @@ function clust_entropy(d::Distribution{DataSet})
   return ent
 end
 
-function info_gain(d1::Distribution{FeatureVector}, d2::Distribution{FeatureVector})
+function info_gain(d1::Distribution, d2::Distribution)
   return entropy(d1)-entropy(d2)
 end
 
-function info_gain(d1::Distribution{Cluster}, d2::Distribution{Cluster})
-  return entropy(d1)-entropy(d2)
-end
+# function info_gain(d1::Distribution{Cluster}, d2::Distribution{Cluster})
+#   return entropy(d1)-entropy(d2)
+# end
 
-function info_gain(d1::Distribution{DataSet}, d2::Distribution{DataSet})
-  return entropy(d1)-entropy(d2)
-end
+# function info_gain(d1::Distribution{DataSet}, d2::Distribution{DataSet})
+#   return entropy(d1)-entropy(d2)
+# end
 
 # function fv_info_gain_clust(d1::Distribution{Cluster}, d2::Distribution{Cluster})
 #   return fv_entropy(d1)-fv_entropy(d2)
