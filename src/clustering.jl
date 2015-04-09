@@ -1,34 +1,24 @@
 #build q-matrix from a distance matrix m (nxn)
 function qmake(m)
-  #print("inside qmake\n")
-  #print("ln 9\n")
   n = size(m)[1]
-  #print("ln 11\n")
   q = Array(Any,n,n)
-  #print("ln 13\n")
   for i = 1:n
-    #print(i)
     for j = 1:n
       if j == i
         q[i,j] = 0
       else
-        #print("ln 20\n")
         x = (n-2)*m[i,j]
         y = sum(m[i,:])-sum(m[j,:])
-        #print("ln 23\n")
         q[i,j] = x-y
-        #print("ln 25\n")
       end
     end
   end
-  #print("q=\n")
-  #print(q)
-  #print("\n\n")
   return q
 end
+
+
 #  find lowest value in a matrix q (nxn) and return its index
 function nfind(q)
-  #print("inside nfind\n")
   n = size(q)[1]
   if n <= 1
     return nothing
@@ -42,9 +32,6 @@ function nfind(q)
         if current != NaN
           if current < lowest
             lowest = current
-            #print("lowest = \n")
-            #print(lowest)
-            #print("\n\n")
             lowestIndex = (i,j)
           end
         end
@@ -54,8 +41,8 @@ function nfind(q)
   return lowestIndex
 end
 
-function hclust(fvectors,dist = dist_cos)
-  #print("inside hclust\n")
+
+function hclust(fvectors,dist_func::Function=dist_euclidean, norm::Bool=true)
   if !isa(fvectors,Array)
     return nothing
   end
@@ -82,12 +69,6 @@ function hclust(fvectors,dist = dist_cos)
   append!(data,fvectors)
   while length(data) > 1
     ind = ind + 1
-    #print("\n\nbeginning of loop, Data:\n")
-    #print(data)
-    #print("\n\n")
-    #print("LENGTH Data:\n")
-    #print(length(data))
-    #print("\n\n")
     #make an empty distance matrix
     d = Array(Any,length(data),length(data))
     fill!(d,0)
@@ -95,28 +76,23 @@ function hclust(fvectors,dist = dist_cos)
     for i = 1:length(data)
       for j = 1:length(data)
         if isa(data[i],Cluster) && isa(data[j],Cluster)
-          d[i,j] = dist_cos(centroid(data[i]),centroid(data[j]))
+          d[i,j] = dist_func(centroid(data[i]),centroid(data[j]),norm)
         elseif isa(data[i],FeatureVector) && isa(data[j],Cluster)
-          d[i,j] = dist_cos(data[i],centroid(data[j]))
+          d[i,j] = dist_func(data[i],centroid(data[j]),norm)
         elseif isa(data[i],Cluster) && isa(data[j],FeatureVector)
-          d[i,j] = dist_cos(centroid(data[i]),data[j])
+          d[i,j] = dist_func(centroid(data[i]),data[j],norm)
         elseif isa(data[i],FeatureVector) && isa(data[j],FeatureVector)
-          d[i,j] = dist_cos(data[i],data[j])
+          d[i,j] = dist_func(data[i],data[j],norm)
         else
           continue
         end
       end
     end
-    #print("\n\nexited loop, d:\n")
-    #print(d)
-    #print("\n\n")
     q = Any
     p = Any
     if length(data) >= 3
       q = qmake(d)
-      #print("ln 83\n")
       p = nfind(q)
-      #print("ln 85\n")
     else
       p = (1,2)
     end
@@ -136,24 +112,8 @@ function hclust(fvectors,dist = dist_cos)
       u.right = setindex!(u.right,data[p[2]],"right")
     end
 
-    #print("\n\nu =\n")
-    #print(u)
-    #print("\n\n")
-
 # push u onto data
     push!(data,u)
-
-    #print("\n\nbefore splice, Data:\n")
-    #print(data)
-    #print("\n\n")
-    #print("LENGTH Data:\n")
-    #print(length(data))
-    #print("\n\n")
-    #print("Removing these 2 indices from Data:\n")
-    #print(p[1])
-    #print("\n")
-    #print(p[2])
-#  ...
     if p[1] > p[2]
       splice!(data,p[1])
       splice!(data,p[2])
@@ -161,13 +121,6 @@ function hclust(fvectors,dist = dist_cos)
       splice!(data,p[2])
       splice!(data,p[1])
     end
-
-    #print("\n\nafter splice, Data:\n")
-    #print(data)
-    #print("\n\n")
-    #print("LENGTH Data:\n")
-    #print(length(data))
-    #print("\n\n")
   end
   if length(data) == 1
     b = BinaryTree{Any,Any}()
@@ -187,9 +140,10 @@ function random_init(features,k)
   end
   return centroids
 end
-random_init(features,k,dist_func) = random_init(features,k)
+random_init(features,k,dist_func,norm::Bool=true) = random_init(features,k)
 
-function max_min_init(features,k,dist_func)
+
+function max_min_init(features,k,dist_func,norm::Bool=true)
   rand_num = (abs(rand(Int64)%Base.length(features)) + 1)
   orig_cent = features[rand_num]
   centroids = vcat(orig_cent)
@@ -200,7 +154,7 @@ function max_min_init(features,k,dist_func)
     for fv in features
       min_dist = Inf
       for centroid in centroids
-        cent_dist = dist_func(centroid,fv)
+        cent_dist = dist_func(centroid,fv,norm)
         if cent_dist < min_dist
           min_dist = cent_dist
         end
@@ -216,7 +170,7 @@ function max_min_init(features,k,dist_func)
   return centroids
 end
 
-function kmeans(clust::Dict, cents::Array=[], k=iceil(sqrt(length(clust)/2)), init_cent_func=max_min_init, dist_func=dist_cos, max_iter=10000)
+function kmeans(clust::Dict, cents::Array=[], k=iceil(sqrt(length(clust)/2)), init_cent_func=max_min_init, dist_func::Function=dist_euclidean, norm::Bool=true, max_iter::Integer=10000)
   # find initial k centroids
   features = collect(Base.values(clust))
   clust_keys = collect(Base.keys(clust))
@@ -233,7 +187,7 @@ function kmeans(clust::Dict, cents::Array=[], k=iceil(sqrt(length(clust)/2)), in
   
   # check if user sent in own array of centroids
   if Base.length(cents) == 0
-    centroids = init_cent_func(features,k,dist_func)
+    centroids = init_cent_func(features,k,dist_func,norm)
   else
     centroids = cents
     length_array = Base.length(centroids)
@@ -259,7 +213,7 @@ function kmeans(clust::Dict, cents::Array=[], k=iceil(sqrt(length(clust)/2)), in
       j = 1
       min_dist_cluster = Cluster()
       for cluster in new_clusters
-        current_dist = dist_func(centroids[j],fv)
+        current_dist = dist_func(centroids[j],fv,norm)
         if current_dist < dist
           dist = current_dist
           min_dist_cluster = cluster
@@ -284,7 +238,7 @@ function kmeans(clust::Dict, cents::Array=[], k=iceil(sqrt(length(clust)/2)), in
     changed = false
     i = 1
     for centroid in old_centroids
-      dist = dist_func(centroid,new_centroids[i])
+      dist = dist_func(centroid,new_centroids[i],norm)
       if dist > .000001
         changed = true
         centroids = new_centroids
@@ -305,12 +259,13 @@ function kmeans(clust::Dict, cents::Array=[], k=iceil(sqrt(length(clust)/2)), in
 
   return new_clusters
 end 
+kmeans(clust::Dict, k, init_cent_func, dist_func, norm) = kmeans(clust,[],k,init_cent_func,dist_func,norm)
 kmeans(clust::Dict, k, init_cent_func, dist_func) = kmeans(clust,[],k,init_cent_func,dist_func)
 kmeans(clust::Dict, k, init_cent_func) = kmeans(clust,[],k,init_cent_func)
 kmeans(clust::Dict, k) = kmeans(clust,[],k)
 
 
-function elbow_method(clust::Dict, dist_func::Function, low_bound, high_bound)
+function elbow_method(clust::Dict, low_bound, high_bound, dist_func::Function=dist_euclidean, norm::Bool=true)
   if high_bound > length(clust)
     k = high_bound
     high_bound = length(clust)
@@ -327,16 +282,10 @@ function elbow_method(clust::Dict, dist_func::Function, low_bound, high_bound)
   elbow_array = []
   while temp_low <= high_bound
     println("Start Elbow cluster $temp_low")
-    clusters = kmeans(clust,temp_low,max_min_init,dist_func)
+    clusters = kmeans(clust,temp_low,max_min_init,dist_func,norm)
     avg_dist = 0
     for cluster in clusters
-      features = values(cluster.vectors)
-      cluster_avg_dist = 0
-      cent = centroid(cluster)
-      for fv in features
-        cluster_avg_dist += dist_func(cent,fv)
-      end
-       avg_dist += (cluster_avg_dist/length(features))
+      avg_dist += dist_centroid(cluster, dist_func, norm)
     end
     distances = vcat(distances,(avg_dist/length(clusters)))
     elbow_array = vcat(elbow_array,(temp_low,(avg_dist/length(clusters))))

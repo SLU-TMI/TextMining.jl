@@ -71,3 +71,9 @@ function display(ds::DataSet)
     end
   end
 end
+
+function show(io::IO, ds::DataSet)
+  print(io,string(typeof(ds)))
+  k = length(ds.clusters)
+  print(io," with $k Clusters")
+end
