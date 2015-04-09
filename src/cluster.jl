@@ -19,6 +19,10 @@ function setindex!(c::Cluster, fv::FeatureVector, key)
   c.vectors[key] = fv
 end
 
+function haskey(c::Cluster, key) 
+  return Base.haskey(c.vectors, key)
+end
+
 function length(c::Cluster)
   return Base.length(c.vectors)
 end
@@ -48,8 +52,56 @@ function distance(c1::Cluster, c2::Cluster, dist::Function = dist_cos)
   return dist(centroid(c1),centroid(c2))
 end
 
-function haskey(c::Cluster, key) 
-  return Base.haskey(c.vectors, key)
+# average distance to centroid
+function dist_centroid(cluster::Cluster, dist_func::Function=dist_euclidean)
+  features = values(cluster.vectors)
+  cluster_avg_dist = 0
+  cent = centroid(cluster)
+  for fv in features
+    if dist_func == dist_euclidean
+      cluster_avg_dist += dist_func(cent,fv)^2
+    else
+      cluster_avg_dist += dist_func(cent,fv)
+    end
+  end
+  return (cluster_avg_dist/length(features))
+end
+
+# creates distance matrix for a cluster
+function dist_matrix(cluster::Cluster, dist_func::Function=dist_euclidean, write_csv::Bool=false)
+  len = length(cluster)
+  dmatrix = Array(Number,(len,len))
+  fvs = collect(keys(cluster))
+  for i in [1:len]
+    for j in [i:len]
+      if i == j
+        dmatrix[i,j] = 0
+      else
+        dist = dist_func(cluster[fvs[i]],cluster[fvs[j]])
+        dmatrix[i,j] = dist
+        dmatrix[j,i] = dist
+      end
+    end
+  end
+  
+  if write_csv
+    f = open(join(["matrix_",string(dist_cos),".cvs"],""), "w")
+    write(f, string(dist_func))
+    for fv in fvs[1:len]
+      write(f,join(["\t",string(fv)],""))
+    end
+    write(f,"\n")
+    for i in [1:len]
+      write(f,string(fvs[i]))
+      for j in [1:len]
+        write(f,join(["\t",string(dmatrix[i,j])],""))
+      end
+      write(f,"\n")
+    end
+    close(f)
+  end
+
+  return dmatrix
 end
 
 # prints out the cluster cleanly.
@@ -76,4 +128,10 @@ function display(cl::Cluster)
       print_with_color(:white,"\t\t\t⋮\n")
     end
   end
+end
+
+function show(io::IO, cl::Cluster)
+  print(io,string(typeof(cl)))
+  k = length(cl.vectors)
+  print(io," with $k FeatureVectors")
 end
