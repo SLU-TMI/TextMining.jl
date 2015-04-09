@@ -89,6 +89,16 @@ function fv_entropy(d::Distribution{Cluster})
   return ent
 end
 
+function fv_entropy(d::Distribution{DataSet})
+  ent = 0
+  for clust in keys(d.space)
+    for fv in keys(d.space[clust])
+      ent -= prob_fv(d,clust,fv)*log2(prob_fv(d,clust,fv))
+    end
+  end
+  return ent
+end
+
 function fv_entropy(d::Distribution{DataSet}, clust_key)
   ent = 0
   for fv in keys(d.space[clust_key])
@@ -117,17 +127,17 @@ function info_gain(d1::Distribution{DataSet}, d2::Distribution{DataSet})
   return entropy(d1)-entropy(d2)
 end
 
-function fv_info_gain_clust(d1::Distribution{Cluster}, d2::Distribution{Cluster})
-  return fv_entropy(d1)-fv_entropy(d2)
-end
+# function fv_info_gain_clust(d1::Distribution{Cluster}, d2::Distribution{Cluster})
+#   return fv_entropy(d1)-fv_entropy(d2)
+# end
 
-function fv_info_gain_dataset(d1::Distribution{DataSet}, d2::Distribution{DataSet}, clust_key)
-  return fv_entropy(d1, clust_key)-fv_entropy(d2,clust_key)
-end
+# function fv_info_gain_dataset(d1::Distribution{DataSet}, d2::Distribution{DataSet}, clust_key)
+#   return fv_entropy(d1, clust_key)-fv_entropy(d2,clust_key)
+# end
 
-function clust_info_gain_dataset(d1::Distribution{DataSet}, d2::Distribution{DataSet})
-  return clust_entropy(d1, clust_key)-clust_entropy(d2,clust_key)
-end
+# function clust_info_gain_dataset(d1::Distribution{DataSet}, d2::Distribution{DataSet})
+#   return clust_entropy(d1, clust_key)-clust_entropy(d2,clust_key)
+# end
 
 function perplexity(d::Distribution)
   return 2^entropy(d)

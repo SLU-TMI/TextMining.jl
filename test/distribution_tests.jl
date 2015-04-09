@@ -97,6 +97,33 @@ facts("entropy of different Distribution types") do
   @fact entropy(ds_dist) => 4
 end
 
+facts("entropy of certain fv or clust") do
+  fv1 = FeatureVector(["c"=>1,"b"=>1,"a"=>1,"d"=>1])
+  fv2 = FeatureVector(["f"=>1,"g"=>1,"e"=>1,"h"=>1])
+  fva = FeatureVector(["1"=>1,"2"=>1,"3"=>1,"4"=>1])
+  fvb = FeatureVector(["8"=>1,"7"=>1,"6"=>1,"5"=>1])
+
+  c1 = Cluster()
+  c2 = Cluster()
+  c1["fv1"] = fv1
+  c1["fv2"] = fv2
+  c2["fva"] = fva
+  c2["fvb"] = fvb
+
+  ds = DataSet()
+  ds["c1"] = c1
+  ds["c2"] = c2
+
+  c1_dist = Distribution(c1)
+  c2_dist = Distribution(c2)
+  ds_dist = Distribution(ds)
+
+  @fact fv_entropy(c1_dist) => 1
+  @fact fv_entropy(ds_dist) => 2
+  @fact fv_entropy(ds_dist, "c1") => 1
+  @fact clust_entropy(ds_dist) => 1
+end
+
 facts("Testing prob_* functions") do
   fv1 = FeatureVector(["c"=>1,"b"=>1,"a"=>1,"d"=>1])
   fv2 = FeatureVector(["f"=>1,"g"=>1,"e"=>1,"h"=>1])
