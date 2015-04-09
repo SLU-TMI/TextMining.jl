@@ -4,7 +4,9 @@ facts("Creating a FeatureVector") do
   dict1 = ["word" => 4, "another" => 3]
   fv1 = FeatureVector(dict1)
   fv2 = FeatureVector()
-
+  
+  @fact fv1.total => 7
+  @fact fv2.total => 0
   @fact fv1.map => dict1
   @fact typeof(fv1.map) => typeof(dict1)
   @fact typeof(fv2.map) => typeof(Dict{Any,Number}())
@@ -13,18 +15,24 @@ end
 facts("Get value of FeatureVector given key") do
   dict1 = ["word" => 4, "another" => 3]
   fv1 = FeatureVector(dict1)
-
+  
+  @fact fv1.total => 7
   @fact fv1["word"] => fv1.map["word"]
 end
 
 facts("Sanitize Dictionary values of 0") do
   dict = ["word" => 4, "another" => 3, "help"=>0]
   fv = FeatureVector(dict)
+  @fact fv.total => 7
+  fv["the"] = 1
+  @fact fv.total => 8
   fv["the"] = 0
+  @fact fv.total => 7
 
   @fact fv.map => ["word"=>4,"another"=>3]
   add!(fv,(-1*fv))
   @fact isempty(fv) => true
+  @fact fv.total => 0
 end
 
 facts("Set value of FeatureVector given key") do
@@ -83,6 +91,7 @@ facts("Make copy of a FeatureVector") do
   end
   @fact fv2 == fv1 => false
   @fact typeof(fv1) => typeof(fv2)
+  @fact fv2.total => fv1.total
 end
 
 facts("Find common type of a FeatureVector and an empty FeatureVector") do
@@ -117,6 +126,8 @@ facts("Adding two FeatureVectors") do
   for key in Base.keys(dict3)
     @fact fv4[key] => dict3[key]
   end
+  @fact fv3.total => (fv1.total + fv2.total)
+  @fact fv4.total => (fv1.total + fv2.total)
 end
 
 facts("Subtracting two FeatureVectors") do
@@ -134,6 +145,8 @@ facts("Subtracting two FeatureVectors") do
   for key in Base.keys(dict4)
     @fact fv4[key] => dict4[key]
   end
+  @fact fv3.total => (fv1.total - fv2.total)
+  @fact fv4.total => (fv2.total - fv1.total)
 end
 
 facts("Multiply a FeatureVector by a scalar") do
@@ -149,9 +162,13 @@ facts("Multiply a FeatureVector by a scalar") do
 
   @fact fv1["word"] => 8
   @fact fv1["another"] => 6
+  @fact fv1.total => 14
   @fact fv2["word"] => .8
   @fact fv2["∂"] => .6
+  @fact fv2.total => 1.4
   @fact fv3 => fv4
+  @fact fv3.total => 0
+  @fact fv4.total => 0
 end
 
 facts("Divide a FeatureVector by a scalar") do
@@ -167,9 +184,13 @@ facts("Divide a FeatureVector by a scalar") do
 
   @fact fv1["word"] => 2
   @fact fv1["another"] => 1.5
+  @fact fv1.total => 3.5
   @fact fv2["word"] => .2
   @fact fv2["∂"] => .15
+  @fact fv2.total => .35
   @fact fv3 => fv4
+  @fact fv3.total => 0
+  @fact fv4.total => 0
 end
 
 facts("Rationalize a FeatureVector by a scalar") do
@@ -182,7 +203,10 @@ facts("Rationalize a FeatureVector by a scalar") do
 
   @fact fv1["word"] => 2//1
   @fact fv1["another"] => 3//2
+  @fact fv1.total => 7//2
   @fact fv2 => fv3
+  @fact fv2.total => 0
+  @fact fv3.total => 0
 end
 
 
@@ -229,12 +253,12 @@ facts("Find dist_taxicab between two FeatureVectors") do
   fv3 = FeatureVector(Dict(["x"=>2,"y"=>0]))
   fv4 = FeatureVector(Dict(["x"=>0,"y"=>0]))
 
-  @fact dist_taxicab(fv,fv4) => 0
-  @fact dist_taxicab(fv1,fv1) => 0
-  @fact dist_taxicab(fv1,fv) == dist_taxicab(fv1,fv4) == 4 => true
-  @fact dist_taxicab(fv2,fv) == dist_taxicab(fv3,fv4) == 2 => true
-  @fact dist_taxicab(fv1,fv2) == dist_taxicab(fv1,fv3) == 2 => true
-  @fact dist_taxicab(fv2,fv3) => 4
+  @fact dist_taxicab(fv,fv4,false) => 0
+  @fact dist_taxicab(fv1,fv1,false) => 0
+  @fact dist_taxicab(fv1,fv,false) == dist_taxicab(fv1,fv4,false) == 4 => true
+  @fact dist_taxicab(fv2,fv,false) == dist_taxicab(fv3,fv4,false) == 2 => true
+  @fact dist_taxicab(fv1,fv2,false) == dist_taxicab(fv1,fv3,false) == 2 => true
+  @fact dist_taxicab(fv2,fv3,false) => 4
 end
 
 
@@ -245,12 +269,12 @@ facts("Find dist_euclidean between two FeatureVectors") do
   fv3 = FeatureVector(Dict(["x"=>2,"y"=>0]))
   fv4 = FeatureVector(Dict(["x"=>0,"y"=>0]))
 
-  @fact dist_euclidean(fv,fv4) => 0
-  @fact dist_euclidean(fv1,fv1) => 0
-  @fact dist_euclidean(fv1,fv) == dist_euclidean(fv1,fv4) == sqrt(8) => true
-  @fact dist_euclidean(fv2,fv) == dist_euclidean(fv3,fv4) == 2 => true
-  @fact dist_euclidean(fv1,fv2) == dist_euclidean(fv1,fv3) == 2 => true
-  @fact dist_euclidean(fv2,fv3) => sqrt(8)
+  @fact dist_euclidean(fv,fv4,false) => 0
+  @fact dist_euclidean(fv1,fv1,false) => 0
+  @fact dist_euclidean(fv1,fv,false) == dist_euclidean(fv1,fv4,false) == sqrt(8) => true
+  @fact dist_euclidean(fv2,fv,false) == dist_euclidean(fv3,fv4,false) == 2 => true
+  @fact dist_euclidean(fv1,fv2,false) == dist_euclidean(fv1,fv3,false) == 2 => true
+  @fact dist_euclidean(fv2,fv3,false) => sqrt(8)
 end
 
 
@@ -261,12 +285,12 @@ facts("Find dist_infinite between two FeatureVectors") do
   fv3 = FeatureVector(Dict(["x"=>10,"y"=>0]))
   fv4 = FeatureVector(Dict(["x"=>0,"y"=>0]))
 
-  @fact dist_infinite(fv,fv4) => 0
-  @fact dist_infinite(fv1,fv) == dist_infinite(fv1,fv4) == 10 => true
-  @fact dist_infinite(fv1,fv1) => 0
-  @fact dist_infinite(fv2,fv) => 5
-  @fact dist_infinite(fv3,fv4) => 10
-  @fact dist_infinite(fv1,fv2) => 10
-  @fact dist_infinite(fv1,fv3) => 5
-  @fact dist_infinite(fv2,fv3) => 10
+  @fact dist_infinite(fv,fv4,false) => 0
+  @fact dist_infinite(fv1,fv,false) == dist_infinite(fv1,fv4,false) == 10 => true
+  @fact dist_infinite(fv1,fv1,false) => 0
+  @fact dist_infinite(fv2,fv,false) => 5
+  @fact dist_infinite(fv3,fv4,false) => 10
+  @fact dist_infinite(fv1,fv2,false) => 10
+  @fact dist_infinite(fv1,fv3,false) => 5
+  @fact dist_infinite(fv2,fv3,false) => 10
 end
