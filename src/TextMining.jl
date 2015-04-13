@@ -37,9 +37,9 @@ export
   #distribution
   probability, prob_fv, prob_cl, cond_prob_f_given_fv, 
   cond_prob_f_given_fv, cond_prob_f_given_clust, cond_prob_fv_given_clust, 
-  features, entropy, fv_entropy, clust_entropy, #=fv_info_gain_clust,
-  fv_info_gain_dataset, clust_info_gain_dataset,=# info_gain, perplexity, 
-  remove_smoothing!, delta_smoothing!, goodturing_smoothing!,
+  features, entropy, fv_entropy, clust_entropy, feature_entropy, 
+  feature_info_gain, info_gain, perplexity, remove_smoothing!, 
+  delta_smoothing!, goodturing_smoothing!,
 
   
   #feature vector
