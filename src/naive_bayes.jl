@@ -1,14 +1,10 @@
 using TextMining
 
-function get_probs(d::Distribution{DataSet})
+function get_probs_fv_in_clust(d::Distribution{DataSet})
   data_set = d.space
   probability_dict = Dict()
   for clust_name in keys(data_set.clusters)
-    clust = d.space[clust_name]
-    probability_dict[clust_name] = 0
-    for fv in keys(clust.vectors)
-    probability_dict[clust_name] += prob_fv(d,clust_name,fv)
-    end
+    probability_dict[clust_name] = prob_clust_in_dataset(d,clust_name)
   end
   return probability_dict
 end
@@ -23,7 +19,6 @@ function split_dataset(dataset::Array, ratio=.67)
     train_set[i] = dataset[i]
     i+=1
     train_size-=1
-    println(i)
   end
 
   test_set = Array(Any, convert(Int64,((length(dataset)-i) +1)))
@@ -36,12 +31,22 @@ function split_dataset(dataset::Array, ratio=.67)
   return (train_set,test_set)
 end
 
-function separate_by_class(ds::DataSet)
-  classes = Array(Any, length(ds.clusters))
+function separate_by_class(d::Distribution{DataSet})
+  classes = Array(Any, length(d.space.clusters))
   i = 1
-  for clust_name in keys(ds.clusters)
+  for clust_name in keys(d.space.clusters)
     classes[i] = clust_name
     i+=1
   end
   return classes
 end
+
+
+
+
+
+
+
+
+
+

@@ -25,6 +25,26 @@ function getindex(d::Distribution, key)
   return d.space[key]
 end
 
+function get_num_texts_in_dist(d::Distribution{DataSet})
+  texts = 0
+  for clust in values(d.space.clusters)
+    texts += length(clust)
+  end
+  return texts
+end
+
+function get_num_texts_given_feature(d::Distribution{DataSet}, feature)
+  texts = 0
+  for clust in values(d.space.clusters)
+    for fv in values(clust.vectors)
+      if haskey(fv,feature)
+        texts += 1
+      end
+    end
+  end
+  return texts
+end
+
 function probability(d::Distribution, feature)
   return d.smooth(d, feature, d.smooth_data)
 end
@@ -49,6 +69,10 @@ function cond_prob_f_given_fv(d::Distribution{DataSet}, clust_key, fv_key, key)
   return d.space[clust_key][fv_key][key] / d.space[clust_key][fv_key].total
 end
 
+function cond_prob_f_given_fv_in_clust(d::Distribution{DataSet}, clust_key, fv_key, key)
+  return d.space[clust_key][fv_key][key] / d.space[clust_key].vector_sum[key]
+end
+
 function cond_prob_f_given_clust(d::Distribution{DataSet}, clust_key, key)
   return d.space[clust_key].vector_sum[key] / d.space[clust_key].vector_sum.total
 end
@@ -56,6 +80,26 @@ end
 function cond_prob_fv_given_clust(d::Distribution{DataSet}, clust_key, key)
   return d.space[clust_key][key].total / d.space[clust_key].vector_sum.total
 end
+
+# new scannell stuff
+function prob_clust_in_dataset(d::Distribution{DataSet}, clust_key)
+  return length(d.space[clust_key].vectors) / get_num_texts_in_dist(d)
+end
+
+function prob_clust_given_feature(d::Distribution{DataSet}, clust_key, feature)
+  num_fvs = 0
+  prob = 0
+  for fv in values(d.space.clusters[clust_key])
+    if haskey(fv,feature)
+      num_fvs += 1
+    end
+  end
+  prob = num_fvs / get_num_texts_given_feature(d,feature)
+  return prob
+end
+
+# end scannell stuff
+
 
 function keys(d::Distribution)
   return keys(d.space)
@@ -120,7 +164,7 @@ function feature_entropy(d::Distribution{Cluster},feature)
   for fv in keys(d.space.vectors)
     x = cond_prob_f_given_fv(d,fv,feature)*log2(cond_prob_f_given_fv(d,fv,feature))
     if isnan(x)
-      x = 1e-15
+      x = 0
     end
     ent -= x
   end
@@ -132,12 +176,66 @@ function feature_entropy(d::Distribution{DataSet},feature)
   for clust in keys(d.space.clusters)
     x = cond_prob_f_given_clust(d,clust,feature)*log2(cond_prob_f_given_clust(d,clust,feature))
     if isnan(x)
-      x = 1e-15
+      x = 0
     end
     ent -= x
   end
   return ent
 end
+
+# scannell
+function clust_in_dataset_entropy(d::Distribution{DataSet})
+  ent = 0
+  for clust in keys(d.space)
+    x = prob_clust_in_dataset(d,clust)*log2(prob_clust_in_dataset(d,clust))
+    if isnan(x)
+      x = 0
+    end
+    ent -= x
+  end
+  return ent
+end
+
+function clust_given_feature_entropy(d::Distribution{DataSet},feature)
+  ent = 0
+  for clust in keys(d.space)
+    x = prob_clust_given_feature(d,clust,feature)*log2(prob_clust_given_feature(d,clust,feature))
+    if isnan(x)
+      x = 0
+    end
+    ent -= x
+  end
+  return ent
+end
+
+function clust_info_gain(d1::Distribution{DataSet}, feature, weight::Bool=false)
+  ent_of_dist = clust_in_dataset_entropy(d1)
+  ent_of_word = clust_given_feature_entropy(d1, feature)
+  if weight
+    return (ent_of_dist - ent_of_word)/ent_of_dist
+  end
+  return ent_of_dist - ent_of_word
+end
+
+function chi_info_gain(d::Distribution{DataSet},feature)
+  all_ig = 0
+  for clust in keys(d.space.clusters)
+    child_ig = 0
+    f_in_clust_ent = 0
+    for fv in keys(d.space[clust].vectors)
+      prob = cond_prob_f_given_fv_in_clust(d,clust,fv,feature)
+      x = (prob*log2(prob))
+      if isnan(x)
+        x = 0
+      end
+      f_in_clust_ent -= x
+    end
+    child_ig = clust_in_dataset_entropy(d) - f_in_clust_ent
+    all_ig += child_ig*prob_clust_given_feature(d,clust,feature)
+  end
+  return clust_info_gain(d,feature) - all_ig
+end
+# end scannell
 
 function info_gain(d1::Distribution, d2::Distribution)
   return entropy(d1)-entropy(d2)

@@ -182,6 +182,64 @@ facts("info_gain(Distribution,Distribution) returns 0 if empty Distributions") d
   @fact info_gain(d1,d2) => 0
 end
 
+facts("chi_info_gain rules out similar features over all decades and outliers that wouldn't tell us much") do
+  fv1 = FeatureVector(["the"=>5, "c1"=>5])
+  fv2 = FeatureVector(["the"=>5, "c1"=>5, "romeo"=>100])
+  fv3 = FeatureVector(["the"=>5, "c1"=>5])
+  fv4 = FeatureVector(["the"=>5, "c1"=>5])
+  fv5 = FeatureVector(["the"=>5, "c2"=>5])
+  fv6 = FeatureVector(["the"=>5, "c2"=>5])
+  fv7 = FeatureVector(["the"=>5, "c2"=>5])
+  fv8 = FeatureVector(["the"=>5, "c2"=>5])
+  fv9 = FeatureVector(["the"=>5, "c3"=>5])
+  fv10 = FeatureVector(["the"=>5, "c3"=>5])
+  fv11 = FeatureVector(["the"=>5, "c3"=>5])
+  fv12 = FeatureVector(["the"=>5, "c3"=>5])
+  fv13 = FeatureVector(["the"=>5, "c4"=>5])
+  fv14 = FeatureVector(["the"=>5, "c4"=>5])
+  fv15 = FeatureVector(["the"=>5, "c4"=>5])
+  fv16 = FeatureVector(["the"=>5, "c4"=>5])
+
+  c1 = Cluster()
+  c2 = Cluster()
+  c3 = Cluster()
+  c4 = Cluster()
+
+  c1["fv1"] = fv1
+  c1["fv2"] = fv2
+  c1["fv3"] = fv3
+  c1["fv4"] = fv4
+  c2["fv5"] = fv5
+  c2["fv6"] = fv6
+  c2["fv7"] = fv7
+  c2["fv8"] = fv8
+  c3["fv9"] = fv9
+  c3["fv10"] = fv10
+  c3["fv11"] = fv11
+  c3["fv12"] = fv12
+  c4["fv13"] = fv13
+  c4["fv14"] = fv14
+  c4["fv15"] = fv15
+  c4["fv16"] = fv16
+
+  ds = DataSet()
+
+  ds["c1"] = c1
+  ds["c2"] = c2
+  ds["c3"] = c3
+  ds["c4"] = c4
+
+  d = Distribution(ds)  
+
+  for feature in keys(d.space.vector_sum)
+    if feature == "the" || feature == "romeo"
+      @fact chi_info_gain(d,feature) => 0.0
+    else
+      @fact chi_info_gain(d,feature) => 2.0
+    end
+  end
+end
+
 facts("info_gain(Distribution,Distribution) returns info_gain of Distribution") do
   dict1 = ["word" => 4, "another" => 3]
   fv1 = FeatureVector(dict1)
