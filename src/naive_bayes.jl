@@ -59,7 +59,7 @@ function naive_bayes(d::Distribution{DataSet},fv::FeatureVector)
     class_probs[clust] += log(prob)
   end
 
-  max_class = ""
+  max_class = "unknown"
   max_value = -Inf
   num_of_same_probs = 1
   for class in keys(class_probs)
@@ -74,19 +74,54 @@ function naive_bayes(d::Distribution{DataSet},fv::FeatureVector)
 
   if num_of_same_probs == length(d.space.clusters)
     warn("All probabilities are the same value")
-    return "unknown class"
   end
 
   return max_class
 end
+function naive_bayes(ds::DataSet,fv::FeatureVector) = naive_bayes(Distribution(ds),fv)
 
-function train_data(ds::DataSet)
+function train_data(ds::DataSet,ig_list::Set)
+
+  new_ds = DataSet()
+
+  for clust in keys(ds.clusters)
+    new_clust = Cluster()
+    for fv in keys(ds[clust])
+      new_fv = FeatureVector()
+      for feature in keys(ds[clust][fv])
+        if feature in ig_list
+          new_fv[feature] = ds[clust][fv][feature]
+        end
+      end
+      new_clust[fv] = new_fv
+    end
+    new_ds[clust] = new_clust
+  end
+
+  return new_ds
 end
 
+function train_data(ds::DataSet,ig_list) = train_data(ds,Set(ig_list))
 
 
+function percentages(test_ds::Distribution{DataSet},d::Distribution{DataSet},cl::Cluster)
+  guesses = Dict()
 
+  for fv in keys(cl.vectors)
+    class = naive_bayes(test_ds,cl[fv])
+    setindex!(guesses,class,fv)
+  end
 
+  right = 0
+  for guess in keys(guesses)
+    if guess in keys(d.space[guesses[guess]])
+      right += 1
+    end
+  end
+
+  correct = right/get_num_texts_in_dist(d)
+  return correct
+end
 
 
 
