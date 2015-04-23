@@ -41,6 +41,79 @@ function separate_by_class(d::Distribution{DataSet})
   return classes
 end
 
+function naive_bayes(d::Distribution{DataSet},fv::FeatureVector)
+
+  class_probs = FeatureVector()
+  for feature in keys(fv)
+    for clust in keys(d.space.clusters)
+      prob = prob_clust_given_feature(d,clust,feature)
+      if isnan(prob) || prob == 0
+        prob = 1e-15
+      end
+      class_probs[clust] += log(prob)*fv[feature]
+    end
+  end
+
+  for clust in keys(d.space.clusters)
+    prob = prob_clust_in_dataset(d,clust)
+    class_probs[clust] += log(prob)
+  end
+
+  max_class = ""
+  max_value = -Inf
+  num_of_same_probs = 1
+  for class in keys(class_probs)
+    value = class_probs[class]
+    if value > max_value
+      max_class = class
+      max_value = value
+    elseif value == max_value
+      num_of_same_probs += 1
+    end
+  end
+
+  if num_of_same_probs == length(d.space.clusters)
+    warn("All probabilities are the same value")
+    return "unknown class"
+  end
+
+  return max_class
+end
+
+function train_data(ds::DataSet)
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
