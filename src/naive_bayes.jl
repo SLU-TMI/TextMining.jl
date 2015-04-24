@@ -1,4 +1,3 @@
-using TextMining
 
 function get_probs_fv_in_clust(d::Distribution{DataSet})
   data_set = d.space
@@ -78,7 +77,7 @@ function naive_bayes(d::Distribution{DataSet},fv::FeatureVector)
 
   return max_class
 end
-function naive_bayes(ds::DataSet,fv::FeatureVector) = naive_bayes(Distribution(ds),fv)
+naive_bayes(ds::DataSet,fv::FeatureVector) = naive_bayes(Distribution(ds),fv)
 
 function train_data(ds::DataSet,ig_list::Set)
 
@@ -101,25 +100,25 @@ function train_data(ds::DataSet,ig_list::Set)
   return new_ds
 end
 
-function train_data(ds::DataSet,ig_list) = train_data(ds,Set(ig_list))
+train_data(ds::DataSet,ig_list) = train_data(ds,Set(ig_list))
 
 
-function percentages(test_ds::Distribution{DataSet},d::Distribution{DataSet},cl::Cluster)
+function percentages(test_d::Distribution{DataSet},correct_d::Distribution{DataSet},cl::Cluster)
   guesses = Dict()
 
   for fv in keys(cl.vectors)
-    class = naive_bayes(test_ds,cl[fv])
+    class = naive_bayes(test_d,cl[fv])
     setindex!(guesses,class,fv)
   end
 
   right = 0
   for guess in keys(guesses)
-    if guess in keys(d.space[guesses[guess]])
+    if guess in keys(correct_d.space[guesses[guess]])
       right += 1
     end
   end
 
-  correct = right/get_num_texts_in_dist(d)
+  correct = right/get_num_texts_in_dist(correct_d)
   return correct
 end
 
