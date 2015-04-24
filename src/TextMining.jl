@@ -13,6 +13,7 @@ include("data_set.jl")
 include("clustering.jl")
 include("distribution.jl")
 include("text_processing.jl")
+include("naive_bayes.jl")
 include("tree.jl")
 
 export  
@@ -22,6 +23,10 @@ export
   
   
   #functions
+
+  #naive bayes
+  get_probs_fv_in_clust, split_dataset, separate_by_class, naive_bayes, 
+  train_data, percentages,
   
   #classification
   knn,
