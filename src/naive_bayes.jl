@@ -45,7 +45,7 @@ function naive_bayes(d::Distribution{DataSet},fv::FeatureVector)
   class_probs = FeatureVector()
   for feature in keys(fv)
     for clust in keys(d.space.clusters)
-      prob = prob_clust_given_feature(d,clust,feature)
+      prob = cond_prob_f_given_clust(d,clust,feature)
       if isnan(prob) || prob == 0
         prob = 1e-15
       end
