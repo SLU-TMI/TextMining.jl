@@ -103,14 +103,7 @@ end
 train_data(ds::DataSet,ig_list) = train_data(ds,Set(ig_list))
 
 
-function percentages(test_d::Distribution{DataSet},correct_d::Distribution{DataSet},cl::Cluster)
-  guesses = Dict()
-
-  for fv in keys(cl.vectors)
-    class = naive_bayes(test_d,cl[fv])
-    setindex!(guesses,class,fv)
-  end
-
+function percentages(correct_d::Distribution{DataSet},guesses::Dict)
   right = 0
   for guess in keys(guesses)
     if guess in keys(correct_d.space[guesses[guess]])
@@ -118,42 +111,6 @@ function percentages(test_d::Distribution{DataSet},correct_d::Distribution{DataS
     end
   end
 
-  correct = right/get_num_texts_in_dist(correct_d)
+  correct = right/length(guesses)
   return correct
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
