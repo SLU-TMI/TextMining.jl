@@ -217,7 +217,7 @@ function clust_info_gain(d1::Distribution{DataSet}, feature, weight::Bool=false)
   return ent_of_dist - ent_of_word
 end
 
-function chi_info_gain(d::Distribution{DataSet},feature)
+function ld_info_gain(d::Distribution{DataSet},feature)
   all_ig = 0
   for clust in keys(d.space.clusters)
     child_ig = 0
@@ -231,9 +231,9 @@ function chi_info_gain(d::Distribution{DataSet},feature)
       f_in_clust_ent -= x
     end
     child_ig = clust_in_dataset_entropy(d) - f_in_clust_ent
-    all_ig += child_ig*prob_clust_given_feature(d,clust,feature)
+    all_ig += (child_ig*prob_clust_given_feature(d,clust,feature)/log2(length(d.space[clust].vectors)))
   end
-  return clust_info_gain(d,feature) - all_ig
+  return (clust_info_gain(d,feature)/log2(length(d.space.clusters))) - all_ig
 end
 # end scannell
 

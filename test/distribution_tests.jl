@@ -182,7 +182,7 @@ facts("info_gain(Distribution,Distribution) returns 0 if empty Distributions") d
   @fact info_gain(d1,d2) => 0
 end
 
-facts("chi_info_gain rules out similar features over all decades and outliers that wouldn't tell us much") do
+facts("ld_info_gain rules out similar features over all decades and outliers that wouldn't tell us much") do
   fv1 = FeatureVector(["the"=>5, "c1"=>5])
   fv2 = FeatureVector(["the"=>5, "c1"=>5, "romeo"=>100])
   fv3 = FeatureVector(["the"=>5, "c1"=>5])
@@ -233,9 +233,9 @@ facts("chi_info_gain rules out similar features over all decades and outliers th
 
   for feature in keys(d.space.vector_sum)
     if feature == "the" || feature == "romeo"
-      @fact chi_info_gain(d,feature) => 0.0
+      @fact ld_info_gain(d,feature) => 0.0
     else
-      @fact chi_info_gain(d,feature) => 2.0
+      @fact ld_info_gain(d,feature) => 1.0
     end
   end
 end
