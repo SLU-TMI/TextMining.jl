@@ -6,6 +6,8 @@
 
 This package is a set of tools being used by Saint Louis University to facilitate interdisciplinary research  of how time passage affects language using data mining, machine learning, and natural language processing techniques.
 ---
+For further information, contact project leader Lauren Kersey at kersey@slu.edu.
+---
 <div align="center">
 <a href="http://julialang.org/" target="_blank">
 <img src="http://julialang.org/images/logo_hires.png" alt="Julia Logo" width="105" height="71"></img>
